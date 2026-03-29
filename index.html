@@ -204,24 +204,31 @@ body {
   color: #374151;
   margin-bottom: 12px;
 }
-.subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .subject-card {
-  border-radius: 20px;
-  padding: 20px 14px;
+  border-radius: 16px;
+  padding: 13px 10px 10px;
   text-align: center;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.18s, box-shadow 0.18s;
   position: relative;
   overflow: hidden;
 }
-.subject-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.15); }
+.subject-card:hover  { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
 .subject-card:active { transform: translateY(-1px); }
-.subject-card .s-icon { font-size: 2.4rem; margin-bottom: 8px; }
-.subject-card .s-name { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 800; color: white; }
-.subject-card .s-teks { font-size: 0.72rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
-.subject-card .s-stars { font-size: 0.85rem; margin-top: 6px; }
-.subject-card .s-count { font-size: 0.72rem; color: rgba(255,255,255,0.85); margin-top: 2px; font-weight: 600; }
+.subject-card .s-icon  { font-size: 1.9rem; margin-bottom: 4px; }
+.subject-card .s-name  { font-family: 'Baloo 2', cursive; font-size: 0.88rem; font-weight: 800; color: white; line-height: 1.2; }
+.subject-card .s-teks  { font-size: 0.65rem; color: rgba(255,255,255,0.78); margin-top: 1px; }
+.subject-card .s-stars { font-size: 0.78rem; margin-top: 4px; min-height: 16px; }
+.subject-card .s-count { font-size: 0.65rem; color: rgba(255,255,255,0.85); margin-top: 1px; font-weight: 600; }
+/* Weekly progress bar on card */
+.subject-card .s-week-wrap { margin-top: 6px; }
+.subject-card .s-week-bar  {
+  height: 5px; border-radius: 99px; background: rgba(255,255,255,0.25); overflow: hidden; margin-bottom: 2px;
+}
+.subject-card .s-week-fill { height: 100%; border-radius: 99px; background: rgba(255,255,255,0.85); transition: width 0.4s; }
+.subject-card .s-week-txt  { font-size: 0.62rem; color: rgba(255,255,255,0.9); font-weight: 700; }
 
 .sc-math  { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
 .sc-ela   { background: linear-gradient(135deg, #db2777, #f97316); }
@@ -331,6 +338,51 @@ body {
 .review-ans-your-skip    { background: #fef3c7; color: #92400e; }
 .review-ans-correct-ans  { background: #dbeafe; color: #1e40af; }
 .review-icon { font-size: 1.2rem; }
+
+/* ════════════════════════════
+   PARENT PROGRESS CHARTS
+════════════════════════════ */
+.prog-filter-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
+}
+.prog-filter-btn {
+  border: 2px solid #e5e7eb; background: white; border-radius: 99px;
+  padding: 5px 14px; font-family: 'Baloo 2', cursive; font-size: 0.8rem;
+  font-weight: 800; cursor: pointer; color: #374151; transition: all 0.15s;
+}
+.prog-filter-btn.active {
+  background: linear-gradient(135deg,#1e3a5f,#7c3aed); color: white; border-color: transparent;
+}
+.prog-chart-wrap {
+  background: white; border-radius: 18px; padding: 14px 14px 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 14px; overflow-x: auto;
+}
+.prog-chart-title {
+  font-family: 'Baloo 2', cursive; font-size: 0.88rem; font-weight: 800;
+  color: #374151; margin-bottom: 10px;
+}
+.prog-bar-chart {
+  display: flex; align-items: flex-end; gap: 5px; height: 110px; padding-bottom: 22px; position: relative;
+}
+.prog-bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 24px; max-width: 44px; }
+.prog-bar-outer {
+  width: 100%; border-radius: 5px 5px 0 0; background: #f3f4f6; position: relative;
+  height: 80px; display: flex; align-items: flex-end;
+}
+.prog-bar-inner {
+  width: 100%; border-radius: 5px 5px 0 0; min-height: 3px;
+  background: linear-gradient(180deg,#7c3aed,#3b82f6); transition: height 0.4s ease;
+}
+.prog-bar-inner.pct-high { background: linear-gradient(180deg,#f59e0b,#ef4444); }
+.prog-bar-inner.pct-good { background: linear-gradient(180deg,#059669,#0891b2); }
+.prog-bar-label { font-size: 0.58rem; font-weight: 700; color: #6b7280; margin-top: 3px; text-align: center; line-height: 1.2; }
+.prog-bar-pct   { font-size: 0.58rem; font-weight: 800; color: #374151; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.prog-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.prog-table th { background: #f8fafc; padding: 7px 10px; text-align: left; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; font-size: 0.78rem; }
+.prog-table td { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+.prog-table tr:last-child td { border-bottom: none; }
+.prog-pct-chip { border-radius: 6px; padding: 2px 8px; font-weight: 800; font-size: 0.75rem; }
+
 #screen-checkin {
   background: linear-gradient(160deg, #1e3a5f 0%, #1e40af 25%, #f0f9ff 25%);
 }
@@ -660,6 +712,14 @@ body {
   font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 4px; margin-left: 8px;
 }
 
+/* ── Writing keyboard input ── */
+.write-input {
+  width: 100%; border: 2px solid #e5e7eb; border-radius: 12px;
+  padding: 12px 14px; font-family: 'Nunito', sans-serif; font-size: 1rem;
+  font-weight: 600; outline: none; transition: border-color 0.2s;
+}
+.write-input:focus { border-color: #d97706; }
+
 /* ── PHONICS ── */
 .phonics-sound-display { text-align: center; padding: 24px 20px 10px; }
 .phonics-letter {
@@ -932,7 +992,7 @@ body {
 .h-welcome { font-family: 'Baloo 2', cursive; font-size: 1.7rem; font-weight: 800; color: #78350f; }
 .h-sub { color: #92400e; font-size: 0.9rem; margin-bottom: 16px; }
 
-.h-subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.h-subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .h-subject-card {
   border-radius: 22px;
   padding: 22px 12px;
@@ -940,10 +1000,14 @@ body {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.h-subject-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
-.h-subject-card .hs-icon { font-size: 3rem; margin-bottom: 8px; }
-.h-subject-card .hs-name { font-family: 'Baloo 2', cursive; font-size: 1.05rem; font-weight: 800; color: white; }
-.h-subject-card .hs-stars { font-size: 0.9rem; margin-top: 6px; }
+.h-subject-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+.h-subject-card .hs-icon  { font-size: 2.2rem; margin-bottom: 5px; }
+.h-subject-card .hs-name  { font-family: 'Baloo 2', cursive; font-size: 0.92rem; font-weight: 800; color: white; }
+.h-subject-card .hs-stars { font-size: 0.82rem; margin-top: 4px; min-height: 16px; }
+.h-subject-card .hs-week-wrap { margin-top: 5px; }
+.h-subject-card .hs-week-bar  { height: 5px; border-radius: 99px; background: rgba(255,255,255,0.25); overflow: hidden; margin-bottom: 2px; }
+.h-subject-card .hs-week-fill { height: 100%; border-radius: 99px; background: rgba(255,255,255,0.85); transition: width 0.4s; }
+.h-subject-card .hs-week-txt  { font-size: 0.62rem; color: rgba(255,255,255,0.9); font-weight: 700; }
 
 .sc-nums   { background: linear-gradient(135deg, #f59e0b, #ef4444); }
 .sc-alpha  { background: linear-gradient(135deg, #8b5cf6, #db2777); }
@@ -1418,6 +1482,13 @@ body {
         <div class="s-stars" id="v-voice-stars">—</div>
         <div class="s-count" id="v-voice-count">0 sessions</div>
       </div>
+      <div id="v-card-staar" class="subject-card" style="background:linear-gradient(135deg,#b45309,#d97706);grid-column:span 3;" onclick="startQuiz('vivan','staar')">
+        <div class="s-icon">⭐</div>
+        <div class="s-name">STAAR Test Prep</div>
+        <div class="s-teks">3rd Grade Texas · Reading · Maths · Science</div>
+        <div class="s-stars" id="v-staar-stars">—</div>
+        <div class="s-count" id="v-staar-count">0 quizzes</div>
+      </div>
     </div>
 
     <div class="section-title">📋 Recent Activity</div>
@@ -1666,12 +1737,32 @@ body {
       </div>
     </div>
 
-    <div class="parent-section-title" style="margin-top:8px;">📋 Quiz History <button class="clear-btn" onclick="clearHistory()" style="float:right;">Clear All</button></div>
-    <div class="history-table-wrap">
-      <table class="history-table">
-        <thead><tr><th>Kid</th><th>Subject</th><th>Score</th><th>Stars</th><th>Date</th></tr></thead>
-        <tbody id="p-history-tbody">
-          <tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>
+    <div class="parent-section-title" style="margin-top:8px;">📈 Progress by Subject <button class="clear-btn" onclick="clearHistory()" style="float:right;">Clear All</button></div>
+
+    <!-- Kid selector -->
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button class="prog-filter-btn active" id="pkid-vivan"   onclick="selectProgKid('vivan')">👦 Vivan</button>
+      <button class="prog-filter-btn"        id="pkid-hridaan" onclick="selectProgKid('hridaan')">👶 Hridaan</button>
+    </div>
+
+    <!-- Subject filter -->
+    <div class="prog-filter-row" id="p-subject-filters"></div>
+
+    <!-- Bar chart -->
+    <div class="prog-chart-wrap">
+      <div class="prog-chart-title" id="p-chart-title">Score % — last 14 days</div>
+      <div class="prog-bar-chart" id="p-bar-chart">
+        <div style="color:#9ca3af;font-size:0.85rem;margin:auto;">Loading…</div>
+      </div>
+    </div>
+
+    <!-- Detail table -->
+    <div class="prog-chart-wrap">
+      <div class="prog-chart-title">📋 All Results</div>
+      <table class="prog-table">
+        <thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>Stars</th></tr></thead>
+        <tbody id="p-prog-tbody">
+          <tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:16px;">No data yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -1998,8 +2089,9 @@ function getSubjectLimits(history) {
    'daily'  = done 2x today → hide
    'weekly' = done 10x this week → hide (unless all subjects are at 10, then 'ok')
 */
-const DAILY_LIMIT  = 2;  // max attempts per subject per day
-const WEEKLY_LIMIT = 5;  // max attempts per subject per week
+const DAILY_LIMIT   = 2;  // max attempts per subject per day
+const WEEKLY_LIMIT  = 5;  // max attempts per subject per week (hide after this)
+const WEEKLY_TARGET = 7;  // minimum target per subject per week (shown on progress bar)
                          // if ALL subjects hit WEEKLY_LIMIT → power user unlock!
 
 function getSubjectStatus(subject, limits, allSubjects) {
@@ -2199,7 +2291,7 @@ function renderDashboard(who, d) {
     document.getElementById('v-total-stars').textContent   = d.totalStars;
     document.getElementById('v-total-quizzes').textContent = d.totalQuizzes;
     document.getElementById('v-streak').textContent        = d.streak;
-    const vivanSubs = ['math','ela','sci','read','write','voice','spell'];
+    const vivanSubs = ['math','ela','sci','read','write','voice','spell','staar'];
     const limits = getSubjectLimits(d.history);
     vivanSubs.forEach(sub => {
       const best    = (d.subjectStars || {})[sub] || 0;
@@ -2232,12 +2324,32 @@ function renderDashboard(who, d) {
   }
 }
 
-/* ── Apply hide logic to a subject card ── */
+/* ── Apply hide logic + weekly bar to a subject card ── */
 function applySubjectCardLimit(cardId, subject, limits, allSubs) {
   const el = document.getElementById(cardId);
   if (!el) return;
   const status = getSubjectStatus(subject, limits, allSubs);
   el.style.display = status === 'ok' ? '' : 'none';
+
+  // Inject / update weekly progress bar
+  const weekly = limits.weekly[subject] || 0;
+  const pct    = Math.min(weekly / WEEKLY_TARGET * 100, 100);
+  const isHCard = el.classList.contains('h-subject-card');
+  const prefix  = isHCard ? 'hs' : 's';
+  let wrapEl = el.querySelector('.' + prefix + '-week-wrap');
+  if (!wrapEl) {
+    wrapEl = document.createElement('div');
+    wrapEl.className = prefix + '-week-wrap';
+    wrapEl.innerHTML = `
+      <div class="${prefix}-week-bar"><div class="${prefix}-week-fill" style="width:${pct}%"></div></div>
+      <div class="${prefix}-week-txt">${weekly}/${WEEKLY_TARGET} this week</div>`;
+    el.appendChild(wrapEl);
+  } else {
+    const fill = wrapEl.querySelector('.' + prefix + '-week-fill');
+    const txt  = wrapEl.querySelector('.' + prefix + '-week-txt');
+    if (fill) fill.style.width = pct + '%';
+    if (txt)  txt.textContent  = weekly + '/' + WEEKLY_TARGET + ' this week';
+  }
 }
 
 /* ── Show/hide power user banner and weekly status ── */
@@ -2353,21 +2465,141 @@ function renderActivity(elId, history, kid) {
   `).join('');
 }
 
-function renderParentHistory(all) {
-  const tbody = document.getElementById('p-history-tbody');
-  if (!all || all.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>';
-    return;
+/* ════════════════════════════════════════════
+   PARENT PROGRESS CHART SYSTEM
+════════════════════════════════════════════ */
+
+let progKid     = 'vivan';
+let progSubject = 'all';
+
+const SUBJECT_LABELS = {
+  'all':   { label:'All',      emoji:'📊' },
+  'math':  { label:'Maths',    emoji:'🔢' },
+  'ela':   { label:'English',  emoji:'📖' },
+  'sci':   { label:'Science',  emoji:'🔬' },
+  'read':  { label:'Reading',  emoji:'📚' },
+  'write': { label:'Writing',  emoji:'✍️' },
+  'spell': { label:'Spelling', emoji:'🔤' },
+  'voice': { label:'Read Aloud',emoji:'🎤'},
+  'staar': { label:'STAAR',    emoji:'⭐' },
+  'nums':  { label:'Numbers',  emoji:'🔢' },
+  'alpha': { label:'Alphabet', emoji:'🔤' },
+  'shapes':{ label:'Shapes',   emoji:'🔵' },
+  'phonics':{ label:'Phonics', emoji:'🔊' },
+};
+
+const KID_SUBJECTS = {
+  vivan:   ['all','math','ela','sci','read','write','spell','voice','staar'],
+  hridaan: ['all','nums','alpha','shapes','phonics','voice'],
+};
+
+function selectProgKid(kid) {
+  progKid     = kid;
+  progSubject = 'all';
+  document.querySelectorAll('[id^="pkid-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('pkid-' + kid)?.classList.add('active');
+  renderProgFilters();
+  renderProgressCharts();
+}
+
+function selectProgSubject(sub) {
+  progSubject = sub;
+  renderProgFilters();
+  renderProgressCharts();
+}
+
+function renderProgFilters() {
+  const subs = KID_SUBJECTS[progKid] || ['all'];
+  const row  = document.getElementById('p-subject-filters');
+  if (!row) return;
+  row.innerHTML = subs.map(s => {
+    const info = SUBJECT_LABELS[s] || { label: s, emoji: '📝' };
+    const active = progSubject === s ? ' active' : '';
+    return `<button class="prog-filter-btn${active}" onclick="selectProgSubject('${s}')">${info.emoji} ${info.label}</button>`;
+  }).join('');
+}
+
+function renderProgressCharts() {
+  const data = getKidData(progKid);
+  const history = (data.history || []).slice().sort((a,b) => a.date.localeCompare(b.date));
+
+  // Filter by subject
+  const filtered = progSubject === 'all'
+    ? history
+    : history.filter(h => {
+        const key = h.subject || '';
+        return key === progSubject || key === progKid + '-' + progSubject;
+      });
+
+  // Group by date — average pct per day
+  const byDate = {};
+  filtered.forEach(h => {
+    if (!byDate[h.date]) byDate[h.date] = [];
+    byDate[h.date].push(h);
+  });
+
+  const dates    = Object.keys(byDate).slice(-14); // last 14 days
+  const subLabel = SUBJECT_LABELS[progSubject]?.label || progSubject;
+  const kidName  = progKid === 'vivan' ? 'Vivan' : 'Hridaan';
+
+  // Update chart title
+  const titleEl = document.getElementById('p-chart-title');
+  if (titleEl) titleEl.textContent = `${kidName} — ${subLabel} — last 14 days`;
+
+  // Render bar chart
+  const chartEl = document.getElementById('p-bar-chart');
+  if (chartEl) {
+    if (dates.length === 0) {
+      chartEl.innerHTML = '<div style="color:#9ca3af;font-size:0.85rem;margin:auto;padding:20px;">No data for this period.</div>';
+    } else {
+      chartEl.innerHTML = dates.map(date => {
+        const entries = byDate[date];
+        const avgPct  = Math.round(entries.reduce((s,h) => s + (h.pct||0), 0) / entries.length);
+        const barH    = Math.max(3, Math.round(avgPct * 0.8));
+        const clr     = avgPct >= 80 ? 'pct-high' : avgPct >= 60 ? 'pct-good' : '';
+        const shortDate = date.slice(5); // MM-DD
+        return `<div class="prog-bar-col">
+          <div class="prog-bar-outer">
+            <div class="prog-bar-inner ${clr}" style="height:${barH}px;">
+              <span class="prog-bar-pct">${avgPct}%</span>
+            </div>
+          </div>
+          <div class="prog-bar-label">${shortDate}<br>${entries.length}q</div>
+        </div>`;
+      }).join('');
+    }
   }
-  tbody.innerHTML = all.slice().reverse().map(h => `
-    <tr>
-      <td><span class="tag-${h.kid === 'vivan' ? 'v' : 'h'}">${h.kid === 'vivan' ? 'Vivan' : 'Hridaan'}</span></td>
-      <td>${h.subjectName}</td>
-      <td>${h.score}/${h.total} (${h.pct}%)</td>
-      <td>${starsStr(h.stars)}</td>
-      <td>${h.date}</td>
-    </tr>
-  `).join('');
+
+  // Render detail table
+  const tbody = document.getElementById('p-prog-tbody');
+  if (tbody) {
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:16px;">No results yet.</td></tr>';
+    } else {
+      const subNames = subjectNames || {};
+      tbody.innerHTML = filtered.slice().reverse().map(h => {
+        const subKey = h.subject || '';
+        const sName  = subNames[subKey] || subKey.replace(progKid + '-','');
+        const pctChip = h.pct >= 80
+          ? `<span class="prog-pct-chip" style="background:#dcfce7;color:#15803d;">${h.pct}%</span>`
+          : h.pct >= 60
+          ? `<span class="prog-pct-chip" style="background:#fef3c7;color:#92400e;">${h.pct}%</span>`
+          : `<span class="prog-pct-chip" style="background:#fee2e2;color:#b91c1c;">${h.pct}%</span>`;
+        return `<tr>
+          <td style="font-weight:600;color:#6b7280;">${h.date}</td>
+          <td style="font-weight:700;">${sName}</td>
+          <td>${pctChip} ${h.score}/${h.total}</td>
+          <td>${starsStr(h.stars)}</td>
+        </tr>`;
+      }).join('');
+    }
+  }
+}
+
+function renderParentHistory(all) {
+  // Legacy compatibility — now delegated to renderProgressCharts
+  renderProgFilters();
+  renderProgressCharts();
 }
 
 /* ════════════════════════════════════════════
@@ -2427,6 +2659,7 @@ const LOADING_EMOJIS = {
   shapes: ['🔵','🔴','🟡','⬛','🔺'],
   phonics:['🔊','👂','🗣️','🎵','🌟'],
   words:  ['💬','📝','🔤','✏️','📖'],
+  staar:  ['⭐','📊','🔬','📐','📖'],
 };
 
 // Daily cache key — resets each new day
@@ -2437,12 +2670,12 @@ function getCacheKey(kid, subject) {
 // Claude API prompts per subject
 function buildPrompt(kid, subject) {
   if (kid === 'vivan') {
-    const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is AHEAD of grade level in Maths and Science. Return ONLY valid JSON, no markdown, no explanation.`;
+    const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is significantly AHEAD of grade level — treat him as an advanced 3rd grader. Return ONLY valid JSON, no markdown, no explanation.`;
 
     if (subject === 'math') return `${base}
-Generate 10 maths questions. Mix of 6 MCQ and 4 number-input questions. Slightly above 2nd grade level (early 3rd grade concepts OK): addition/subtraction within 1000, place value, simple multiplication intro, word problems.
+Generate 10 maths questions at advanced 3rd grade level. Mix of 6 MCQ and 4 number-input. Topics: multi-digit multiplication (2-digit × 1-digit), long division intro (÷2,÷3,÷4,÷5), fractions (halves/thirds/quarters on a number line), area and perimeter of rectangles, rounding to nearest 10/100, multi-step word problems, place value to ten-thousands.
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"} or {"text":"question","type":"input","answer":"number as string"}]
-Make sure ALL answers are mathematically correct. Double-check every calculation.`;
+CRITICAL: Double-check every single calculation. All answers must be 100% mathematically correct.`;
 
     if (subject === 'ela') return `${base}
 Generate 10 English language arts questions. All MCQ. Topics: plurals, opposites, verb tense, rhyming words, nouns/verbs/adjectives, simple grammar, fill-in-the-blank sentences. Keep vocabulary simple (ESL-friendly).
@@ -2460,7 +2693,8 @@ Examples of good hints:
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option","hint":"kid-friendly explanation or empty string if not needed"}]`;
 
     if (subject === 'sci') return `${base}
-Generate 10 science questions. All MCQ. Topics: animals (habitats, diet, classification), plants, weather, simple forces, human body, materials. Slightly above 2nd grade (3rd grade OK).
+Generate 10 challenging 3rd grade science questions. All MCQ. Topics: ecosystems and food chains, states of matter (solid/liquid/gas) and changes, life cycles (insect/frog/plant), simple machines (lever/pulley/inclined plane), forces and motion, inherited vs learned traits, rocks and soil, weather patterns and water cycle, adaptations, photosynthesis basics.
+Make questions genuinely challenging — require thinking, not just recall.
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"}]`;
 
     if (subject === 'read') return `${base}
@@ -2468,37 +2702,59 @@ Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on 
 Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["a","b","c","d"],"answer":"correct option"}]}
 The answer MUST be directly supported by the passage text.`;
 
+    if (subject === 'staar') return `${base}
+Generate 12 STAAR-style practice questions for a student preparing for the Texas 3rd Grade STAAR exam. Mix of Reading, Maths, and Science — 4 questions each.
+READING questions: short passage then comprehension questions (main idea, author purpose, vocabulary in context, make inferences, text structure).
+MATHS questions: multi-step word problems, fractions, area/perimeter, multiplication/division, data/graphs — all at STAAR rigor level (harder than typical 3rd grade).
+SCIENCE questions: ecosystems, matter, forces, organisms, Earth science — STAAR format with 4 answer choices.
+Make questions genuinely test-like — tricky distractors, require careful reading.
+Return JSON array: [{"text":"question or passage+question","type":"mcq","options":["A) option","B) option","C) option","D) option"],"answer":"A) correct option","subject":"Reading|Maths|Science"}]`;
+
     if (subject === 'write') return `${base}
-Generate 5 sentence-builder questions and 5 spot-the-mistake questions for a 7-year-old (ESL).
-Sentence builders: give 4-6 shuffled words to arrange into a correct sentence.
-Spot the mistake: give 4 options, only ONE is grammatically correct.
-Return JSON array of 10: 
-[{"type":"build","instruction":"Put the words in the right order:","words":["shuffled","word","array"],"answer":"The correct sentence with capital and full stop."},
-{"type":"mistake","instruction":"Which sentence is correct?","options":["opt1","opt2","opt3","opt4"],"answer":"The correct option exactly as written"}]
-Ensure the correct answer in spot-the-mistake is always one of the 4 options.`;
+Generate 10 sentence-building exercises. The child will TYPE the complete sentence from memory using a keyboard — no drag and drop.
+Give 4-7 shuffled words. The child must type the COMPLETE correct sentence including capital letter at start and correct punctuation at end (full stop or question mark or exclamation mark).
+Make sentences interesting and varied: statements, questions, exclamations. Mix simple and slightly complex.
+Return JSON array of 10:
+[{"type":"build","instruction":"Type the words in the correct order as a sentence:","words":["shuffled","word","array"],"answer":"The complete correct sentence with capital letter and punctuation."}]
+The answer field must include the capital letter and end punctuation exactly. Example: "The big dog ran to the park."`;
   }
 
   if (kid === 'hridaan') {
-    const base = `You are generating quiz questions for Hridaan, a 3-year-old in Pre-K in Texas. English is his second language. His parent will read questions aloud. All questions must be tap-based (multiple choice only, no typing). Use simple emoji labels in options. Return ONLY valid JSON, no markdown.`;
+    const base = `You are generating quiz questions for Hridaan, a 4-year-old in Pre-K in Texas. English is his second language. He is ahead of typical Pre-K level — treat as an advanced Pre-K / early Kindergarten learner. His parent will read questions aloud. All questions must be tap-based (MCQ only). Use simple emoji. Return ONLY valid JSON, no markdown.`;
 
     if (subject === 'nums') return `${base}
-Generate 8 number questions. Count objects (use emoji), which is more/less, what comes before/after (numbers 1-10).
-Each option should be a single number or emoji string.
-Return JSON array: [{"emoji":"🍎🍎🍎","text":"How many apples?","options":["1","2","3","4"],"answer":"3"}]`;
+Generate 8 maths questions at advanced Pre-K / early KG level. Mix: addition within 20, subtraction within 10, skip counting by 2s and 5s, what comes before/after (numbers 1-30), simple multiplication concept ("3 groups of 2 apples = ?"), number comparisons up to 30.
+Return JSON array: [{"emoji":"🍎🍎🍎","text":"3 + 4 = ?","options":["5","6","7","8"],"answer":"7"}]
+Make all calculations correct.`;
 
     if (subject === 'alpha') return `${base}
-Generate 8 alphabet questions. "X is for ___?" or "Which starts with /x/?" using familiar objects with emoji. Letters A-E only (early learner).
-Options should include emoji + word like "🍎 Apple".
-Return JSON array: [{"emoji":"🍎","text":"A is for…?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
+Generate 8 challenging alphabet questions for an advanced Pre-K learner. Mix of:
+- Alphabet sequence: "What letter comes AFTER G?" / "What comes BEFORE M?"
+- Missing letter: "A, B, _, D — what is missing?"
+- Uppercase/lowercase match: "Which is the lowercase of B?"
+- Word initial sound: "Which word starts with the letter S?"
+- Alphabetical order: "Which comes FIRST in the alphabet: D, B, or F?"
+Use emoji to illustrate options where helpful.
+Return JSON array: [{"emoji":"🔤","text":"What letter comes after G?","options":["F","H","I","J"],"answer":"H"}]`;
 
     if (subject === 'shapes') return `${base}
-Generate 8 shapes and colours questions. Shape of everyday objects, colour recognition, simple pattern ("which is the circle?"). Use bright emoji.
-Return JSON array: [{"emoji":"⚽","text":"A ball is this shape:","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
+Generate 8 advanced shapes questions for Pre-K/KG:
+- 3D shapes: cube, sphere, cylinder, cone — identify by name or everyday object
+- Count sides and corners: "A triangle has how many sides?"
+- Shape patterns: "What comes next: circle, square, circle, ___?"
+- Combine shapes: "A rectangle + triangle = what shape?"
+- Real-world: "Which shape is a pizza? Which shape is a box?"
+Return JSON array: [{"emoji":"📦","text":"A box is which 3D shape?","options":["Sphere","Cube","Cylinder","Cone"],"answer":"Cube"}]`;
 
     if (subject === 'phonics') return `${base}
-Generate 8 letter-sound questions. Show a letter, ask which picture starts with that sound. Letters A-T only. Options use emoji + word.
-Return JSON array: [{"letter":"A","says":"says /a/ like in…","prompt":"Which starts with the /a/ sound?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]
-Use only very familiar words a 3-year-old would know.`;
+Generate 8 advanced phonics questions covering all letters A-Z:
+- Blend sounds: "Which word has the /bl/ blend?" 
+- Ending sounds: "What sound does DOG end with?"
+- Short vowels: "Which word has the short /e/ sound?"
+- Rhyming: "Which word rhymes with CAT?"
+- Two-letter blends: sh, ch, th, wh — "Which word starts with /sh/?"
+Use emoji + word options. Make genuinely challenging.
+Return JSON array: [{"letter":"SH","says":"makes the /sh/ sound","prompt":"Which word starts with /sh/?","options":["🐑 Sheep","🐱 Cat","🐶 Dog","🎩 Hat"],"answer":"🐑 Sheep"}]`;
   }
   if (kid === 'prisha') {
     const base = `You are generating quiz questions for Prisha, a 3-year-old in Pre-K following Maharashtra State Board (English medium) curriculum in India. Her parent reads questions aloud. All questions must be tap-based (MCQ only, no typing). Use simple emoji. Return ONLY valid JSON, no markdown.`;
@@ -2932,7 +3188,7 @@ function finishHridaanQuiz() {
 /* ── RESULTS ── */
 const subjectNames = {
   'vivan-math':'Maths','vivan-ela':'English','vivan-sci':'Science',
-  'vivan-read':'Reading','vivan-write':'Writing','vivan-voice':'Read Aloud','vivan-spell':'Spelling',
+  'vivan-read':'Reading','vivan-write':'Writing','vivan-voice':'Read Aloud','vivan-spell':'Spelling','vivan-staar':'STAAR Prep',
   'hridaan-nums':'Numbers','hridaan-alpha':'Alphabet',
   'hridaan-shapes':'Shapes & Colours','hridaan-phonics':'Phonics',
   'hridaan-voice':'Voice Phonics',
@@ -3135,22 +3391,27 @@ function loadWritingQuiz() {
 }
 
 function buildSentenceCard(q, i) {
-  // Shuffle words for display
+  // Show shuffled words as reference (read-only) + keyboard input
   const shuffled = [...q.words].sort(() => Math.random() - 0.5);
-  writingSentences[i] = { placed: [], available: [...shuffled], correct: q.answer };
-  const tiles = shuffled.map((w,wi) =>
-    `<span class="word-tile" id="wtile-${i}-${wi}" onclick="placeWord(${i},${wi},'${w}')">${w}</span>`
+  writingSentences[i] = { correct: q.answer };
+  const tiles = shuffled.map(w =>
+    `<span class="word-tile" style="cursor:default;opacity:0.85;">${w}</span>`
   ).join('');
   return `
     <div class="q-card" id="wq-${i}" style="margin-bottom:16px;">
       <div class="q-num-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b);">${i+1}</div>
       <div class="q-text">${q.instruction}</div>
-      <div class="word-bank" id="wbank-${i}">${tiles}</div>
-      <div style="font-size:0.8rem;font-weight:700;color:#6b7280;margin-bottom:6px;">Your sentence (tap to remove a word):</div>
-      <div class="sentence-drop" id="wdrop-${i}"><span class="sentence-drop-hint">Tap words above to build your sentence…</span></div>
-      <div style="margin-top:10px;">
-        <button class="sb-check-btn" onclick="checkSentence(${i})">Check ✓</button>
-        <button class="sb-clear-btn" onclick="clearSentence(${i})">Clear ↺</button>
+      <div class="word-bank" id="wbank-${i}" style="margin-bottom:12px;">${tiles}</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#6b7280;margin-bottom:6px;">
+        ✏️ Type the full sentence — Capital letter + punctuation at the end!
+      </div>
+      <input class="write-input" id="winput-${i}" type="text"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+        placeholder="Type your sentence here…"
+        onkeydown="if(event.key===\'Enter\')checkTypedSentence(${i})">
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <button class="sb-check-btn" onclick="checkTypedSentence(${i})">Check ✓</button>
+        <button class="sb-clear-btn" onclick="clearTyped(${i})">Clear ↺</button>
       </div>
       <div class="q-feedback" id="wfb-${i}"></div>
     </div>`;
@@ -3158,7 +3419,7 @@ function buildSentenceCard(q, i) {
 
 function mistakeCard(q, i) {
   const opts = q.options.map(o =>
-    `<button class="q-opt" onclick="writingMCQ(${i},this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}')">
+    `<button class="q-opt" onclick="writingMCQ(${i},this,\`${o}\`,\`${q.answer}\`)">
       ${o}
     </button>`
   ).join('');
@@ -3171,60 +3432,27 @@ function mistakeCard(q, i) {
     </div>`;
 }
 
-function placeWord(qIdx, wordIdx, word) {
-  const s = writingSentences[qIdx];
-  if (!s || s.placed.includes(wordIdx)) return;
-  s.placed.push(wordIdx);
-  // grey out tile
-  const tile = document.getElementById('wtile-' + qIdx + '-' + wordIdx);
-  if (tile) tile.classList.add('used');
-  renderDropZone(qIdx);
-}
-
-function renderDropZone(qIdx) {
-  const s = writingSentences[qIdx];
-  const drop = document.getElementById('wdrop-' + qIdx);
-  if (s.placed.length === 0) {
-    drop.innerHTML = '<span class="sentence-drop-hint">Tap words above to build your sentence…</span>';
-    return;
-  }
-  drop.innerHTML = s.placed.map((wi, pos) => {
-    const word = writingSentences[qIdx].available[wi] || '?';
-    return `<span class="placed-word" onclick="removeWord(${qIdx},${pos})">${word}</span>`;
-  }).join('');
-}
-
-function removeWord(qIdx, pos) {
-  const s = writingSentences[qIdx];
-  const wordIdx = s.placed[pos];
-  s.placed.splice(pos, 1);
-  const tile = document.getElementById('wtile-' + qIdx + '-' + wordIdx);
-  if (tile) tile.classList.remove('used');
-  renderDropZone(qIdx);
-  // clear feedback since changed
-  document.getElementById('wfb-' + qIdx).textContent = '';
-  document.getElementById('wq-' + qIdx).classList.remove('correct','wrong');
-}
-
-function clearSentence(qIdx) {
-  const s = writingSentences[qIdx];
-  s.placed = [];
-  document.querySelectorAll(`[id^="wtile-${qIdx}-"]`).forEach(t => t.classList.remove('used'));
-  renderDropZone(qIdx);
+function clearTyped(qIdx) {
+  const input = document.getElementById('winput-' + qIdx);
+  if (input) input.value = '';
   document.getElementById('wfb-' + qIdx).textContent = '';
   document.getElementById('wq-' + qIdx).classList.remove('correct','wrong');
   delete writingAnswers[qIdx];
   updateWritingProgress();
 }
 
-function checkSentence(qIdx) {
-  const s = writingSentences[qIdx];
-  if (s.placed.length === 0) return;
-  const built = s.placed.map(wi => s.available[wi]).join(' ');
+function checkTypedSentence(qIdx) {
+  const input = document.getElementById('winput-' + qIdx);
+  if (!input || !input.value.trim()) return;
+  const typed   = input.value.trim();
+  const correct = writingSentences[qIdx].correct;
 
-  // Compare word-by-word, case-insensitive, ignoring punctuation
-  const clean = str => str.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g,' ').trim();
-  const isRight = clean(built) === clean(s.correct);
+  const normalise = str => str.trim().replace(/\s+/g,' ');
+  const wordsOnly = str => normalise(str).toLowerCase().replace(/[^a-z0-9 ]/g,'');
+  const wordsMatch  = wordsOnly(typed) === wordsOnly(correct);
+  const hasCapital  = /^[A-Z]/.test(typed);
+  const hasPunct    = /[.!?]$/.test(typed);
+  const isRight     = wordsMatch && hasCapital && hasPunct;
 
   writingAnswers[qIdx] = isRight;
   const fb = document.getElementById('wfb-' + qIdx);
@@ -3232,9 +3460,16 @@ function checkSentence(qIdx) {
   el.classList.remove('correct','wrong');
   el.classList.add(isRight ? 'correct' : 'wrong');
   fb.className = 'q-feedback ' + (isRight ? 'ok' : 'bad');
-  // Show the correct answer with first word capitalised for display only
-  const displayCorrect = s.correct.charAt(0).toUpperCase() + s.correct.slice(1);
-  fb.textContent = isRight ? '✅ Correct!' : '❌ Correct order: ' + displayCorrect;
+
+  if (isRight) {
+    fb.textContent = '✅ Perfect sentence!';
+  } else {
+    let hints = [];
+    if (!wordsMatch) hints.push('Check the word order');
+    if (!hasCapital)  hints.push('Start with a capital letter');
+    if (!hasPunct)    hints.push('End with . or ! or ?');
+    fb.innerHTML = '❌ ' + hints.join(' · ') + '<br><span style="font-size:0.82rem;color:#374151;font-weight:600;">✓ ' + correct + '</span>';
+  }
   updateWritingProgress();
 }
 
@@ -3245,6 +3480,7 @@ function writingMCQ(idx, btn, val, correct) {
   writingAnswers[idx] = val === correct;
   updateWritingProgress();
 }
+
 
 function updateWritingProgress() {
   const total = WRITING_QUIZ.questions.length;
@@ -4011,7 +4247,7 @@ async function loadDiyara() {
     document.getElementById('dy-total-stars').textContent   = cloud.totalStars   || 0;
     document.getElementById('dy-total-quizzes').textContent = cloud.totalQuizzes || 0;
     document.getElementById('dy-streak').textContent        = cloud.streak       || 0;
-    ['math','ela','sci','read','write','voice','spell'].forEach(sub => {
+    ['math','ela','sci','read','write','voice','spell','staar'].forEach(sub => {
       const best = (cloud.subjectStars||{})[sub] || 0;
       const cnt  = (cloud.subjectCount||{})[sub] || 0;
       const sEl  = document.getElementById('dy-' + sub + '-stars');
@@ -4516,15 +4752,18 @@ async function confirmPayReward() {
    VIVAN SPELLING PRACTICE
 ════════════════════════════════════════════ */
 
+// Dolch sight words — 2nd grade level
 const SPELL_FALLBACK = [
-  { word:'cat',    hint:'The cat sat on the mat.',     sentence:'cat. The cat sat on the mat. Cat.' },
-  { word:'dog',    hint:'A dog is a friendly animal.', sentence:'dog. I have a pet dog. Dog.' },
-  { word:'sun',    hint:'The sun shines in the sky.',  sentence:'sun. The sun is very bright. Sun.' },
-  { word:'hat',    hint:'You wear it on your head.',   sentence:'hat. She wore a red hat. Hat.' },
-  { word:'big',    hint:'The opposite of small.',      sentence:'big. The elephant is big. Big.' },
-  { word:'run',    hint:'Moving faster than walking.', sentence:'run. I like to run in the park. Run.' },
-  { word:'fish',   hint:'It lives in water.',          sentence:'fish. The fish swims in the pond. Fish.' },
-  { word:'tree',   hint:'It has leaves and branches.', sentence:'tree. The tree is very tall. Tree.' },
+  { word:'because',  sentence:'because. I stayed home because I was sick. Because.' },
+  { word:'before',   sentence:'before. Wash your hands before you eat. Before.' },
+  { word:'around',   sentence:'around. The dog ran around the tree. Around.' },
+  { word:'together', sentence:'together. We work better together. Together.' },
+  { word:'better',   sentence:'better. This is better than yesterday. Better.' },
+  { word:'always',   sentence:'always. She always brushes her teeth. Always.' },
+  { word:'would',    sentence:'would. I would like some water please. Would.' },
+  { word:'should',   sentence:'should. You should eat your vegetables. Should.' },
+  { word:'people',   sentence:'people. Many people live in the city. People.' },
+  { word:'friend',   sentence:'friend. He is my best friend. Friend.' },
 ];
 
 let spellWords       = [...SPELL_FALLBACK];
@@ -4549,10 +4788,10 @@ async function startSpelling() {
       spellWords = JSON.parse(cached);
       console.log('✅ Using cached spelling words');
     } else {
-      const prompt = `Generate 8 spelling words for Vivan, a 7-year-old in 2nd Grade in Texas. English is his second language. Mix of CVC words and slightly harder 2nd grade words. For each word provide a short example sentence.
-Return ONLY this JSON array:
-[{"word":"cat","hint":"The cat sat on the mat.","sentence":"cat. The cat sat on the mat. Cat."},...]
-Rules: word must be all lowercase, sentence must say the word at start, in context, and at end (like a spelling bee). 7-10 words.`;
+      const prompt = `Generate 8-10 spelling words for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS). Focus on Dolch 2nd grade sight words and high-frequency words. English is his second language. Do NOT include easy CVC words (cat/dog/hat). Use words like: because, before, around, people, together, friend, should, would, could, always, never, every, during, while, enough, through, their, there, where, these, those, school, water, between.
+Return ONLY this JSON array with NO hint field:
+[{"word":"because","sentence":"because. I was late because I missed the bus. Because."}]
+Rules: word lowercase, sentence says word at start then in context then at end. 8-10 words.`;
 
       const res = await fetch(
         'https://zaagldgqqpfypjlgfuix.supabase.co/functions/v1/ai-proxy',
@@ -4591,7 +4830,7 @@ function loadSpellQuestion() {
 
   document.getElementById('spell-prog').textContent          = (spellCurrentIdx + 1) + ' / ' + spellWords.length;
   document.getElementById('spell-listen-btn').textContent    = '🔊 Hear the word';
-  document.getElementById('spell-hint').textContent          = '';
+  document.getElementById('spell-hint').textContent = ''; // stays empty — no hint shown
   document.getElementById('spell-input').value               = '';
   document.getElementById('spell-input').className           = 'spell-input';
   document.getElementById('spell-input').disabled            = false;
@@ -4613,10 +4852,7 @@ function spellSpeak() {
     { text: w.hint,       rate: 0.88, pitch: 1.0 },
     { text: w.word + '.', rate: 0.75, pitch: 1.0 },
   ], 1200);
-  // Show hint after first word
-  setTimeout(() => {
-    document.getElementById('spell-hint').textContent = '💡 ' + w.hint;
-  }, 1400);
+  // Hint deliberately hidden — kids must spell from memory, not copy
 }
 
 function checkSpelling() {
@@ -5213,7 +5449,7 @@ window.addEventListener('load', () => {
     <div class="spell-card">
       <div style="font-size:0.85rem;font-weight:700;color:#6b7280;margin-bottom:12px;">Listen to the word, then spell it!</div>
       <button class="spell-listen-btn" id="spell-listen-btn" onclick="spellSpeak()">🔊 Hear the word</button>
-      <div class="spell-hint" id="spell-hint"></div>
+      <div class="spell-hint" id="spell-hint" style="display:none;"></div>
       <input class="spell-input" id="spell-input" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Type your spelling…" onkeydown="if(event.key==='Enter')checkSpelling()">
       <button class="spell-check-btn" onclick="checkSpelling()">✅ Check</button>
       <div class="spell-feedback" id="spell-feedback"></div>
