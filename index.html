@@ -204,31 +204,24 @@ body {
   color: #374151;
   margin-bottom: 12px;
 }
-.subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
 .subject-card {
-  border-radius: 16px;
-  padding: 13px 10px 10px;
+  border-radius: 20px;
+  padding: 20px 14px;
   text-align: center;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
   overflow: hidden;
 }
-.subject-card:hover  { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+.subject-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.15); }
 .subject-card:active { transform: translateY(-1px); }
-.subject-card .s-icon  { font-size: 1.9rem; margin-bottom: 4px; }
-.subject-card .s-name  { font-family: 'Baloo 2', cursive; font-size: 0.88rem; font-weight: 800; color: white; line-height: 1.2; }
-.subject-card .s-teks  { font-size: 0.65rem; color: rgba(255,255,255,0.78); margin-top: 1px; }
-.subject-card .s-stars { font-size: 0.78rem; margin-top: 4px; min-height: 16px; }
-.subject-card .s-count { font-size: 0.65rem; color: rgba(255,255,255,0.85); margin-top: 1px; font-weight: 600; }
-/* Weekly progress bar on card */
-.subject-card .s-week-wrap { margin-top: 6px; }
-.subject-card .s-week-bar  {
-  height: 5px; border-radius: 99px; background: rgba(255,255,255,0.25); overflow: hidden; margin-bottom: 2px;
-}
-.subject-card .s-week-fill { height: 100%; border-radius: 99px; background: rgba(255,255,255,0.85); transition: width 0.4s; }
-.subject-card .s-week-txt  { font-size: 0.62rem; color: rgba(255,255,255,0.9); font-weight: 700; }
+.subject-card .s-icon { font-size: 2.4rem; margin-bottom: 8px; }
+.subject-card .s-name { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 800; color: white; }
+.subject-card .s-teks { font-size: 0.72rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
+.subject-card .s-stars { font-size: 0.85rem; margin-top: 6px; }
+.subject-card .s-count { font-size: 0.72rem; color: rgba(255,255,255,0.85); margin-top: 2px; font-weight: 600; }
 
 .sc-math  { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
 .sc-ela   { background: linear-gradient(135deg, #db2777, #f97316); }
@@ -338,51 +331,6 @@ body {
 .review-ans-your-skip    { background: #fef3c7; color: #92400e; }
 .review-ans-correct-ans  { background: #dbeafe; color: #1e40af; }
 .review-icon { font-size: 1.2rem; }
-
-/* ════════════════════════════
-   PARENT PROGRESS CHARTS
-════════════════════════════ */
-.prog-filter-row {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
-}
-.prog-filter-btn {
-  border: 2px solid #e5e7eb; background: white; border-radius: 99px;
-  padding: 5px 14px; font-family: 'Baloo 2', cursive; font-size: 0.8rem;
-  font-weight: 800; cursor: pointer; color: #374151; transition: all 0.15s;
-}
-.prog-filter-btn.active {
-  background: linear-gradient(135deg,#1e3a5f,#7c3aed); color: white; border-color: transparent;
-}
-.prog-chart-wrap {
-  background: white; border-radius: 18px; padding: 14px 14px 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 14px; overflow-x: auto;
-}
-.prog-chart-title {
-  font-family: 'Baloo 2', cursive; font-size: 0.88rem; font-weight: 800;
-  color: #374151; margin-bottom: 10px;
-}
-.prog-bar-chart {
-  display: flex; align-items: flex-end; gap: 5px; height: 110px; padding-bottom: 22px; position: relative;
-}
-.prog-bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 24px; max-width: 44px; }
-.prog-bar-outer {
-  width: 100%; border-radius: 5px 5px 0 0; background: #f3f4f6; position: relative;
-  height: 80px; display: flex; align-items: flex-end;
-}
-.prog-bar-inner {
-  width: 100%; border-radius: 5px 5px 0 0; min-height: 3px;
-  background: linear-gradient(180deg,#7c3aed,#3b82f6); transition: height 0.4s ease;
-}
-.prog-bar-inner.pct-high { background: linear-gradient(180deg,#f59e0b,#ef4444); }
-.prog-bar-inner.pct-good { background: linear-gradient(180deg,#059669,#0891b2); }
-.prog-bar-label { font-size: 0.58rem; font-weight: 700; color: #6b7280; margin-top: 3px; text-align: center; line-height: 1.2; }
-.prog-bar-pct   { font-size: 0.58rem; font-weight: 800; color: #374151; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
-.prog-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-.prog-table th { background: #f8fafc; padding: 7px 10px; text-align: left; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; font-size: 0.78rem; }
-.prog-table td { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.prog-table tr:last-child td { border-bottom: none; }
-.prog-pct-chip { border-radius: 6px; padding: 2px 8px; font-weight: 800; font-size: 0.75rem; }
-
 #screen-checkin {
   background: linear-gradient(160deg, #1e3a5f 0%, #1e40af 25%, #f0f9ff 25%);
 }
@@ -712,14 +660,6 @@ body {
   font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 4px; margin-left: 8px;
 }
 
-/* ── Writing keyboard input ── */
-.write-input {
-  width: 100%; border: 2px solid #e5e7eb; border-radius: 12px;
-  padding: 12px 14px; font-family: 'Nunito', sans-serif; font-size: 1rem;
-  font-weight: 600; outline: none; transition: border-color 0.2s;
-}
-.write-input:focus { border-color: #d97706; }
-
 /* ── PHONICS ── */
 .phonics-sound-display { text-align: center; padding: 24px 20px 10px; }
 .phonics-letter {
@@ -992,7 +932,7 @@ body {
 .h-welcome { font-family: 'Baloo 2', cursive; font-size: 1.7rem; font-weight: 800; color: #78350f; }
 .h-sub { color: #92400e; font-size: 0.9rem; margin-bottom: 16px; }
 
-.h-subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.h-subject-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
 .h-subject-card {
   border-radius: 22px;
   padding: 22px 12px;
@@ -1000,14 +940,10 @@ body {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.h-subject-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
-.h-subject-card .hs-icon  { font-size: 2.2rem; margin-bottom: 5px; }
-.h-subject-card .hs-name  { font-family: 'Baloo 2', cursive; font-size: 0.92rem; font-weight: 800; color: white; }
-.h-subject-card .hs-stars { font-size: 0.82rem; margin-top: 4px; min-height: 16px; }
-.h-subject-card .hs-week-wrap { margin-top: 5px; }
-.h-subject-card .hs-week-bar  { height: 5px; border-radius: 99px; background: rgba(255,255,255,0.25); overflow: hidden; margin-bottom: 2px; }
-.h-subject-card .hs-week-fill { height: 100%; border-radius: 99px; background: rgba(255,255,255,0.85); transition: width 0.4s; }
-.h-subject-card .hs-week-txt  { font-size: 0.62rem; color: rgba(255,255,255,0.9); font-weight: 700; }
+.h-subject-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
+.h-subject-card .hs-icon { font-size: 3rem; margin-bottom: 8px; }
+.h-subject-card .hs-name { font-family: 'Baloo 2', cursive; font-size: 1.05rem; font-weight: 800; color: white; }
+.h-subject-card .hs-stars { font-size: 0.9rem; margin-top: 6px; }
 
 .sc-nums   { background: linear-gradient(135deg, #f59e0b, #ef4444); }
 .sc-alpha  { background: linear-gradient(135deg, #8b5cf6, #db2777); }
@@ -1337,6 +1273,52 @@ body {
 }
 
 /* ════════════════════════════
+   CURRICULUM PROGRESS MAP
+════════════════════════════ */
+.curr-subject-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.curr-subject-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.curr-subject-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+.curr-dots-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.curr-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+.curr-dot.mastered { border-radius: 3px; }
+.curr-dot.current  { border-radius: 50%; box-shadow: 0 0 0 2px white, 0 0 0 3px currentColor; }
+.curr-topic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.curr-topic-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+.curr-topic-sub {
+  font-size: 0.72rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* ════════════════════════════
    RESPONSIVE
 ════════════════════════════ */
 @media (max-width: 600px) {
@@ -1482,13 +1464,6 @@ body {
         <div class="s-stars" id="v-voice-stars">—</div>
         <div class="s-count" id="v-voice-count">0 sessions</div>
       </div>
-      <div id="v-card-staar" class="subject-card" style="background:linear-gradient(135deg,#b45309,#d97706);grid-column:span 3;" onclick="startQuiz('vivan','staar')">
-        <div class="s-icon">⭐</div>
-        <div class="s-name">STAAR Test Prep</div>
-        <div class="s-teks">3rd Grade Texas · Reading · Maths · Science</div>
-        <div class="s-stars" id="v-staar-stars">—</div>
-        <div class="s-count" id="v-staar-count">0 quizzes</div>
-      </div>
     </div>
 
     <div class="section-title">📋 Recent Activity</div>
@@ -1498,6 +1473,12 @@ body {
         <div class="activity-text">No quizzes yet — pick a subject above!</div>
         <div class="activity-stars"></div>
       </div>
+    </div>
+
+    <!-- Curriculum Progress Map -->
+    <div class="section-title" style="margin-top:20px;">🗺️ My Learning Journey</div>
+    <div style="background:white;border-radius:20px;padding:18px 16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:20px;" id="v-curriculum-map">
+      <div style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:10px;">Loading your curriculum…</div>
     </div>
   </div>
 </div>
@@ -1666,6 +1647,8 @@ body {
 ═══════════════════════════════════ -->
 <div id="screen-results" class="screen">
   <div class="results-card" id="results-card">
+    <!-- Curriculum mastery badge — shown when topic is completed -->
+    <div id="res-mastery-badge" style="display:none;background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:16px;padding:14px 16px;margin-bottom:16px;text-align:center;animation:popIn 0.5s cubic-bezier(.34,1.56,.64,1);"></div>
     <div class="res-confetti" id="res-confetti">🎉🎊🏆</div>
     <div class="res-score" id="res-score">8/10</div>
     <div class="res-pct" id="res-pct">80%</div>
@@ -1737,32 +1720,17 @@ body {
       </div>
     </div>
 
-    <div class="parent-section-title" style="margin-top:8px;">📈 Progress by Subject <button class="clear-btn" onclick="clearHistory()" style="float:right;">Clear All</button></div>
-
-    <!-- Kid selector -->
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <button class="prog-filter-btn active" id="pkid-vivan"   onclick="selectProgKid('vivan')">👦 Vivan</button>
-      <button class="prog-filter-btn"        id="pkid-hridaan" onclick="selectProgKid('hridaan')">👶 Hridaan</button>
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <button onclick="openCurriculumManager()" style="flex:1;background:linear-gradient(135deg,#1e3a5f,#7c3aed);color:white;border:none;border-radius:14px;padding:13px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(30,58,95,0.3);">
+        📚 Curriculum Manager
+      </button>
     </div>
-
-    <!-- Subject filter -->
-    <div class="prog-filter-row" id="p-subject-filters"></div>
-
-    <!-- Bar chart -->
-    <div class="prog-chart-wrap">
-      <div class="prog-chart-title" id="p-chart-title">Score % — last 14 days</div>
-      <div class="prog-bar-chart" id="p-bar-chart">
-        <div style="color:#9ca3af;font-size:0.85rem;margin:auto;">Loading…</div>
-      </div>
-    </div>
-
-    <!-- Detail table -->
-    <div class="prog-chart-wrap">
-      <div class="prog-chart-title">📋 All Results</div>
-      <table class="prog-table">
-        <thead><tr><th>Date</th><th>Subject</th><th>Score</th><th>Stars</th></tr></thead>
-        <tbody id="p-prog-tbody">
-          <tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:16px;">No data yet.</td></tr>
+    <div class="parent-section-title" style="margin-top:8px;">📋 Quiz History <button class="clear-btn" onclick="clearHistory()" style="float:right;">Clear All</button></div>
+    <div class="history-table-wrap">
+      <table class="history-table">
+        <thead><tr><th>Kid</th><th>Subject</th><th>Score</th><th>Stars</th><th>Date</th></tr></thead>
+        <tbody id="p-history-tbody">
+          <tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -1825,6 +1793,334 @@ body {
 ════════════════════════════════════════════ */
 const SUPABASE_URL = 'https://zaagldgqqpfypjlgfuix.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphYWdsZGdxcXBmeXBqbGdmdWl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjUxOTMsImV4cCI6MjA5MDIwMTE5M30.uz1G6JOPfituQ34wBbkIHgACuLC7NgOHEUGnvFs37O0';
+
+/* ════════════════════════════════════════════
+   CURRICULUM SYSTEM — Phase 1
+   Hardcoded topic maps per subject (75% base).
+   AI adds revision topics weekly (25%).
+   Topics stored in Supabase curriculum_progress table.
+   Mastery = 70%+ twice on same topic → advance.
+════════════════════════════════════════════ */
+
+/* ── Curriculum maps — ordered topic lists per subject ── */
+const CURRICULUM = {
+  vivan: {
+    math: [
+      { name: 'Place Value & Number Sense',          desc: 'Read, write, compare numbers to 10,000 and 100,000. Order and round.' },
+      { name: 'Addition & Subtraction',              desc: 'Multi-digit addition and subtraction within 1,000 with regrouping.' },
+      { name: 'Multiplication Basics',               desc: 'Groups, arrays, repeated addition, times tables 2×–5×.' },
+      { name: 'Multiplication & Division Fluency',   desc: 'Times tables 6×–10×, fact families, corresponding division facts.' },
+      { name: 'Multi-step Word Problems',            desc: '2-step problems, choosing the right operation, explaining reasoning.' },
+      { name: 'Fractions — Understanding & Number Line', desc: 'Halves, thirds, quarters, eighths. Fractions as distances from 0 on a number line.' },
+      { name: 'Equivalent & Comparing Fractions',   desc: '½=2/4=3/6. Compare fractions with same numerator or denominator.' },
+      { name: 'Area & Perimeter',                   desc: 'Count unit squares, multiply rows × columns, find missing side lengths.' },
+      { name: 'Time & Measurement',                 desc: 'Telling time to nearest minute, time intervals, liquid volume, weight.' },
+      { name: 'Data & Graphs',                      desc: 'Bar graphs, dot plots, pictographs, frequency tables with scaled intervals.' },
+      { name: 'Geometry',                           desc: '2D shapes, quadrilaterals (rhombus, trapezoid, parallelogram), attributes.' },
+      { name: 'Large Numbers & Rounding',           desc: 'Numbers to 100,000. Round to nearest 10 and 100.' },
+      { name: 'Financial Literacy',                 desc: 'Scarcity, cost, credit basics, smart spending.' },
+    ],
+    ela: [
+      { name: 'Nouns',                   desc: 'Common, proper, singular and plural nouns.' },
+      { name: 'Verbs & Tenses',          desc: 'Past, present, future tense. Irregular verbs (ran, ate, went).' },
+      { name: 'Adjectives',              desc: 'Descriptive, comparative (big→bigger→biggest), articles.' },
+      { name: 'Adverbs',                 desc: 'How, when, where. Words ending in -ly.' },
+      { name: 'Pronouns',               desc: 'He, she, they, it, we, I, you. Pronoun-antecedent agreement.' },
+      { name: 'Subject-Verb Agreement',  desc: 'She runs / They run. Matching subject with correct verb form.' },
+      { name: 'Compound Sentences',      desc: 'Joining with conjunctions: and, but, because, so, or.' },
+      { name: 'Contractions',           desc: "It's/its, they're/their, don't, won't, couldn't. Apostrophe use." },
+      { name: 'Punctuation',            desc: 'Commas, apostrophes, quotation marks, end punctuation.' },
+      { name: 'Plurals & Possessives',  desc: "Regular/irregular plurals. Possessive 's." },
+      { name: 'Prefixes',               desc: 'un-, re-, pre-, dis-, mis-. How prefixes change word meaning.' },
+      { name: 'Suffixes',               desc: '-ful, -less, -ness, -tion, -ly. How suffixes change word meaning.' },
+      { name: 'Root Words',             desc: 'Base words, word families, building related words.' },
+      { name: 'Multiple Meaning Words', desc: 'bat, bark, light, run, play. Context determines meaning.' },
+      { name: 'Rhyme & Word Patterns',  desc: 'Word families, onset-rime, recognising patterns.' },
+      { name: 'Vocabulary in Context',  desc: 'Using surrounding text to figure out word meanings.' },
+    ],
+    sci: [
+      { name: 'Matter & Physical Properties',  desc: 'Colour, texture, hardness, mass, volume. Measuring properties.' },
+      { name: 'States of Matter',              desc: 'Solid, liquid, gas. Changes caused by heating and cooling.' },
+      { name: 'Combining Materials',           desc: 'Using physical properties to choose materials for a purpose.' },
+      { name: 'Forces — Push & Pull',          desc: 'Contact vs non-contact forces, gravity, direction of force.' },
+      { name: 'Magnetism',                     desc: 'Attract and repel, magnetic vs non-magnetic materials.' },
+      { name: 'Simple Machines',               desc: 'Lever, pulley, inclined plane, wheel and axle.' },
+      { name: 'Sound Energy',                  desc: 'Vibrations, pitch, volume, how sound travels.' },
+      { name: 'Light Energy',                  desc: 'Reflection, shadows, transparent/opaque/translucent materials.' },
+      { name: 'Life Cycles',                   desc: 'Insect, frog, plant, bird life cycles and stages.' },
+      { name: 'Inherited vs Learned Traits',   desc: 'Born-with traits vs behaviours learned over time.' },
+      { name: 'Adaptations',                   desc: 'How animals and plants survive in their specific habitats.' },
+      { name: 'Food Chains & Food Webs',       desc: 'Producer, consumer, decomposer. Energy flow in ecosystems.' },
+      { name: 'Ecosystems',                    desc: 'Habitats, interdependence, what happens when ecosystems change.' },
+      { name: 'Weather & Water Cycle',         desc: 'Evaporation, condensation, precipitation, cloud types, weather instruments.' },
+      { name: 'Earth Science',                 desc: 'Rocks, soil, weathering, erosion, fossils.' },
+      { name: 'Space',                         desc: 'Planets, moon phases, sun-Earth relationship, solar system.' },
+    ],
+    read: [
+      { name: 'Literal Recall',          desc: 'Answer questions directly from the text. Simple 2-paragraph passages.' },
+      { name: 'Main Idea',               desc: 'Identify the central idea of a passage in your own words.' },
+      { name: 'Inference — Basic',       desc: 'Why did the character do this? Use clues from the text.' },
+      { name: 'Vocabulary in Context',   desc: 'What does this word mean in this passage?' },
+      { name: 'Cause & Effect',          desc: 'What caused X to happen? What happened because of Y?' },
+      { name: "Author's Purpose",        desc: 'Did the author write to inform, entertain, or persuade?' },
+      { name: 'Mixed Question Types',    desc: 'All 6 question types. 3-paragraph passages.' },
+      { name: 'Text Structure',          desc: 'Sequence, compare/contrast, problem/solution structures.' },
+      { name: 'Inference — Advanced',    desc: 'Predict, identify theme, understand character motivation.' },
+      { name: 'STAAR-style Passages',    desc: 'Full difficulty. All question types. Complex passages.' },
+    ],
+    write: [
+      { name: 'Sentence Basics',          desc: 'Capital letter + end punctuation. Simple complete sentences.' },
+      { name: 'Subject-Verb Agreement',   desc: 'Spot and fix subject-verb errors in sentences.' },
+      { name: 'Compound Sentences',       desc: 'Join sentences with and/but/because/so correctly.' },
+      { name: 'Contractions',            desc: "Write contractions correctly. Apostrophe in the right place." },
+      { name: 'Descriptive Writing',      desc: 'Write 2-3 sentences describing a scene or object vividly.' },
+      { name: 'Narrative Writing',        desc: 'Write a short story beginning with a character and problem.' },
+      { name: 'Expository Writing',       desc: 'Explain how something works or give reasons for something.' },
+      { name: 'Prefixes & Suffixes',      desc: 'Use words with un-, re-, -ful, -less correctly in sentences.' },
+      { name: 'Editing & Revision',       desc: 'Find and fix multiple error types in a paragraph.' },
+      { name: 'STAAR Writing Prep',       desc: 'Full paragraph response to a prompt. All conventions.' },
+    ],
+    spell: [
+      { name: 'Dolch 2nd Grade Sight Words',  desc: 'because, before, around, always, would, should, could, every.' },
+      { name: 'Dolch 3rd Grade Sight Words',  desc: 'carry, draw, drink, eight, fall, far, full, got, grow, hold.' },
+      { name: 'Long Vowel Word Families',     desc: 'make/take/cake/lake, light/night/fight/sight, bone/tone/stone.' },
+      { name: 'R-controlled Vowels',          desc: 'car/far, bird/third, corn/born, burn/turn, her/fern.' },
+      { name: 'Homophones',                   desc: 'there/their/they're, to/too/two, meet/meat, hear/here, write/right.' },
+      { name: 'Contractions Spelling',        desc: "don't, won't, it's, they're, couldn't, shouldn't, haven't." },
+      { name: 'Prefixes Spelling',            desc: 'unhappy, redo, preview, disagree, misspell, prepay.' },
+      { name: 'Suffixes Spelling',            desc: 'careful, helpless, kindness, action, joyful, darkness.' },
+      { name: 'Multisyllabic Words',          desc: 'together, important, different, another, remember, between.' },
+      { name: 'Silent Letters',              desc: 'know, write, lamb, knight, wrap, kneel, comb, thumb.' },
+      { name: 'Greek & Latin Roots',         desc: 'bicycle, triangle, telephone, microscope, aquarium, transport.' },
+      { name: '4th Grade Challenge Words',   desc: 'caught, through, believe, receive, necessary, beautiful, rhythm.' },
+    ],
+  },
+};
+
+/* ── State: current curriculum position per subject ── */
+let vivCurriculum = {}; // { math: { topicIdx:0, passCount:0, topicId:null }, ... }
+let curriculumLoaded = false;
+
+/* ── Load curriculum progress from Supabase ── */
+async function loadCurriculumProgress(kid) {
+  try {
+    const rows = await sbFetch('curriculum_progress?kid=eq.' + kid + '&select=*');
+    const result = {};
+    if (rows && rows.length > 0) {
+      rows.forEach(r => {
+        result[r.subject] = {
+          topicIdx:   r.topic_idx   || 0,
+          passCount:  r.pass_count  || 0,
+          masteredCount: r.mastered_count || 0,
+          topicId:    r.id,
+        };
+      });
+    }
+    // Fill in any missing subjects with defaults
+    if (kid === 'vivan') {
+      const subjects = ['math','ela','sci','read','write','spell'];
+      subjects.forEach(sub => {
+        if (!result[sub]) result[sub] = { topicIdx: 0, passCount: 0, masteredCount: 0, topicId: null };
+      });
+    }
+    return result;
+  } catch(e) {
+    console.warn('Curriculum load failed:', e.message);
+    // Return defaults
+    const result = {};
+    ['math','ela','sci','read','write','spell'].forEach(sub => {
+      result[sub] = { topicIdx: 0, passCount: 0, masteredCount: 0, topicId: null };
+    });
+    return result;
+  }
+}
+
+/* ── Save/upsert curriculum progress for one subject ── */
+async function saveCurriculumProgress(kid, subject, topicIdx, passCount, masteredCount) {
+  try {
+    const topics = CURRICULUM[kid]?.[subject];
+    const topicName = topics?.[topicIdx]?.name || 'Unknown Topic';
+    // Try update first, then insert
+    const existing = await sbFetch('curriculum_progress?kid=eq.' + kid + '&subject=eq.' + subject);
+    if (existing && existing.length > 0) {
+      await sbFetch('curriculum_progress?kid=eq.' + kid + '&subject=eq.' + subject, {
+        method: 'PATCH',
+        prefer: 'return=minimal',
+        body: JSON.stringify({ topic_idx: topicIdx, topic_name: topicName, pass_count: passCount, mastered_count: masteredCount, updated_at: new Date().toISOString() }),
+      });
+    } else {
+      await sbFetch('curriculum_progress', {
+        method: 'POST',
+        prefer: 'return=minimal',
+        body: JSON.stringify({ kid, subject, topic_idx: topicIdx, topic_name: topicName, pass_count: passCount, mastered_count: masteredCount }),
+      });
+    }
+    console.log('📚 Curriculum saved:', kid, subject, 'Topic', topicIdx, '(' + topicName + ') passCount:', passCount);
+  } catch(e) {
+    console.warn('Curriculum save failed:', e.message);
+  }
+}
+
+/* ── Get current topic for a kid/subject ── */
+function getCurrentTopic(kid, subject) {
+  const prog = kid === 'vivan' ? vivCurriculum : {};
+  const subProg = prog[subject] || { topicIdx: 0 };
+  const topics = CURRICULUM[kid]?.[subject];
+  if (!topics) return null;
+  const idx = Math.min(subProg.topicIdx, topics.length - 1);
+  return { ...topics[idx], idx, total: topics.length };
+}
+
+/* ── Check mastery after quiz result and advance if earned ── */
+async function checkAndAdvanceCurriculum(kid, subject, pct) {
+  if (!CURRICULUM[kid]?.[subject]) return null; // not a tracked subject
+
+  const prog = kid === 'vivan' ? vivCurriculum : {};
+  if (!prog[subject]) prog[subject] = { topicIdx: 0, passCount: 0, masteredCount: 0 };
+
+  const topics  = CURRICULUM[kid][subject];
+  const current = prog[subject];
+  const passed  = pct >= 70;
+
+  if (passed) current.passCount++;
+
+  let justMastered = null;
+
+  if (current.passCount >= 2 && current.topicIdx < topics.length - 1) {
+    // Topic mastered — advance!
+    justMastered = topics[current.topicIdx].name;
+    current.masteredCount++;
+    current.topicIdx++;
+    current.passCount = 0; // reset for new topic
+    console.log('🏆 Topic mastered! Advancing to:', topics[current.topicIdx]?.name);
+  }
+
+  // Save to Supabase
+  await saveCurriculumProgress(kid, subject, current.topicIdx, current.passCount, current.masteredCount);
+
+  return justMastered; // returns topic name if just mastered, null otherwise
+}
+
+/* ── Render Vivan's curriculum progress map on dashboard ── */
+function renderCurriculumMap() {
+  const container = document.getElementById('v-curriculum-map');
+  if (!container) return;
+
+  const subjects = [
+    { key: 'math',  label: '🔢 Maths',   color: '#3b82f6' },
+    { key: 'ela',   label: '📖 English', color: '#db2877' },
+    { key: 'sci',   label: '🔬 Science', color: '#059669' },
+    { key: 'read',  label: '📚 Reading', color: '#7c3aed' },
+    { key: 'write', label: '✍️ Writing', color: '#d97706' },
+    { key: 'spell', label: '🔤 Spelling', color: '#0891b2' },
+  ];
+
+  container.innerHTML = subjects.map(s => {
+    const topics  = CURRICULUM.vivan[s.key];
+    const prog    = vivCurriculum[s.key] || { topicIdx: 0, passCount: 0 };
+    const idx     = prog.topicIdx;
+    const topic   = topics[idx];
+    const pct     = Math.round((prog.masteredCount || idx) / topics.length * 100);
+
+    const dots = topics.map((t, i) => {
+      let cls = 'curr-dot';
+      if (i < idx) cls += ' mastered';
+      else if (i === idx) cls += ' current';
+      return `<div class="${cls}" title="${t.name}" style="background:${i < idx ? s.color : i === idx ? s.color : '#e5e7eb'};opacity:${i === idx ? 1 : i < idx ? 0.9 : 0.35};"></div>`;
+    }).join('');
+
+    const passNeeded = 2 - (prog.passCount || 0);
+
+    return `<div class="curr-subject-row">
+      <div class="curr-subject-label" style="color:${s.color};">${s.label}</div>
+      <div class="curr-dots-wrap">${dots}</div>
+      <div class="curr-topic-info">
+        <span class="curr-topic-name">${topic?.name || 'Complete!'}</span>
+        <span class="curr-topic-sub">${idx < topics.length ? (passNeeded > 0 ? passNeeded + ' more 70%+ to advance' : '🏆 Ready to advance!') : '✅ All topics done!'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Weekly Monday check — save performance summary ── */
+async function runWeeklyCheck(kid) {
+  const today = new Date();
+  if (today.getDay() !== 1) return; // Only run on Monday
+
+  const weekStart = getWeekStart();
+  try {
+    // Check if already ran this Monday
+    const existing = await sbFetch('weekly_reports?kid=eq.' + kid + '&week_start=eq.' + weekStart);
+    if (existing && existing.length > 0) return; // Already done this week
+
+    // Get last week's results from Supabase
+    const lastMonday = new Date(today);
+    lastMonday.setDate(today.getDate() - 7);
+    const lastMondayStr = lastMonday.toISOString().slice(0, 10);
+
+    const results = await sbFetch('progress?kid=eq.' + kid + '&date=gte.' + lastMondayStr + '&date=lt.' + weekStart + '&order=date.asc');
+
+    if (!results || results.length === 0) return; // No data to analyze
+
+    // Build performance summary per subject
+    const summary = {};
+    results.forEach(r => {
+      if (!summary[r.subject]) summary[r.subject] = { attempts: 0, totalPct: 0, scores: [] };
+      summary[r.subject].attempts++;
+      summary[r.subject].totalPct += r.pct;
+      summary[r.subject].scores.push(r.pct);
+    });
+
+    Object.keys(summary).forEach(sub => {
+      summary[sub].avgPct = Math.round(summary[sub].totalPct / summary[sub].attempts);
+      summary[sub].weak = summary[sub].avgPct < 65;
+    });
+
+    // Ask AI for revision suggestions
+    const weakSubjects = Object.entries(summary)
+      .filter(([, v]) => v.weak)
+      .map(([k, v]) => ({ subject: k, avgPct: v.avgPct, attempts: v.attempts }));
+
+    let aiSuggestions = [];
+    if (weakSubjects.length > 0) {
+      try {
+        const prompt = `Vivan is a 7-year-old ESL student in Texas (TEKS 3rd grade level). Here is his quiz performance last week: ${JSON.stringify(weakSubjects)}. His curriculum topics are: ${JSON.stringify(Object.fromEntries(Object.entries(CURRICULUM.vivan).map(([sub, topics]) => [sub, topics.map(t => t.name)])))}.
+        
+For each weak subject (below 65% average), suggest ONE revision topic to insert before his current topic. Return ONLY a JSON array: [{"subject":"math","topic_name":"Multiplication Revision","description":"Review times tables 2x-5x with mixed practice","insert_before_current":true,"reason":"Average score was 58% on multiplication"}]
+If no suggestions needed return empty array [].`;
+
+        const res = await fetch(SUPABASE_URL + '/functions/v1/ai-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+          body: JSON.stringify({
+            model: 'gemini-2.0-flash', max_tokens: 500,
+            system: 'You are a curriculum advisor. Return ONLY valid JSON array, no markdown.',
+            messages: [{ role: 'user', content: prompt }],
+          }),
+        });
+        const data = await res.json();
+        const text = data.content?.find(b => b.type === 'text')?.text || '[]';
+        aiSuggestions = parseAIResponse(text);
+      } catch(e) { console.warn('AI suggestions failed:', e.message); }
+    }
+
+    // Save weekly report
+    await sbFetch('weekly_reports', {
+      method: 'POST',
+      prefer: 'return=minimal',
+      body: JSON.stringify({
+        kid, week_start: weekStart,
+        performance_summary: summary,
+        ai_suggestions: aiSuggestions,
+        suggestions_status: aiSuggestions.length > 0 ? 'pending' : 'none',
+      }),
+    });
+
+    console.log('📊 Weekly report saved for', kid, '- Suggestions:', aiSuggestions.length);
+  } catch(e) { console.warn('Weekly check failed:', e.message); }
+}
+
+
 
 async function sbFetch(path, options = {}) {
   const url = SUPABASE_URL + '/rest/v1/' + path;
@@ -2089,9 +2385,8 @@ function getSubjectLimits(history) {
    'daily'  = done 2x today → hide
    'weekly' = done 10x this week → hide (unless all subjects are at 10, then 'ok')
 */
-const DAILY_LIMIT   = 2;  // max attempts per subject per day
-const WEEKLY_LIMIT  = 5;  // max attempts per subject per week (hide after this)
-const WEEKLY_TARGET = 7;  // minimum target per subject per week (shown on progress bar)
+const DAILY_LIMIT  = 2;  // max attempts per subject per day
+const WEEKLY_LIMIT = 5;  // max attempts per subject per week
                          // if ALL subjects hit WEEKLY_LIMIT → power user unlock!
 
 function getSubjectStatus(subject, limits, allSubjects) {
@@ -2291,7 +2586,7 @@ function renderDashboard(who, d) {
     document.getElementById('v-total-stars').textContent   = d.totalStars;
     document.getElementById('v-total-quizzes').textContent = d.totalQuizzes;
     document.getElementById('v-streak').textContent        = d.streak;
-    const vivanSubs = ['math','ela','sci','read','write','voice','spell','staar'];
+    const vivanSubs = ['math','ela','sci','read','write','voice','spell'];
     const limits = getSubjectLimits(d.history);
     vivanSubs.forEach(sub => {
       const best    = (d.subjectStars || {})[sub] || 0;
@@ -2324,32 +2619,12 @@ function renderDashboard(who, d) {
   }
 }
 
-/* ── Apply hide logic + weekly bar to a subject card ── */
+/* ── Apply hide logic to a subject card ── */
 function applySubjectCardLimit(cardId, subject, limits, allSubs) {
   const el = document.getElementById(cardId);
   if (!el) return;
   const status = getSubjectStatus(subject, limits, allSubs);
   el.style.display = status === 'ok' ? '' : 'none';
-
-  // Inject / update weekly progress bar
-  const weekly = limits.weekly[subject] || 0;
-  const pct    = Math.min(weekly / WEEKLY_TARGET * 100, 100);
-  const isHCard = el.classList.contains('h-subject-card');
-  const prefix  = isHCard ? 'hs' : 's';
-  let wrapEl = el.querySelector('.' + prefix + '-week-wrap');
-  if (!wrapEl) {
-    wrapEl = document.createElement('div');
-    wrapEl.className = prefix + '-week-wrap';
-    wrapEl.innerHTML = `
-      <div class="${prefix}-week-bar"><div class="${prefix}-week-fill" style="width:${pct}%"></div></div>
-      <div class="${prefix}-week-txt">${weekly}/${WEEKLY_TARGET} this week</div>`;
-    el.appendChild(wrapEl);
-  } else {
-    const fill = wrapEl.querySelector('.' + prefix + '-week-fill');
-    const txt  = wrapEl.querySelector('.' + prefix + '-week-txt');
-    if (fill) fill.style.width = pct + '%';
-    if (txt)  txt.textContent  = weekly + '/' + WEEKLY_TARGET + ' this week';
-  }
 }
 
 /* ── Show/hide power user banner and weekly status ── */
@@ -2385,6 +2660,14 @@ async function loadVivan() {
   updateStreak(local);
   saveKidData('vivan', local);
   renderDashboard('vivan', local);
+
+  // Load curriculum progress
+  vivCurriculum = await loadCurriculumProgress('vivan');
+  curriculumLoaded = true;
+  renderCurriculumMap();
+
+  // Run weekly Monday check in background
+  runWeeklyCheck('vivan');
 
   const cloud = await sbLoadKidData('vivan');
   if (cloud) {
@@ -2465,141 +2748,21 @@ function renderActivity(elId, history, kid) {
   `).join('');
 }
 
-/* ════════════════════════════════════════════
-   PARENT PROGRESS CHART SYSTEM
-════════════════════════════════════════════ */
-
-let progKid     = 'vivan';
-let progSubject = 'all';
-
-const SUBJECT_LABELS = {
-  'all':   { label:'All',      emoji:'📊' },
-  'math':  { label:'Maths',    emoji:'🔢' },
-  'ela':   { label:'English',  emoji:'📖' },
-  'sci':   { label:'Science',  emoji:'🔬' },
-  'read':  { label:'Reading',  emoji:'📚' },
-  'write': { label:'Writing',  emoji:'✍️' },
-  'spell': { label:'Spelling', emoji:'🔤' },
-  'voice': { label:'Read Aloud',emoji:'🎤'},
-  'staar': { label:'STAAR',    emoji:'⭐' },
-  'nums':  { label:'Numbers',  emoji:'🔢' },
-  'alpha': { label:'Alphabet', emoji:'🔤' },
-  'shapes':{ label:'Shapes',   emoji:'🔵' },
-  'phonics':{ label:'Phonics', emoji:'🔊' },
-};
-
-const KID_SUBJECTS = {
-  vivan:   ['all','math','ela','sci','read','write','spell','voice','staar'],
-  hridaan: ['all','nums','alpha','shapes','phonics','voice'],
-};
-
-function selectProgKid(kid) {
-  progKid     = kid;
-  progSubject = 'all';
-  document.querySelectorAll('[id^="pkid-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('pkid-' + kid)?.classList.add('active');
-  renderProgFilters();
-  renderProgressCharts();
-}
-
-function selectProgSubject(sub) {
-  progSubject = sub;
-  renderProgFilters();
-  renderProgressCharts();
-}
-
-function renderProgFilters() {
-  const subs = KID_SUBJECTS[progKid] || ['all'];
-  const row  = document.getElementById('p-subject-filters');
-  if (!row) return;
-  row.innerHTML = subs.map(s => {
-    const info = SUBJECT_LABELS[s] || { label: s, emoji: '📝' };
-    const active = progSubject === s ? ' active' : '';
-    return `<button class="prog-filter-btn${active}" onclick="selectProgSubject('${s}')">${info.emoji} ${info.label}</button>`;
-  }).join('');
-}
-
-function renderProgressCharts() {
-  const data = getKidData(progKid);
-  const history = (data.history || []).slice().sort((a,b) => a.date.localeCompare(b.date));
-
-  // Filter by subject
-  const filtered = progSubject === 'all'
-    ? history
-    : history.filter(h => {
-        const key = h.subject || '';
-        return key === progSubject || key === progKid + '-' + progSubject;
-      });
-
-  // Group by date — average pct per day
-  const byDate = {};
-  filtered.forEach(h => {
-    if (!byDate[h.date]) byDate[h.date] = [];
-    byDate[h.date].push(h);
-  });
-
-  const dates    = Object.keys(byDate).slice(-14); // last 14 days
-  const subLabel = SUBJECT_LABELS[progSubject]?.label || progSubject;
-  const kidName  = progKid === 'vivan' ? 'Vivan' : 'Hridaan';
-
-  // Update chart title
-  const titleEl = document.getElementById('p-chart-title');
-  if (titleEl) titleEl.textContent = `${kidName} — ${subLabel} — last 14 days`;
-
-  // Render bar chart
-  const chartEl = document.getElementById('p-bar-chart');
-  if (chartEl) {
-    if (dates.length === 0) {
-      chartEl.innerHTML = '<div style="color:#9ca3af;font-size:0.85rem;margin:auto;padding:20px;">No data for this period.</div>';
-    } else {
-      chartEl.innerHTML = dates.map(date => {
-        const entries = byDate[date];
-        const avgPct  = Math.round(entries.reduce((s,h) => s + (h.pct||0), 0) / entries.length);
-        const barH    = Math.max(3, Math.round(avgPct * 0.8));
-        const clr     = avgPct >= 80 ? 'pct-high' : avgPct >= 60 ? 'pct-good' : '';
-        const shortDate = date.slice(5); // MM-DD
-        return `<div class="prog-bar-col">
-          <div class="prog-bar-outer">
-            <div class="prog-bar-inner ${clr}" style="height:${barH}px;">
-              <span class="prog-bar-pct">${avgPct}%</span>
-            </div>
-          </div>
-          <div class="prog-bar-label">${shortDate}<br>${entries.length}q</div>
-        </div>`;
-      }).join('');
-    }
-  }
-
-  // Render detail table
-  const tbody = document.getElementById('p-prog-tbody');
-  if (tbody) {
-    if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:16px;">No results yet.</td></tr>';
-    } else {
-      const subNames = subjectNames || {};
-      tbody.innerHTML = filtered.slice().reverse().map(h => {
-        const subKey = h.subject || '';
-        const sName  = subNames[subKey] || subKey.replace(progKid + '-','');
-        const pctChip = h.pct >= 80
-          ? `<span class="prog-pct-chip" style="background:#dcfce7;color:#15803d;">${h.pct}%</span>`
-          : h.pct >= 60
-          ? `<span class="prog-pct-chip" style="background:#fef3c7;color:#92400e;">${h.pct}%</span>`
-          : `<span class="prog-pct-chip" style="background:#fee2e2;color:#b91c1c;">${h.pct}%</span>`;
-        return `<tr>
-          <td style="font-weight:600;color:#6b7280;">${h.date}</td>
-          <td style="font-weight:700;">${sName}</td>
-          <td>${pctChip} ${h.score}/${h.total}</td>
-          <td>${starsStr(h.stars)}</td>
-        </tr>`;
-      }).join('');
-    }
-  }
-}
-
 function renderParentHistory(all) {
-  // Legacy compatibility — now delegated to renderProgressCharts
-  renderProgFilters();
-  renderProgressCharts();
+  const tbody = document.getElementById('p-history-tbody');
+  if (!all || all.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = all.slice().reverse().map(h => `
+    <tr>
+      <td><span class="tag-${h.kid === 'vivan' ? 'v' : 'h'}">${h.kid === 'vivan' ? 'Vivan' : 'Hridaan'}</span></td>
+      <td>${h.subjectName}</td>
+      <td>${h.score}/${h.total} (${h.pct}%)</td>
+      <td>${starsStr(h.stars)}</td>
+      <td>${h.date}</td>
+    </tr>
+  `).join('');
 }
 
 /* ════════════════════════════════════════════
@@ -2659,7 +2822,6 @@ const LOADING_EMOJIS = {
   shapes: ['🔵','🔴','🟡','⬛','🔺'],
   phonics:['🔊','👂','🗣️','🎵','🌟'],
   words:  ['💬','📝','🔤','✏️','📖'],
-  staar:  ['⭐','📊','🔬','📐','📖'],
 };
 
 // Daily cache key — resets each new day
@@ -2670,12 +2832,15 @@ function getCacheKey(kid, subject) {
 // Claude API prompts per subject
 function buildPrompt(kid, subject) {
   if (kid === 'vivan') {
-    const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is significantly AHEAD of grade level — treat him as an advanced 3rd grader. Return ONLY valid JSON, no markdown, no explanation.`;
+    // Get current curriculum topic to focus questions on
+    const currTopic = getCurrentTopic('vivan', subject);
+    const topicFocus = currTopic ? `\n\nCURRENT LEARNING TOPIC: "${currTopic.name}" — ${currTopic.desc}\nFocus ALL questions on this specific topic. This is topic ${currTopic.idx + 1} of ${currTopic.total} in the curriculum.` : '';
+    const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is AHEAD of grade level — treat him as an advanced 3rd grader. Return ONLY valid JSON, no markdown, no explanation.${topicFocus}`;
 
     if (subject === 'math') return `${base}
-Generate 10 maths questions at advanced 3rd grade level. Mix of 6 MCQ and 4 number-input. Topics: multi-digit multiplication (2-digit × 1-digit), long division intro (÷2,÷3,÷4,÷5), fractions (halves/thirds/quarters on a number line), area and perimeter of rectangles, rounding to nearest 10/100, multi-step word problems, place value to ten-thousands.
+Generate 10 maths questions. Mix of 6 MCQ and 4 number-input questions. Slightly above 2nd grade level (early 3rd grade concepts OK): addition/subtraction within 1000, place value, simple multiplication intro, word problems.
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"} or {"text":"question","type":"input","answer":"number as string"}]
-CRITICAL: Double-check every single calculation. All answers must be 100% mathematically correct.`;
+Make sure ALL answers are mathematically correct. Double-check every calculation.`;
 
     if (subject === 'ela') return `${base}
 Generate 10 English language arts questions. All MCQ. Topics: plurals, opposites, verb tense, rhyming words, nouns/verbs/adjectives, simple grammar, fill-in-the-blank sentences. Keep vocabulary simple (ESL-friendly).
@@ -2693,8 +2858,7 @@ Examples of good hints:
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option","hint":"kid-friendly explanation or empty string if not needed"}]`;
 
     if (subject === 'sci') return `${base}
-Generate 10 challenging 3rd grade science questions. All MCQ. Topics: ecosystems and food chains, states of matter (solid/liquid/gas) and changes, life cycles (insect/frog/plant), simple machines (lever/pulley/inclined plane), forces and motion, inherited vs learned traits, rocks and soil, weather patterns and water cycle, adaptations, photosynthesis basics.
-Make questions genuinely challenging — require thinking, not just recall.
+Generate 10 science questions. All MCQ. Topics: animals (habitats, diet, classification), plants, weather, simple forces, human body, materials. Slightly above 2nd grade (3rd grade OK).
 Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"}]`;
 
     if (subject === 'read') return `${base}
@@ -2702,59 +2866,37 @@ Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on 
 Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["a","b","c","d"],"answer":"correct option"}]}
 The answer MUST be directly supported by the passage text.`;
 
-    if (subject === 'staar') return `${base}
-Generate 12 STAAR-style practice questions for a student preparing for the Texas 3rd Grade STAAR exam. Mix of Reading, Maths, and Science — 4 questions each.
-READING questions: short passage then comprehension questions (main idea, author purpose, vocabulary in context, make inferences, text structure).
-MATHS questions: multi-step word problems, fractions, area/perimeter, multiplication/division, data/graphs — all at STAAR rigor level (harder than typical 3rd grade).
-SCIENCE questions: ecosystems, matter, forces, organisms, Earth science — STAAR format with 4 answer choices.
-Make questions genuinely test-like — tricky distractors, require careful reading.
-Return JSON array: [{"text":"question or passage+question","type":"mcq","options":["A) option","B) option","C) option","D) option"],"answer":"A) correct option","subject":"Reading|Maths|Science"}]`;
-
     if (subject === 'write') return `${base}
-Generate 10 sentence-building exercises. The child will TYPE the complete sentence from memory using a keyboard — no drag and drop.
-Give 4-7 shuffled words. The child must type the COMPLETE correct sentence including capital letter at start and correct punctuation at end (full stop or question mark or exclamation mark).
-Make sentences interesting and varied: statements, questions, exclamations. Mix simple and slightly complex.
-Return JSON array of 10:
-[{"type":"build","instruction":"Type the words in the correct order as a sentence:","words":["shuffled","word","array"],"answer":"The complete correct sentence with capital letter and punctuation."}]
-The answer field must include the capital letter and end punctuation exactly. Example: "The big dog ran to the park."`;
+Generate 5 sentence-builder questions and 5 spot-the-mistake questions for a 7-year-old (ESL).
+Sentence builders: give 4-6 shuffled words to arrange into a correct sentence.
+Spot the mistake: give 4 options, only ONE is grammatically correct.
+Return JSON array of 10: 
+[{"type":"build","instruction":"Put the words in the right order:","words":["shuffled","word","array"],"answer":"The correct sentence with capital and full stop."},
+{"type":"mistake","instruction":"Which sentence is correct?","options":["opt1","opt2","opt3","opt4"],"answer":"The correct option exactly as written"}]
+Ensure the correct answer in spot-the-mistake is always one of the 4 options.`;
   }
 
   if (kid === 'hridaan') {
-    const base = `You are generating quiz questions for Hridaan, a 4-year-old in Pre-K in Texas. English is his second language. He is ahead of typical Pre-K level — treat as an advanced Pre-K / early Kindergarten learner. His parent will read questions aloud. All questions must be tap-based (MCQ only). Use simple emoji. Return ONLY valid JSON, no markdown.`;
+    const base = `You are generating quiz questions for Hridaan, a 3-year-old in Pre-K in Texas. English is his second language. His parent will read questions aloud. All questions must be tap-based (multiple choice only, no typing). Use simple emoji labels in options. Return ONLY valid JSON, no markdown.`;
 
     if (subject === 'nums') return `${base}
-Generate 8 maths questions at advanced Pre-K / early KG level. Mix: addition within 20, subtraction within 10, skip counting by 2s and 5s, what comes before/after (numbers 1-30), simple multiplication concept ("3 groups of 2 apples = ?"), number comparisons up to 30.
-Return JSON array: [{"emoji":"🍎🍎🍎","text":"3 + 4 = ?","options":["5","6","7","8"],"answer":"7"}]
-Make all calculations correct.`;
+Generate 8 number questions. Count objects (use emoji), which is more/less, what comes before/after (numbers 1-10).
+Each option should be a single number or emoji string.
+Return JSON array: [{"emoji":"🍎🍎🍎","text":"How many apples?","options":["1","2","3","4"],"answer":"3"}]`;
 
     if (subject === 'alpha') return `${base}
-Generate 8 challenging alphabet questions for an advanced Pre-K learner. Mix of:
-- Alphabet sequence: "What letter comes AFTER G?" / "What comes BEFORE M?"
-- Missing letter: "A, B, _, D — what is missing?"
-- Uppercase/lowercase match: "Which is the lowercase of B?"
-- Word initial sound: "Which word starts with the letter S?"
-- Alphabetical order: "Which comes FIRST in the alphabet: D, B, or F?"
-Use emoji to illustrate options where helpful.
-Return JSON array: [{"emoji":"🔤","text":"What letter comes after G?","options":["F","H","I","J"],"answer":"H"}]`;
+Generate 8 alphabet questions. "X is for ___?" or "Which starts with /x/?" using familiar objects with emoji. Letters A-E only (early learner).
+Options should include emoji + word like "🍎 Apple".
+Return JSON array: [{"emoji":"🍎","text":"A is for…?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
 
     if (subject === 'shapes') return `${base}
-Generate 8 advanced shapes questions for Pre-K/KG:
-- 3D shapes: cube, sphere, cylinder, cone — identify by name or everyday object
-- Count sides and corners: "A triangle has how many sides?"
-- Shape patterns: "What comes next: circle, square, circle, ___?"
-- Combine shapes: "A rectangle + triangle = what shape?"
-- Real-world: "Which shape is a pizza? Which shape is a box?"
-Return JSON array: [{"emoji":"📦","text":"A box is which 3D shape?","options":["Sphere","Cube","Cylinder","Cone"],"answer":"Cube"}]`;
+Generate 8 shapes and colours questions. Shape of everyday objects, colour recognition, simple pattern ("which is the circle?"). Use bright emoji.
+Return JSON array: [{"emoji":"⚽","text":"A ball is this shape:","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
 
     if (subject === 'phonics') return `${base}
-Generate 8 advanced phonics questions covering all letters A-Z:
-- Blend sounds: "Which word has the /bl/ blend?" 
-- Ending sounds: "What sound does DOG end with?"
-- Short vowels: "Which word has the short /e/ sound?"
-- Rhyming: "Which word rhymes with CAT?"
-- Two-letter blends: sh, ch, th, wh — "Which word starts with /sh/?"
-Use emoji + word options. Make genuinely challenging.
-Return JSON array: [{"letter":"SH","says":"makes the /sh/ sound","prompt":"Which word starts with /sh/?","options":["🐑 Sheep","🐱 Cat","🐶 Dog","🎩 Hat"],"answer":"🐑 Sheep"}]`;
+Generate 8 letter-sound questions. Show a letter, ask which picture starts with that sound. Letters A-T only. Options use emoji + word.
+Return JSON array: [{"letter":"A","says":"says /a/ like in…","prompt":"Which starts with the /a/ sound?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]
+Use only very familiar words a 3-year-old would know.`;
   }
   if (kid === 'prisha') {
     const base = `You are generating quiz questions for Prisha, a 3-year-old in Pre-K following Maharashtra State Board (English medium) curriculum in India. Her parent reads questions aloud. All questions must be tap-based (MCQ only, no typing). Use simple emoji. Return ONLY valid JSON, no markdown.`;
@@ -3114,6 +3256,12 @@ function submitQuiz() {
   };
 
   saveResult(currentUser, currentQuizKey, correct, total, pct, stars);
+
+  // Generate AI quiz summary in background
+  const qDetail = buildQuestionsDetail(qs, quizAnswers);
+  const subject = currentQuizKey.split('-').slice(1).join('-');
+  runQuizSummaryPipeline(currentUser, subject, qDetail, correct, total, pct);
+
   showResults(correct, total, pct, stars, false);
 }
 function loadHridaanQuiz() {
@@ -3188,7 +3336,7 @@ function finishHridaanQuiz() {
 /* ── RESULTS ── */
 const subjectNames = {
   'vivan-math':'Maths','vivan-ela':'English','vivan-sci':'Science',
-  'vivan-read':'Reading','vivan-write':'Writing','vivan-voice':'Read Aloud','vivan-spell':'Spelling','vivan-staar':'STAAR Prep',
+  'vivan-read':'Reading','vivan-write':'Writing','vivan-voice':'Read Aloud','vivan-spell':'Spelling',
   'hridaan-nums':'Numbers','hridaan-alpha':'Alphabet',
   'hridaan-shapes':'Shapes & Colours','hridaan-phonics':'Phonics',
   'hridaan-voice':'Voice Phonics',
@@ -3201,6 +3349,123 @@ const subjectNames = {
   'rutvik-shapes':'Shapes & Colours','rutvik-phonics':'Phonics',
   'rutvik-words':'Simple Words','rutvik-voice':'Voice Phonics',
 };
+
+/* ════════════════════════════════════════════
+   AI QUIZ SUMMARY SYSTEM
+   After every quiz, captures detailed Q&A data
+   and asks Gemini to generate an insight summary.
+   Saved to quiz_summaries table in Supabase.
+════════════════════════════════════════════ */
+
+/* ── Save quiz summary to Supabase ── */
+async function sbSaveQuizSummary(kid, subject, topicName, date, score, total, pct, questionsDetail, aiSummary, weakAreas, strongAreas) {
+  try {
+    await sbFetch('quiz_summaries', {
+      method: 'POST',
+      prefer: 'return=minimal',
+      body: JSON.stringify({
+        kid, subject, topic_name: topicName, date, score, total, pct,
+        questions_detail: questionsDetail,
+        ai_summary: aiSummary,
+        weak_areas: weakAreas,
+        strong_areas: strongAreas,
+      }),
+    });
+    console.log('📝 Quiz summary saved:', kid, subject, aiSummary?.slice(0,60));
+  } catch(e) {
+    console.warn('Quiz summary save failed:', e.message);
+  }
+}
+
+/* ── Generate AI summary of a quiz attempt ── */
+async function generateQuizSummary(kid, subject, topicName, questionsDetail, pct) {
+  // Only for Vivan (tracked kid) and only for academic subjects
+  const trackedSubjects = ['math','ela','sci','read','write','spell','staar'];
+  if (kid !== 'vivan' || !trackedSubjects.includes(subject)) return null;
+
+  try {
+    const wrongQs  = questionsDetail.filter(q => !q.correct);
+    const rightQs  = questionsDetail.filter(q => q.correct);
+
+    const prompt = `You are analyzing a quiz taken by Vivan, a 7-year-old ESL student in Texas (TEKS 3rd grade level).
+
+Subject: ${subject.toUpperCase()}
+Current topic: ${topicName || 'General'}
+Score: ${pct}% (${rightQs.length} correct, ${wrongQs.length} wrong)
+
+Questions he got RIGHT:
+${rightQs.map((q,i) => `${i+1}. "${q.q}" → He answered: "${q.kidAnswer}"`).join('
+') || 'None'}
+
+Questions he got WRONG:
+${wrongQs.map((q,i) => `${i+1}. "${q.q}" → He answered: "${q.kidAnswer || 'no answer'}" (correct: "${q.correctAnswer}")`).join('
+') || 'None'}
+
+Respond with ONLY a JSON object (no markdown):
+{
+  "summary": "2-3 natural sentences explaining what Vivan understands well and where he is struggling. Be specific about the question types or concepts, not just the score. Write as if talking to a parent.",
+  "weak_areas": ["specific concept 1", "specific concept 2"],
+  "strong_areas": ["specific concept 1", "specific concept 2"]
+}
+
+weak_areas and strong_areas should be specific (e.g. "7× and 8× times tables" not just "multiplication"). Max 3 items each. If score is 100% weak_areas should be empty.`;
+
+    const res = await fetch(SUPABASE_URL + '/functions/v1/ai-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({
+        model: 'gemini-2.0-flash', max_tokens: 400,
+        system: 'You are a children's learning analyst. Return ONLY valid JSON, no markdown fences.',
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    const data = await res.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || '';
+    const parsed = parseAIResponse(text);
+    return {
+      summary:      parsed.summary || '',
+      weakAreas:    parsed.weak_areas || [],
+      strongAreas:  parsed.strong_areas || [],
+    };
+  } catch(e) {
+    console.warn('Quiz summary AI failed:', e.message);
+    return null;
+  }
+}
+
+/* ── Build questions detail array from quiz answers ── */
+function buildQuestionsDetail(questions, answers) {
+  return questions.map((q, i) => {
+    const kidAnswer   = (answers[i] || '').toString().trim();
+    const correctAnswer = q.answer.toString().trim();
+    const correct     = kidAnswer.toLowerCase() === correctAnswer.toLowerCase();
+    return {
+      q:             q.text || q.instruction || '',
+      kidAnswer:     kidAnswer || null,
+      correctAnswer: correctAnswer,
+      correct,
+      type:          q.type || 'mcq',
+    };
+  });
+}
+
+/* ── Full post-quiz summary pipeline ── */
+async function runQuizSummaryPipeline(kid, subject, questionsDetail, score, total, pct) {
+  const topic     = getCurrentTopic(kid, subject);
+  const topicName = topic?.name || 'General';
+  const today     = getToday();
+
+  // Generate AI summary in background (don't block results screen)
+  const aiResult = await generateQuizSummary(kid, subject, topicName, questionsDetail, pct);
+
+  await sbSaveQuizSummary(
+    kid, subject, topicName, today, score, total, pct,
+    questionsDetail,
+    aiResult?.summary || null,
+    aiResult?.weakAreas || [],
+    aiResult?.strongAreas || [],
+  );
+}
 
 function saveResult(kid, quizKey, correct, total, pct, stars) {
   const d = getKidData(kid);
@@ -3220,12 +3485,35 @@ function saveResult(kid, quizKey, correct, total, pct, stars) {
 
   // Also save to Supabase for cross-device sync
   sbSaveResult(kid, subject, sName, correct, total, pct, stars, today);
+
+  // Check curriculum mastery and advance topic if earned
+  checkAndAdvanceCurriculum(kid, subject, pct).then(justMastered => {
+    if (justMastered) {
+      // Store for results screen to show badge
+      window._justMasteredTopic = justMastered;
+    }
+    // Refresh progress map
+    if (kid === 'vivan') renderCurriculumMap();
+  });
 }
 
 function showResults(correct, total, pct, stars, isHridaan) {
   document.getElementById('res-score').textContent = correct + '/' + total;
   document.getElementById('res-pct').textContent   = pct + '%';
   document.getElementById('res-stars').textContent = starsStr(stars);
+
+  // Show mastery badge if topic just mastered
+  const masteredBadge = document.getElementById('res-mastery-badge');
+  const justMastered = window._justMasteredTopic;
+  if (masteredBadge) {
+    if (justMastered) {
+      masteredBadge.style.display = 'block';
+      masteredBadge.innerHTML = `<div style="font-size:2rem;margin-bottom:4px;">🏆</div><div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#92400e;">Topic Mastered!</div><div style="font-size:0.88rem;font-weight:700;color:#78350f;margin-top:2px;">${justMastered}</div><div style="font-size:0.78rem;color:#92400e;margin-top:4px;">Moving to the next topic! 🚀</div>`;
+      window._justMasteredTopic = null;
+    } else {
+      masteredBadge.style.display = 'none';
+    }
+  }
 
   let msg, sub, confetti;
   if (pct === 100)     { msg='Perfect! Amazing! 🏆'; sub='You got everything right!'; confetti='🎉🌟🏆'; }
@@ -3368,6 +3656,15 @@ function submitReading() {
   };
 
   saveResult('vivan', 'vivan-read', correct, total, pct, stars);
+
+  // Generate AI quiz summary in background
+  const rDetail = quiz.questions.map((q, i) => ({
+    q: q.text, kidAnswer: readingAnswers[i] || null,
+    correctAnswer: q.answer, correct: (readingAnswers[i]||'').toLowerCase().trim() === q.answer.toLowerCase().trim(),
+    type: 'mcq',
+  }));
+  runQuizSummaryPipeline('vivan', 'read', rDetail, correct, total, pct);
+
   showResults(correct, total, pct, stars, false);
 }
 
@@ -3391,27 +3688,22 @@ function loadWritingQuiz() {
 }
 
 function buildSentenceCard(q, i) {
-  // Show shuffled words as reference (read-only) + keyboard input
+  // Shuffle words for display
   const shuffled = [...q.words].sort(() => Math.random() - 0.5);
-  writingSentences[i] = { correct: q.answer };
-  const tiles = shuffled.map(w =>
-    `<span class="word-tile" style="cursor:default;opacity:0.85;">${w}</span>`
+  writingSentences[i] = { placed: [], available: [...shuffled], correct: q.answer };
+  const tiles = shuffled.map((w,wi) =>
+    `<span class="word-tile" id="wtile-${i}-${wi}" onclick="placeWord(${i},${wi},'${w}')">${w}</span>`
   ).join('');
   return `
     <div class="q-card" id="wq-${i}" style="margin-bottom:16px;">
       <div class="q-num-badge" style="background:linear-gradient(135deg,#d97706,#f59e0b);">${i+1}</div>
       <div class="q-text">${q.instruction}</div>
-      <div class="word-bank" id="wbank-${i}" style="margin-bottom:12px;">${tiles}</div>
-      <div style="font-size:0.8rem;font-weight:700;color:#6b7280;margin-bottom:6px;">
-        ✏️ Type the full sentence — Capital letter + punctuation at the end!
-      </div>
-      <input class="write-input" id="winput-${i}" type="text"
-        autocomplete="off" autocorrect="off" spellcheck="false"
-        placeholder="Type your sentence here…"
-        onkeydown="if(event.key===\'Enter\')checkTypedSentence(${i})">
-      <div style="margin-top:8px;display:flex;gap:8px;">
-        <button class="sb-check-btn" onclick="checkTypedSentence(${i})">Check ✓</button>
-        <button class="sb-clear-btn" onclick="clearTyped(${i})">Clear ↺</button>
+      <div class="word-bank" id="wbank-${i}">${tiles}</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#6b7280;margin-bottom:6px;">Your sentence (tap to remove a word):</div>
+      <div class="sentence-drop" id="wdrop-${i}"><span class="sentence-drop-hint">Tap words above to build your sentence…</span></div>
+      <div style="margin-top:10px;">
+        <button class="sb-check-btn" onclick="checkSentence(${i})">Check ✓</button>
+        <button class="sb-clear-btn" onclick="clearSentence(${i})">Clear ↺</button>
       </div>
       <div class="q-feedback" id="wfb-${i}"></div>
     </div>`;
@@ -3419,7 +3711,7 @@ function buildSentenceCard(q, i) {
 
 function mistakeCard(q, i) {
   const opts = q.options.map(o =>
-    `<button class="q-opt" onclick="writingMCQ(${i},this,\`${o}\`,\`${q.answer}\`)">
+    `<button class="q-opt" onclick="writingMCQ(${i},this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}')">
       ${o}
     </button>`
   ).join('');
@@ -3432,27 +3724,60 @@ function mistakeCard(q, i) {
     </div>`;
 }
 
-function clearTyped(qIdx) {
-  const input = document.getElementById('winput-' + qIdx);
-  if (input) input.value = '';
+function placeWord(qIdx, wordIdx, word) {
+  const s = writingSentences[qIdx];
+  if (!s || s.placed.includes(wordIdx)) return;
+  s.placed.push(wordIdx);
+  // grey out tile
+  const tile = document.getElementById('wtile-' + qIdx + '-' + wordIdx);
+  if (tile) tile.classList.add('used');
+  renderDropZone(qIdx);
+}
+
+function renderDropZone(qIdx) {
+  const s = writingSentences[qIdx];
+  const drop = document.getElementById('wdrop-' + qIdx);
+  if (s.placed.length === 0) {
+    drop.innerHTML = '<span class="sentence-drop-hint">Tap words above to build your sentence…</span>';
+    return;
+  }
+  drop.innerHTML = s.placed.map((wi, pos) => {
+    const word = writingSentences[qIdx].available[wi] || '?';
+    return `<span class="placed-word" onclick="removeWord(${qIdx},${pos})">${word}</span>`;
+  }).join('');
+}
+
+function removeWord(qIdx, pos) {
+  const s = writingSentences[qIdx];
+  const wordIdx = s.placed[pos];
+  s.placed.splice(pos, 1);
+  const tile = document.getElementById('wtile-' + qIdx + '-' + wordIdx);
+  if (tile) tile.classList.remove('used');
+  renderDropZone(qIdx);
+  // clear feedback since changed
+  document.getElementById('wfb-' + qIdx).textContent = '';
+  document.getElementById('wq-' + qIdx).classList.remove('correct','wrong');
+}
+
+function clearSentence(qIdx) {
+  const s = writingSentences[qIdx];
+  s.placed = [];
+  document.querySelectorAll(`[id^="wtile-${qIdx}-"]`).forEach(t => t.classList.remove('used'));
+  renderDropZone(qIdx);
   document.getElementById('wfb-' + qIdx).textContent = '';
   document.getElementById('wq-' + qIdx).classList.remove('correct','wrong');
   delete writingAnswers[qIdx];
   updateWritingProgress();
 }
 
-function checkTypedSentence(qIdx) {
-  const input = document.getElementById('winput-' + qIdx);
-  if (!input || !input.value.trim()) return;
-  const typed   = input.value.trim();
-  const correct = writingSentences[qIdx].correct;
+function checkSentence(qIdx) {
+  const s = writingSentences[qIdx];
+  if (s.placed.length === 0) return;
+  const built = s.placed.map(wi => s.available[wi]).join(' ');
 
-  const normalise = str => str.trim().replace(/\s+/g,' ');
-  const wordsOnly = str => normalise(str).toLowerCase().replace(/[^a-z0-9 ]/g,'');
-  const wordsMatch  = wordsOnly(typed) === wordsOnly(correct);
-  const hasCapital  = /^[A-Z]/.test(typed);
-  const hasPunct    = /[.!?]$/.test(typed);
-  const isRight     = wordsMatch && hasCapital && hasPunct;
+  // Compare word-by-word, case-insensitive, ignoring punctuation
+  const clean = str => str.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g,' ').trim();
+  const isRight = clean(built) === clean(s.correct);
 
   writingAnswers[qIdx] = isRight;
   const fb = document.getElementById('wfb-' + qIdx);
@@ -3460,16 +3785,9 @@ function checkTypedSentence(qIdx) {
   el.classList.remove('correct','wrong');
   el.classList.add(isRight ? 'correct' : 'wrong');
   fb.className = 'q-feedback ' + (isRight ? 'ok' : 'bad');
-
-  if (isRight) {
-    fb.textContent = '✅ Perfect sentence!';
-  } else {
-    let hints = [];
-    if (!wordsMatch) hints.push('Check the word order');
-    if (!hasCapital)  hints.push('Start with a capital letter');
-    if (!hasPunct)    hints.push('End with . or ! or ?');
-    fb.innerHTML = '❌ ' + hints.join(' · ') + '<br><span style="font-size:0.82rem;color:#374151;font-weight:600;">✓ ' + correct + '</span>';
-  }
+  // Show the correct answer with first word capitalised for display only
+  const displayCorrect = s.correct.charAt(0).toUpperCase() + s.correct.slice(1);
+  fb.textContent = isRight ? '✅ Correct!' : '❌ Correct order: ' + displayCorrect;
   updateWritingProgress();
 }
 
@@ -3480,7 +3798,6 @@ function writingMCQ(idx, btn, val, correct) {
   writingAnswers[idx] = val === correct;
   updateWritingProgress();
 }
-
 
 function updateWritingProgress() {
   const total = WRITING_QUIZ.questions.length;
@@ -3538,6 +3855,15 @@ function submitWriting() {
   };
 
   saveResult('vivan', 'vivan-write', correct, total, pct, stars);
+
+  // Generate AI quiz summary in background
+  const wDetail = quiz.questions.map((q, i) => ({
+    q: (q.instruction || '') + (q.type === 'build' ? ' [' + (q.words||[]).join(' ') + ']' : ''),
+    kidAnswer: writingAnswers[i] === true ? '✓ correct' : writingAnswers[i] === false ? '✗ wrong' : null,
+    correctAnswer: q.answer, correct: writingAnswers[i] === true, type: q.type,
+  }));
+  runQuizSummaryPipeline('vivan', 'write', wDetail, correct, total, pct);
+
   showResults(correct, total, pct, stars, false);
 }
 function loadPhonicsQuiz() {
@@ -4247,7 +4573,7 @@ async function loadDiyara() {
     document.getElementById('dy-total-stars').textContent   = cloud.totalStars   || 0;
     document.getElementById('dy-total-quizzes').textContent = cloud.totalQuizzes || 0;
     document.getElementById('dy-streak').textContent        = cloud.streak       || 0;
-    ['math','ela','sci','read','write','voice','spell','staar'].forEach(sub => {
+    ['math','ela','sci','read','write','voice','spell'].forEach(sub => {
       const best = (cloud.subjectStars||{})[sub] || 0;
       const cnt  = (cloud.subjectCount||{})[sub] || 0;
       const sEl  = document.getElementById('dy-' + sub + '-stars');
@@ -4752,18 +5078,15 @@ async function confirmPayReward() {
    VIVAN SPELLING PRACTICE
 ════════════════════════════════════════════ */
 
-// Dolch sight words — 2nd grade level
 const SPELL_FALLBACK = [
-  { word:'because',  sentence:'because. I stayed home because I was sick. Because.' },
-  { word:'before',   sentence:'before. Wash your hands before you eat. Before.' },
-  { word:'around',   sentence:'around. The dog ran around the tree. Around.' },
-  { word:'together', sentence:'together. We work better together. Together.' },
-  { word:'better',   sentence:'better. This is better than yesterday. Better.' },
-  { word:'always',   sentence:'always. She always brushes her teeth. Always.' },
-  { word:'would',    sentence:'would. I would like some water please. Would.' },
-  { word:'should',   sentence:'should. You should eat your vegetables. Should.' },
-  { word:'people',   sentence:'people. Many people live in the city. People.' },
-  { word:'friend',   sentence:'friend. He is my best friend. Friend.' },
+  { word:'cat',    hint:'The cat sat on the mat.',     sentence:'cat. The cat sat on the mat. Cat.' },
+  { word:'dog',    hint:'A dog is a friendly animal.', sentence:'dog. I have a pet dog. Dog.' },
+  { word:'sun',    hint:'The sun shines in the sky.',  sentence:'sun. The sun is very bright. Sun.' },
+  { word:'hat',    hint:'You wear it on your head.',   sentence:'hat. She wore a red hat. Hat.' },
+  { word:'big',    hint:'The opposite of small.',      sentence:'big. The elephant is big. Big.' },
+  { word:'run',    hint:'Moving faster than walking.', sentence:'run. I like to run in the park. Run.' },
+  { word:'fish',   hint:'It lives in water.',          sentence:'fish. The fish swims in the pond. Fish.' },
+  { word:'tree',   hint:'It has leaves and branches.', sentence:'tree. The tree is very tall. Tree.' },
 ];
 
 let spellWords       = [...SPELL_FALLBACK];
@@ -4788,10 +5111,10 @@ async function startSpelling() {
       spellWords = JSON.parse(cached);
       console.log('✅ Using cached spelling words');
     } else {
-      const prompt = `Generate 8-10 spelling words for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS). Focus on Dolch 2nd grade sight words and high-frequency words. English is his second language. Do NOT include easy CVC words (cat/dog/hat). Use words like: because, before, around, people, together, friend, should, would, could, always, never, every, during, while, enough, through, their, there, where, these, those, school, water, between.
-Return ONLY this JSON array with NO hint field:
-[{"word":"because","sentence":"because. I was late because I missed the bus. Because."}]
-Rules: word lowercase, sentence says word at start then in context then at end. 8-10 words.`;
+      const prompt = `Generate 8 spelling words for Vivan, a 7-year-old in 2nd Grade in Texas. English is his second language. Mix of CVC words and slightly harder 2nd grade words. For each word provide a short example sentence.
+Return ONLY this JSON array:
+[{"word":"cat","hint":"The cat sat on the mat.","sentence":"cat. The cat sat on the mat. Cat."},...]
+Rules: word must be all lowercase, sentence must say the word at start, in context, and at end (like a spelling bee). 7-10 words.`;
 
       const res = await fetch(
         'https://zaagldgqqpfypjlgfuix.supabase.co/functions/v1/ai-proxy',
@@ -4830,7 +5153,7 @@ function loadSpellQuestion() {
 
   document.getElementById('spell-prog').textContent          = (spellCurrentIdx + 1) + ' / ' + spellWords.length;
   document.getElementById('spell-listen-btn').textContent    = '🔊 Hear the word';
-  document.getElementById('spell-hint').textContent = ''; // stays empty — no hint shown
+  document.getElementById('spell-hint').textContent          = '';
   document.getElementById('spell-input').value               = '';
   document.getElementById('spell-input').className           = 'spell-input';
   document.getElementById('spell-input').disabled            = false;
@@ -4852,7 +5175,10 @@ function spellSpeak() {
     { text: w.hint,       rate: 0.88, pitch: 1.0 },
     { text: w.word + '.', rate: 0.75, pitch: 1.0 },
   ], 1200);
-  // Hint deliberately hidden — kids must spell from memory, not copy
+  // Show hint after first word
+  setTimeout(() => {
+    document.getElementById('spell-hint').textContent = '💡 ' + w.hint;
+  }, 1400);
 }
 
 function checkSpelling() {
@@ -4916,6 +5242,14 @@ function finishSpelling() {
   };
 
   saveResult('vivan', 'vivan-spell', correct, total, pct, stars);
+
+  // Generate AI quiz summary in background
+  const spDetail = spellWords.map((w, i) => ({
+    q: 'Spell the word: ' + w.word,
+    kidAnswer: spellAnswers[i] === true ? w.word : spellAnswers[i] === false ? '(incorrect)' : null,
+    correctAnswer: w.word, correct: spellAnswers[i] === true, type: 'typed',
+  }));
+  runQuizSummaryPipeline('vivan', 'spell', spDetail, correct, total, pct);
 
   const el = document.getElementById('v-spell-stars');
   if (el) el.textContent = starsStr(stars);
@@ -5008,6 +5342,343 @@ function buildHridaanReviewItems(questions, answers) {
       correct: isCorrect === undefined ? null : isCorrect,
     };
   });
+}
+
+/* ════════════════════════════════════════════
+   CURRICULUM MANAGER — Phase 2
+   Parent UI to view, edit, skip, reorder topics.
+   AI suggestions from weekly reports shown here.
+════════════════════════════════════════════ */
+
+/* ── State ── */
+let cmKid     = 'vivan';
+let cmSubject = 'math';
+let cmTopics  = []; // live editable copy for current kid+subject
+let cmProg    = {}; // curriculum progress for current kid
+
+const CM_SUBJECTS = {
+  vivan:   [
+    { key:'math',  label:'🔢 Maths'   },
+    { key:'ela',   label:'📖 English' },
+    { key:'sci',   label:'🔬 Science' },
+    { key:'read',  label:'📚 Reading' },
+    { key:'write', label:'✍️ Writing' },
+    { key:'spell', label:'🔤 Spelling'},
+  ],
+  hridaan: [
+    { key:'nums',   label:'🔢 Numbers' },
+    { key:'alpha',  label:'🔤 Alphabet'},
+    { key:'shapes', label:'🔵 Shapes'  },
+    { key:'phonics',label:'🔊 Phonics' },
+  ],
+};
+
+/* ── Open curriculum manager from parent dashboard ── */
+async function openCurriculumManager() {
+  cmKid     = 'vivan';
+  cmSubject = 'math';
+  cmProg    = await loadCurriculumProgress(cmKid);
+  await cmRender();
+  showScreen('curriculum');
+}
+
+/* ── Select kid ── */
+async function cmSelectKid(kid) {
+  cmKid     = kid;
+  cmSubject = CM_SUBJECTS[kid]?.[0]?.key || 'math';
+  cmProg    = await loadCurriculumProgress(kid);
+  document.querySelectorAll('[id^="cm-kid-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('cm-kid-' + kid)?.classList.add('active');
+  await cmRender();
+}
+
+/* ── Select subject ── */
+async function cmSelectSubject(sub) {
+  cmSubject = sub;
+  await cmRender();
+}
+
+/* ── Main render ── */
+async function cmRender() {
+  // Build subject tabs
+  const tabsEl = document.getElementById('cm-subject-tabs');
+  if (tabsEl) {
+    tabsEl.innerHTML = (CM_SUBJECTS[cmKid] || []).map(s =>
+      `<button class="prog-filter-btn${cmSubject === s.key ? ' active' : ''}" onclick="cmSelectSubject('${s.key}')">${s.label}</button>`
+    ).join('');
+  }
+
+  // Get topic list — use CURRICULUM map + any custom topics from Supabase
+  const baseTopic = CURRICULUM[cmKid]?.[cmSubject] || [];
+  cmTopics = baseTopic.map((t, i) => ({ ...t, idx: i, source: t.source || 'hardcoded' }));
+
+  // Load custom/AI topics from Supabase for this kid+subject
+  try {
+    const custom = await sbFetch('curriculum_topics?kid=eq.' + cmKid + '&subject=eq.' + cmSubject + '&order=topic_idx.asc');
+    if (custom && custom.length > 0) {
+      // Merge custom topics into the list
+      custom.filter(t => t.source !== 'hardcoded').forEach(t => {
+        const insertAfter = t.topic_idx;
+        cmTopics.splice(insertAfter + 1, 0, {
+          name: t.topic_name, desc: t.description || '',
+          source: t.source || 'custom', dbId: t.id,
+          idx: insertAfter + 1,
+        });
+      });
+    }
+  } catch(e) { /* custom topics optional */ }
+
+  const prog = cmProg[cmSubject] || { topicIdx: 0, passCount: 0, masteredCount: 0 };
+
+  // Progress bar
+  const mastered = prog.masteredCount || prog.topicIdx || 0;
+  const total    = cmTopics.length;
+  const pct      = total > 0 ? Math.round(mastered / total * 100) : 0;
+  document.getElementById('cm-subject-title').textContent = CM_SUBJECTS[cmKid]?.find(s=>s.key===cmSubject)?.label || cmSubject;
+  document.getElementById('cm-progress-text').textContent = mastered + ' / ' + total + ' mastered';
+  document.getElementById('cm-progress-fill').style.width = pct + '%';
+
+  // Render topic list
+  const listEl = document.getElementById('cm-topic-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = cmTopics.map((t, i) => {
+    const isMastered  = i < (prog.masteredCount || prog.topicIdx || 0);
+    const isCurrent   = i === (prog.topicIdx || 0);
+    const isSkipped   = t.skipped || false;
+    const isAI        = t.source === 'ai-revision' || t.source === 'ai';
+    const isCustom    = t.source === 'custom';
+
+    let statusIcon  = isMastered ? '✅' : isCurrent ? '🔄' : '○';
+    let statusColor = isMastered ? '#15803d' : isCurrent ? '#1d4ed8' : '#9ca3af';
+    let cardBg      = isCurrent ? '#eff6ff' : isMastered ? '#f0fdf4' : 'white';
+    let borderColor = isCurrent ? '#3b82f6' : isMastered ? '#22c55e' : '#e5e7eb';
+
+    const sourceTag = isAI     ? '<span style="background:#fef3c7;color:#92400e;border-radius:6px;padding:1px 7px;font-size:0.68rem;font-weight:800;margin-left:6px;">🤖 AI</span>'
+                    : isCustom ? '<span style="background:#e0f2fe;color:#0c4a6e;border-radius:6px;padding:1px 7px;font-size:0.68rem;font-weight:800;margin-left:6px;">✏️ Custom</span>'
+                    : '';
+
+    const passInfo = isCurrent
+      ? `<div style="font-size:0.72rem;color:#6b7280;font-weight:600;margin-top:2px;">${prog.passCount || 0}/2 passes · ${2-(prog.passCount||0)} more 70%+ needed</div>`
+      : isMastered ? `<div style="font-size:0.72rem;color:#15803d;font-weight:700;margin-top:2px;">✓ Mastered</div>` : '';
+
+    return `<div style="background:${cardBg};border:2px solid ${borderColor};border-radius:14px;padding:13px 14px;margin-bottom:8px;">
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="font-size:1.1rem;flex-shrink:0;margin-top:1px;">${statusIcon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Baloo 2',cursive;font-size:0.92rem;font-weight:800;color:#1f2937;">
+            ${i+1}. ${t.name}${sourceTag}
+          </div>
+          ${t.desc ? `<div style="font-size:0.78rem;color:#6b7280;font-weight:600;margin-top:2px;line-height:1.4;">${t.desc}</div>` : ''}
+          ${passInfo}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">
+          ${!isMastered && !isCurrent ? `<button onclick="cmMarkMastered(${i})" style="background:#dcfce7;border:none;border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:800;color:#15803d;cursor:pointer;">✓ Mark done</button>` : ''}
+          ${!isMastered ? `<button onclick="cmSkipTopic(${i})" style="background:#fee2e2;border:none;border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:800;color:#b91c1c;cursor:pointer;">⏭ Skip</button>` : ''}
+          ${i > 0 ? `<button onclick="cmMoveUp(${i})" style="background:#f3f4f6;border:none;border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:700;color:#374151;cursor:pointer;">↑</button>` : ''}
+          ${i < cmTopics.length-1 ? `<button onclick="cmMoveDown(${i})" style="background:#f3f4f6;border:none;border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:700;color:#374151;cursor:pointer;">↓</button>` : ''}
+          ${isCustom || isAI ? `<button onclick="cmRemoveTopic(${i})" style="background:#fee2e2;border:none;border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:700;color:#b91c1c;cursor:pointer;">🗑</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Load + show AI suggestions
+  cmLoadSuggestions();
+
+  // Populate add-topic position selector
+  const sel = document.getElementById('cm-new-topic-after');
+  if (sel) {
+    sel.innerHTML = cmTopics.map((t, i) =>
+      `<option value="${i}">After topic ${i+1}: ${t.name}</option>`
+    ).join('');
+  }
+}
+
+/* ── Load AI suggestions from weekly_reports ── */
+async function cmLoadSuggestions() {
+  const banner = document.getElementById('cm-suggestions-banner');
+  if (!banner) return;
+  try {
+    const reports = await sbFetch(
+      'weekly_reports?kid=eq.' + cmKid + '&suggestions_status=eq.pending&order=created_at.desc&limit=1'
+    );
+    if (!reports || reports.length === 0) { banner.style.display = 'none'; return; }
+    const report      = reports[0];
+    const suggestions = report.ai_suggestions || [];
+    const subSuggestions = suggestions.filter(s => s.subject === cmSubject);
+    if (subSuggestions.length === 0) { banner.style.display = 'none'; return; }
+
+    banner.style.display = 'block';
+    document.getElementById('cm-suggestions-text').textContent =
+      subSuggestions.map(s => s.reason).join(' · ');
+
+    document.getElementById('cm-suggestions-btns').innerHTML = subSuggestions.map((s, i) =>
+      `<button onclick="cmApproveSuggestion('${report.id}',${i},'${s.topic_name}','${s.description||''}')"
+        style="background:#059669;border:none;color:white;border-radius:8px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">
+        ✓ Add "${s.topic_name}"
+      </button>
+      <button onclick="cmDismissSuggestion('${report.id}')"
+        style="background:#f3f4f6;border:none;color:#374151;border-radius:8px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">
+        Dismiss
+      </button>`
+    ).join('');
+  } catch(e) { banner.style.display = 'none'; }
+}
+
+/* ── Mark topic as mastered manually ── */
+async function cmMarkMastered(topicIdx) {
+  const prog = cmProg[cmSubject] || { topicIdx: 0, passCount: 0, masteredCount: 0 };
+  if (topicIdx >= prog.topicIdx) {
+    // Advance to this topic + 1
+    prog.topicIdx     = topicIdx + 1;
+    prog.passCount    = 0;
+    prog.masteredCount = topicIdx + 1;
+    cmProg[cmSubject] = prog;
+    if (cmKid === 'vivan') vivCurriculum[cmSubject] = prog;
+    await saveCurriculumProgress(cmKid, cmSubject, prog.topicIdx, 0, prog.masteredCount);
+    await cmRender();
+    showToast('✅ Topic marked as mastered!');
+  }
+}
+
+/* ── Skip a topic ── */
+async function cmSkipTopic(topicIdx) {
+  if (!confirm('Skip this topic? Vivan will jump to the next one.')) return;
+  const prog = cmProg[cmSubject] || { topicIdx: 0, passCount: 0, masteredCount: 0 };
+  if (topicIdx >= prog.topicIdx) {
+    prog.topicIdx  = Math.max(prog.topicIdx, topicIdx + 1);
+    prog.passCount = 0;
+    cmProg[cmSubject] = prog;
+    if (cmKid === 'vivan') vivCurriculum[cmSubject] = prog;
+    await saveCurriculumProgress(cmKid, cmSubject, prog.topicIdx, 0, prog.masteredCount || 0);
+    await cmRender();
+    showToast('⏭ Topic skipped!');
+  }
+}
+
+/* ── Move topic up ── */
+function cmMoveUp(i) {
+  if (i === 0) return;
+  [cmTopics[i-1], cmTopics[i]] = [cmTopics[i], cmTopics[i-1]];
+  // Update CURRICULUM in memory
+  if (CURRICULUM[cmKid]?.[cmSubject]) {
+    [CURRICULUM[cmKid][cmSubject][i-1], CURRICULUM[cmKid][cmSubject][i]] =
+    [CURRICULUM[cmKid][cmSubject][i],   CURRICULUM[cmKid][cmSubject][i-1]];
+  }
+  cmRender();
+  showToast('↑ Topic moved up');
+}
+
+/* ── Move topic down ── */
+function cmMoveDown(i) {
+  if (i >= cmTopics.length - 1) return;
+  [cmTopics[i], cmTopics[i+1]] = [cmTopics[i+1], cmTopics[i]];
+  if (CURRICULUM[cmKid]?.[cmSubject]) {
+    [CURRICULUM[cmKid][cmSubject][i], CURRICULUM[cmKid][cmSubject][i+1]] =
+    [CURRICULUM[cmKid][cmSubject][i+1], CURRICULUM[cmKid][cmSubject][i]];
+  }
+  cmRender();
+  showToast('↓ Topic moved down');
+}
+
+/* ── Remove AI/custom topic ── */
+async function cmRemoveTopic(i) {
+  const t = cmTopics[i];
+  if (!confirm('Remove "' + t.name + '"?')) return;
+  cmTopics.splice(i, 1);
+  if (t.dbId) {
+    try { await sbFetch('curriculum_topics?id=eq.' + t.dbId, { method:'DELETE', prefer:'return=minimal' }); } catch(e) {}
+  }
+  cmRender();
+  showToast('🗑 Topic removed');
+}
+
+/* ── Add custom topic ── */
+function cmShowAddTopic() {
+  document.getElementById('cm-add-modal').style.display = 'flex';
+}
+function cmHideAddTopic() {
+  document.getElementById('cm-add-modal').style.display = 'none';
+}
+
+async function cmSaveNewTopic() {
+  const name  = document.getElementById('cm-new-topic-name').value.trim();
+  const desc  = document.getElementById('cm-new-topic-desc').value.trim();
+  const after = parseInt(document.getElementById('cm-new-topic-after').value) || 0;
+  if (!name) { alert('Please enter a topic name.'); return; }
+
+  // Save to Supabase curriculum_topics
+  try {
+    await sbFetch('curriculum_topics', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({
+        kid: cmKid, subject: cmSubject,
+        topic_idx: after + 1, topic_name: name,
+        description: desc, source: 'custom', is_active: true,
+      }),
+    });
+  } catch(e) { console.warn('Custom topic save failed:', e.message); }
+
+  // Also insert into local CURRICULUM map
+  if (CURRICULUM[cmKid]?.[cmSubject]) {
+    CURRICULUM[cmKid][cmSubject].splice(after + 1, 0, { name, desc, source: 'custom' });
+  }
+
+  cmHideAddTopic();
+  await cmRender();
+  showToast('✅ Custom topic added!');
+}
+
+/* ── Approve AI suggestion ── */
+async function cmApproveSuggestion(reportId, suggIdx, topicName, description) {
+  const prog = cmProg[cmSubject] || { topicIdx: 0 };
+  const insertAfter = Math.max(0, (prog.topicIdx || 0) - 1);
+
+  // Insert into CURRICULUM map
+  if (CURRICULUM[cmKid]?.[cmSubject]) {
+    CURRICULUM[cmKid][cmSubject].splice(insertAfter + 1, 0, {
+      name: topicName, desc: description, source: 'ai-revision',
+    });
+  }
+
+  // Mark suggestion as reviewed in DB
+  try {
+    await sbFetch('weekly_reports?id=eq.' + reportId, {
+      method: 'PATCH', prefer: 'return=minimal',
+      body: JSON.stringify({ suggestions_status: 'reviewed' }),
+    });
+  } catch(e) {}
+
+  await cmRender();
+  showToast('🤖 AI revision topic added!');
+}
+
+/* ── Dismiss AI suggestion ── */
+async function cmDismissSuggestion(reportId) {
+  try {
+    await sbFetch('weekly_reports?id=eq.' + reportId, {
+      method: 'PATCH', prefer: 'return=minimal',
+      body: JSON.stringify({ suggestions_status: 'reviewed' }),
+    });
+  } catch(e) {}
+  document.getElementById('cm-suggestions-banner').style.display = 'none';
+  showToast('Suggestion dismissed');
+}
+
+/* ── Toast notification ── */
+function showToast(msg) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1f2937;color:white;padding:10px 20px;border-radius:99px;font-family:Nunito,sans-serif;font-size:0.88rem;font-weight:700;z-index:9999;transition:opacity 0.3s;white-space:nowrap;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
 }
 
 window.addEventListener('load', () => {
@@ -5382,6 +6053,76 @@ window.addEventListener('load', () => {
 </div>
 
 <!-- ═══════════════════════════════════
+     SCREEN: CURRICULUM MANAGER (Parent)
+═══════════════════════════════════ -->
+<div id="screen-curriculum" class="screen" style="background:#f8fafc;">
+  <div style="background:linear-gradient(135deg,#1e3a5f,#7c3aed);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;">
+    <button onclick="goHome()" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);color:white;border-radius:10px;padding:7px 14px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;font-size:0.9rem;">← Back</button>
+    <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:white;flex:1;">📚 Curriculum Manager</div>
+  </div>
+
+  <!-- Kid + Subject selectors -->
+  <div style="background:white;padding:14px 18px;border-bottom:2px solid #e5e7eb;flex-shrink:0;">
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button class="prog-filter-btn active" id="cm-kid-vivan" onclick="cmSelectKid('vivan')">👦 Vivan</button>
+      <button class="prog-filter-btn" id="cm-kid-hridaan" onclick="cmSelectKid('hridaan')">👶 Hridaan</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;" id="cm-subject-tabs"></div>
+  </div>
+
+  <!-- AI suggestions banner -->
+  <div id="cm-suggestions-banner" style="display:none;background:linear-gradient(135deg,#fef3c7,#fde68a);padding:12px 18px;border-bottom:2px solid #fbbf24;flex-shrink:0;">
+    <div style="font-family:'Baloo 2',cursive;font-size:0.88rem;font-weight:800;color:#92400e;margin-bottom:4px;">🤖 AI has revision suggestions this week</div>
+    <div style="font-size:0.8rem;color:#78350f;font-weight:600;" id="cm-suggestions-text"></div>
+    <div style="display:flex;gap:8px;margin-top:8px;" id="cm-suggestions-btns"></div>
+  </div>
+
+  <!-- Progress summary bar -->
+  <div style="background:white;padding:12px 18px;border-bottom:1px solid #f3f4f6;flex-shrink:0;" id="cm-progress-bar-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-family:'Baloo 2',cursive;font-size:0.88rem;font-weight:800;color:#374151;" id="cm-subject-title">Maths</div>
+      <div style="font-size:0.78rem;font-weight:700;color:#6b7280;" id="cm-progress-text">0 / 13 mastered</div>
+    </div>
+    <div style="background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;">
+      <div id="cm-progress-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#3b82f6,#7c3aed);transition:width 0.4s;width:0%;"></div>
+    </div>
+  </div>
+
+  <!-- Topic list -->
+  <div style="flex:1;overflow-y:auto;padding:14px 16px 30px;" id="cm-topic-list"></div>
+
+  <!-- Add custom topic -->
+  <div style="background:white;border-top:2px solid #e5e7eb;padding:14px 18px;flex-shrink:0;">
+    <button onclick="cmShowAddTopic()" style="width:100%;background:linear-gradient(135deg,#1e3a5f,#7c3aed);color:white;border:none;border-radius:12px;padding:12px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;">
+      + Add Custom Topic
+    </button>
+  </div>
+
+  <!-- Add topic modal -->
+  <div id="cm-add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:white;border-radius:20px;padding:24px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1f2937;margin-bottom:16px;">➕ Add Custom Topic</div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Topic Name</label>
+        <input id="cm-new-topic-name" type="text" placeholder="e.g. Mixed Fraction Practice" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Description (optional)</label>
+        <input id="cm-new-topic-desc" type="text" placeholder="What this topic covers" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Insert after topic #</label>
+        <select id="cm-new-topic-after" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;"></select>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="cmHideAddTopic()" style="flex:1;background:#f3f4f6;border:2px solid #e5e7eb;border-radius:10px;padding:11px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:700;cursor:pointer;color:#374151;">Cancel</button>
+        <button onclick="cmSaveNewTopic()" style="flex:1;background:linear-gradient(135deg,#1e3a5f,#7c3aed);border:none;border-radius:10px;padding:11px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;cursor:pointer;color:white;">Add Topic</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
      SCREEN: DAILY CHECK-IN
 ═══════════════════════════════════ -->
 <div id="screen-checkin" class="screen">
@@ -5449,7 +6190,7 @@ window.addEventListener('load', () => {
     <div class="spell-card">
       <div style="font-size:0.85rem;font-weight:700;color:#6b7280;margin-bottom:12px;">Listen to the word, then spell it!</div>
       <button class="spell-listen-btn" id="spell-listen-btn" onclick="spellSpeak()">🔊 Hear the word</button>
-      <div class="spell-hint" id="spell-hint" style="display:none;"></div>
+      <div class="spell-hint" id="spell-hint"></div>
       <input class="spell-input" id="spell-input" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Type your spelling…" onkeydown="if(event.key==='Enter')checkSpelling()">
       <button class="spell-check-btn" onclick="checkSpelling()">✅ Check</button>
       <div class="spell-feedback" id="spell-feedback"></div>
