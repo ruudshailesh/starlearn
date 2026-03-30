@@ -3068,7 +3068,7 @@ async function fetchAIQuestions(kid, subject) {
         'Authorization': 'Bearer ' + SUPABASE_KEY,
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'gemini-2.0-flash',
         max_tokens: 2500,
         system: 'You are a children\'s quiz generator. You ALWAYS respond with raw JSON only — no markdown, no code fences, no explanation, no preamble. Just the JSON object or array, nothing else.',
         messages: [{ role: 'user', content: prompt }],
