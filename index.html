@@ -1885,7 +1885,7 @@ const CURRICULUM = {
       { name: 'Dolch 3rd Grade Sight Words',  desc: 'carry, draw, drink, eight, fall, far, full, got, grow, hold.' },
       { name: 'Long Vowel Word Families',     desc: 'make/take/cake/lake, light/night/fight/sight, bone/tone/stone.' },
       { name: 'R-controlled Vowels',          desc: 'car/far, bird/third, corn/born, burn/turn, her/fern.' },
-      { name: 'Homophones',                   desc: 'there/their/they're, to/too/two, meet/meat, hear/here, write/right.' },
+      { name: 'Homophones',                   desc: "there/their/they're, to/too/two, meet/meat, hear/here, write/right." },
       { name: 'Contractions Spelling',        desc: "don't, won't, it's, they're, couldn't, shouldn't, haven't." },
       { name: 'Prefixes Spelling',            desc: 'unhappy, redo, preview, disagree, misspell, prepay.' },
       { name: 'Suffixes Spelling',            desc: 'careful, helpless, kindness, action, joyful, darkness.' },
@@ -3387,35 +3387,25 @@ async function generateQuizSummary(kid, subject, topicName, questionsDetail, pct
     const wrongQs  = questionsDetail.filter(q => !q.correct);
     const rightQs  = questionsDetail.filter(q => q.correct);
 
-    const prompt = `You are analyzing a quiz taken by Vivan, a 7-year-old ESL student in Texas (TEKS 3rd grade level).
-
-Subject: ${subject.toUpperCase()}
-Current topic: ${topicName || 'General'}
-Score: ${pct}% (${rightQs.length} correct, ${wrongQs.length} wrong)
-
-Questions he got RIGHT:
-${rightQs.map((q,i) => `${i+1}. "${q.q}" → He answered: "${q.kidAnswer}"`).join('
-') || 'None'}
-
-Questions he got WRONG:
-${wrongQs.map((q,i) => `${i+1}. "${q.q}" → He answered: "${q.kidAnswer || 'no answer'}" (correct: "${q.correctAnswer}")`).join('
-') || 'None'}
-
-Respond with ONLY a JSON object (no markdown):
-{
-  "summary": "2-3 natural sentences explaining what Vivan understands well and where he is struggling. Be specific about the question types or concepts, not just the score. Write as if talking to a parent.",
-  "weak_areas": ["specific concept 1", "specific concept 2"],
-  "strong_areas": ["specific concept 1", "specific concept 2"]
-}
-
-weak_areas and strong_areas should be specific (e.g. "7× and 8× times tables" not just "multiplication"). Max 3 items each. If score is 100% weak_areas should be empty.`;
+    const rightList = rightQs.map((q,i) => (i+1) + '. "' + q.q + '" -> He answered: "' + (q.kidAnswer||'no answer') + '"').join('\n') || 'None';
+    const wrongList = wrongQs.map((q,i) => (i+1) + '. "' + q.q + '" -> He answered: "' + (q.kidAnswer||'no answer') + '" (correct: "' + q.correctAnswer + '")').join('\n') || 'None';
+    const prompt = 'You are analyzing a quiz taken by Vivan, a 7-year-old ESL student in Texas (TEKS 3rd grade level).\n\n'
+      + 'Subject: ' + subject.toUpperCase() + '\n'
+      + 'Current topic: ' + (topicName || 'General') + '\n'
+      + 'Score: ' + pct + '% (' + rightQs.length + ' correct, ' + wrongQs.length + ' wrong)\n\n'
+      + 'Questions he got RIGHT:\n' + rightList + '\n\n'
+      + 'Questions he got WRONG:\n' + wrongList + '\n\n'
+      + 'Respond with ONLY a JSON object (no markdown, no backticks):\n'
+      + '{ "summary": "2-3 sentences on what Vivan understands well and where he struggles. Specific concepts, not just score. Write for a parent.", '
+      + '"weak_areas": ["specific concept 1"], "strong_areas": ["specific concept 1"] }\n\n'
+      + 'weak_areas and strong_areas: be specific (e.g. 7x8 times tables not just multiplication). Max 3 each. Empty weak_areas if score is 100%.';
 
     const res = await fetch(SUPABASE_URL + '/functions/v1/ai-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
       body: JSON.stringify({
         model: 'gemini-2.0-flash', max_tokens: 400,
-        system: 'You are a children's learning analyst. Return ONLY valid JSON, no markdown fences.',
+        system: "You are a children's learning analyst. Return ONLY valid JSON, no markdown fences.",
         messages: [{ role: 'user', content: prompt }],
       }),
     });
