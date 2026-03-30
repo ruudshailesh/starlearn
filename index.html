@@ -14,7 +14,6 @@
   --hridaan: #f59e0b;
   --hridaan2: #ef4444;
   --parent: #059669;
-  --parent2: #0891b2;
 }
 
 body {
@@ -1196,29 +1195,7 @@ body {
 }
 #screen-parent .app-header { background: transparent; }
 
-/* Prisha — warm pink/coral */
-#screen-prisha {
-  background: linear-gradient(160deg, #831843 0%, #db2777 30%, #fdf2f8 30%);
-}
-#screen-prisha .app-header { background: transparent; }
-
-/* Rutvik — deep teal/indigo */
-#screen-rutvik {
-  background: linear-gradient(160deg, #1e3a5f 0%, #0891b2 30%, #f0f9ff 30%);
-}
-#screen-rutvik .app-header { background: transparent; }
-
-/* Diyara — emerald green / CBSE orange */
-#screen-diyara {
-  background: linear-gradient(160deg, #064e3b 0%, #059669 30%, #f0fdf4 30%);
-}
-#screen-diyara .app-header { background: transparent; }
-
-/* Parent2 — amber/orange */
-#screen-parent2 {
-  background: linear-gradient(160deg, #78350f 0%, #d97706 30%, #fffbeb 30%);
-}
-#screen-parent2 .app-header { background: transparent; }
+/* Prisha, Rutvik, Diyara, Parent2 removed */
 
 .parent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 
@@ -1359,11 +1336,7 @@ body {
       <p>🔑 Login Details</p>
       <div class="hint-row"><span>Vivan (2nd Grade · Texas)</span><span>vivan / star123</span></div>
       <div class="hint-row"><span>Hridaan (Pre-K · Texas)</span><span>hridaan / moon123</span></div>
-      <div class="hint-row"><span>Prisha (Pre-K · Maharashtra)</span><span>prisha / sun123</span></div>
-      <div class="hint-row"><span>Rutvik (KG · Maharashtra)</span><span>rutvik / moon456</span></div>
-      <div class="hint-row"><span>Parent (Vivan &amp; Hridaan)</span><span>parent / parent123</span></div>
-      <div class="hint-row"><span>Diyara (2nd Grade · CBSE)</span><span>diyara / shine123</span></div>
-      <div class="hint-row"><span>Parent (Prisha, Rutvik &amp; Diyara)</span><span>parent2 / family123</span></div>
+      <div class="hint-row"><span>Parent</span><span>parent / parent123</span></div>
     </div>
   </div>
 </div>
@@ -2299,11 +2272,7 @@ let phAnswered = {};
 const USERS = {
   'vivan':   { pass: 'star123',   screen: 'vivan'   },
   'hridaan': { pass: 'moon123',   screen: 'hridaan' },
-  'prisha':  { pass: 'sun123',    screen: 'prisha'  },
-  'rutvik':  { pass: 'moon456',   screen: 'rutvik'  },
   'parent':  { pass: 'parent123', screen: 'parent'  },
-  'diyara':  { pass: 'shine123',  screen: 'diyara'  },
-  'parent2': { pass: 'family123', screen: 'parent2' },
 };
 
 /* ── STATE ── */
@@ -2559,11 +2528,7 @@ function doLogin() {
     const target = USERS[user].screen;
     if (target === 'vivan')   { loadVivan();   showScreen('vivan');   }
     if (target === 'hridaan') { loadHridaan(); showScreen('hridaan'); }
-    if (target === 'prisha')  { loadPrisha();  showScreen('prisha');  }
-    if (target === 'rutvik')  { loadRutvik();  showScreen('rutvik');  }
     if (target === 'parent')  { loadParent();  showScreen('parent');  }
-    if (target === 'diyara')  { loadDiyara();  showScreen('diyara');  }
-    if (target === 'parent2') { loadParent2(); showScreen('parent2'); }
   } else {
     err.style.display = 'block';
   }
@@ -2788,27 +2753,6 @@ const LOADING_FACTS = {
     "🍎 A is for Apple, B is for Ball — you've got this!",
     "🎈 Learning is the most fun game there is!",
   ],
-  prisha: [
-    "🌸 Prisha, you are a superstar learner!",
-    "🔊 Every sound you learn helps you read better!",
-    "🎉 Every letter you learn is a new friend!",
-    "🍎 A is for Apple — you've got this!",
-    "🌟 Learning is so much fun — keep going!",
-  ],
-  diyara: [
-    "🌺 Diyara, you are a brilliant learner!",
-    "📚 CBSE champion in the making!",
-    "⭐ Every question you answer makes you smarter!",
-    "🌟 You are doing so well — keep going Diyara!",
-    "🏆 Hard work always pays off — keep it up!",
-  ],
-  rutvik: [
-    "🚀 Rutvik, you are amazing — keep learning!",
-    "💬 Every word you learn makes you smarter!",
-    "🔊 Sounds build words, words build stories!",
-    "🌟 You are doing so well — keep it up!",
-    "🎈 Learning every day makes your brain grow!",
-  ],
 };
 
 const LOADING_EMOJIS = {
@@ -2826,7 +2770,14 @@ const LOADING_EMOJIS = {
 
 // Daily cache key — resets each new day
 function getCacheKey(kid, subject) {
-  return `sl_aicache_${kid}_${subject}_${getToday()}`;
+  // Weekly cache — same questions all week, refreshes Monday
+  // Drastically reduces API calls vs daily refresh
+  const d = new Date();
+  const year = d.getFullYear();
+  // Get ISO week number
+  const startOfYear = new Date(year, 0, 1);
+  const weekNum = Math.ceil(((d - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return `sl_aicache_${kid}_${subject}_w${year}_${weekNum}`;
 }
 
 // Claude API prompts per subject
@@ -2898,80 +2849,11 @@ Generate 8 letter-sound questions. Show a letter, ask which picture starts with 
 Return JSON array: [{"letter":"A","says":"says /a/ like in…","prompt":"Which starts with the /a/ sound?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]
 Use only very familiar words a 3-year-old would know.`;
   }
-  if (kid === 'prisha') {
-    const base = `You are generating quiz questions for Prisha, a 3-year-old in Pre-K following Maharashtra State Board (English medium) curriculum in India. Her parent reads questions aloud. All questions must be tap-based (MCQ only, no typing). Use simple emoji. Return ONLY valid JSON, no markdown.`;
 
-    if (subject === 'nums') return `${base}
-Generate 8 number questions. Count objects with emoji, which is more/less, what comes before/after (numbers 1-10). Maharashtra board Pre-K level.
-Return JSON array: [{"emoji":"🍎🍎🍎","text":"How many apples?","options":["1","2","3","4"],"answer":"3"}]`;
 
-    if (subject === 'alpha') return `${base}
-Generate 8 alphabet questions. "A is for ___?" using familiar objects with emoji. Letters A-E only. Include some Indian context words (like Aam for mango).
-Options should include emoji + word. Return JSON array: [{"emoji":"🍎","text":"A is for…?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
 
-    if (subject === 'shapes') return `${base}
-Generate 8 shapes and colours questions. Shape of everyday objects, colour recognition. Use bright emoji. Include Indian everyday objects where natural.
-Return JSON array: [{"emoji":"⚽","text":"A ball is this shape:","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
 
-    if (subject === 'phonics') return `${base}
-Generate 8 letter-sound questions for a 3-year-old. Show a letter, ask which picture starts with that sound. Letters A-M only. Use emoji + word options.
-Return JSON array: [{"letter":"A","says":"says /a/ like in…","prompt":"Which starts with the /a/ sound?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
-  }
 
-  if (kid === 'rutvik') {
-    const base = `You are generating quiz questions for Rutvik, a 4-year-old in KG (Kindergarten) following Maharashtra State Board (English medium) curriculum in India. His parent reads questions aloud. All questions must be tap-based (MCQ only, no typing). Use simple emoji. Return ONLY valid JSON, no markdown.`;
-
-    if (subject === 'nums') return `${base}
-Generate 8 number questions. Count objects (emoji), which is more/less, simple addition within 5, what comes before/after (numbers 1-20). KG level.
-Return JSON array: [{"emoji":"🍎🍎🍎","text":"How many apples?","options":["2","3","4","5"],"answer":"3"}]`;
-
-    if (subject === 'alpha') return `${base}
-Generate 8 alphabet questions covering A-Z. "X is for ___?" using familiar objects with emoji. Mix of uppercase and lowercase recognition. KG level.
-Options include emoji + word. Return JSON array: [{"emoji":"🍎","text":"A is for…?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
-
-    if (subject === 'shapes') return `${base}
-Generate 8 shapes and colours questions. Include basic 2D shapes (circle, square, triangle, rectangle, oval), colours, and simple size comparisons (big/small). KG level.
-Return JSON array: [{"emoji":"⚽","text":"A ball is this shape:","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
-
-    if (subject === 'phonics') return `${base}
-Generate 8 phonics questions for a 4-year-old KG student. Letter sounds A-Z, which word starts with a given sound, rhyming pairs. Slightly harder than Pre-K.
-Return JSON array: [{"letter":"A","says":"says /a/ like in…","prompt":"Which starts with the /a/ sound?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
-
-    if (subject === 'words') return `${base}
-Generate 8 simple 3-letter word recognition questions for KG. Show a picture (emoji), pick the correct word. CVC words only (cat, dog, sun, cup, hat, etc).
-Return JSON array: [{"emoji":"🐱","text":"What word matches this picture?","options":["cat","bat","rat","mat"],"answer":"cat"}]`;
-  }
-
-  if (kid === 'diyara') {
-    const base = `You are generating quiz questions for Diyara, a 7-year-old in Class 2 following the CBSE curriculum in India. English is her second language so keep language clear and simple. She is in 2nd grade level. Return ONLY valid JSON, no markdown, no explanation.`;
-
-    if (subject === 'math') return `${base}
-Generate 10 maths questions. Mix of 6 MCQ and 4 number-input. CBSE Class 2 level: addition/subtraction within 1000, place value (hundreds/tens/ones), multiplication intro (times tables 2,3,5), simple word problems.
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"} or {"text":"question","type":"input","answer":"number as string"}]
-Double-check all calculations are correct.`;
-
-    if (subject === 'ela') return `${base}
-Generate 10 English language arts questions. All MCQ. CBSE Class 2 topics: plurals, opposites, verb tense, naming words (nouns), doing words (verbs), describing words (adjectives), rhyming words, fill-in-the-blank. ESL-friendly vocabulary.
-IMPORTANT: For grammar questions include a hint field with a simple child-friendly explanation.
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option","hint":"simple explanation or empty string"}]`;
-
-    if (subject === 'sci') return `${base}
-Generate 10 EVS/Science questions for CBSE Class 2. Topics: plants and animals, our body, food and nutrition, air and water, weather and seasons, family and community, means of transport.
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"}]`;
-
-    if (subject === 'read') return `${base}
-Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on any topic relevant to Indian children (nature, animals, daily life, festivals, values). Then write 4 MCQ comprehension questions. Keep language ESL-friendly.
-Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["a","b","c","d"],"answer":"correct option"}]}
-The answer MUST be directly supported by the passage text.`;
-
-    if (subject === 'write') return `${base}
-Generate 5 sentence-builder questions and 5 spot-the-mistake questions for a 7-year-old (ESL, CBSE Class 2).
-Sentence builders: give 4-6 shuffled words to arrange into a correct sentence.
-Spot the mistake: give 4 options, only ONE is grammatically correct.
-Return JSON array of 10:
-[{"type":"build","instruction":"Put the words in the right order:","words":["shuffled","word","array"],"answer":"The correct sentence with capital and full stop."},
-{"type":"mistake","instruction":"Which sentence is correct?","options":["opt1","opt2","opt3","opt4"],"answer":"The correct option exactly as written"}]`;
-  }
 
   return '';
 }
@@ -3094,7 +2976,7 @@ async function fetchAIQuestions(kid, subject) {
 
 // Inject AI questions into the right quiz format
 function injectAIQuestions(kid, subject, aiData) {
-  if (kid === 'vivan' || kid === 'diyara') {
+  if (kid === 'vivan') {
     if (subject === 'math' || subject === 'ela' || subject === 'sci') {
       // aiData is array of questions — plug into QUIZZES format
       const subjectTitles = { math:'🔢 Maths Quiz', ela:'📖 English Quiz', sci:'🔬 Science Quiz' };
@@ -3107,7 +2989,7 @@ function injectAIQuestions(kid, subject, aiData) {
       // aiData is array of 10 writing questions
       WRITING_QUIZ.questions = aiData;
     }
-  } else if (kid === 'hridaan' || kid === 'prisha' || kid === 'rutvik') {
+  } else if (kid === 'hridaan') {
     // All hridaan subjects use hridaan quiz engine
     const hTitles = { nums:'🔢 Numbers', alpha:'🔤 Alphabet', shapes:'🔵 Shapes & Colours', phonics:'🔊 Phonics', words:'💬 Simple Words' };
     if (subject === 'phonics') {
@@ -3147,8 +3029,8 @@ async function startQuiz(kid, subject) {
   if (subject === 'read')    { loadReadingQuiz();  showScreen('reading'); return; }
   if (subject === 'write')   { loadWritingQuiz();  showScreen('writing'); return; }
   if (subject === 'phonics') { loadPhonicsQuiz();  showScreen('phonics'); return; }
-  if (kid === 'hridaan' || kid === 'prisha' || kid === 'rutvik') { loadHridaanQuiz(); showScreen('hquiz'); return; }
-  loadVivanQuiz(); showScreen('quiz'); // vivan and diyara both use vivan quiz engine
+  if (kid === 'hridaan') { loadHridaanQuiz(); showScreen('hquiz'); return; }
+  loadVivanQuiz(); showScreen('quiz');ine
 }
 
 /* ── VIVAN QUIZ ── */
@@ -3340,14 +3222,7 @@ const subjectNames = {
   'hridaan-nums':'Numbers','hridaan-alpha':'Alphabet',
   'hridaan-shapes':'Shapes & Colours','hridaan-phonics':'Phonics',
   'hridaan-voice':'Voice Phonics',
-  'prisha-nums':'Numbers','prisha-alpha':'Alphabet',
-  'prisha-shapes':'Shapes & Colours','prisha-phonics':'Phonics',
-  'prisha-voice':'Voice Phonics',
-  'diyara-math':'Maths','diyara-ela':'English','diyara-sci':'Science',
-  'diyara-read':'Reading','diyara-write':'Writing','diyara-voice':'Read Aloud','diyara-spell':'Spelling',
-  'rutvik-nums':'Numbers','rutvik-alpha':'Alphabet',
-  'rutvik-shapes':'Shapes & Colours','rutvik-phonics':'Phonics',
-  'rutvik-words':'Simple Words','rutvik-voice':'Voice Phonics',
+
 };
 
 /* ════════════════════════════════════════════
@@ -3521,11 +3396,7 @@ function showResults(correct, total, pct, stars, isHridaan) {
 function goHome() {
   if (currentUser === 'vivan')   { loadVivan();   showScreen('vivan');   }
   if (currentUser === 'hridaan') { loadHridaan(); showScreen('hridaan'); }
-  if (currentUser === 'prisha')  { loadPrisha();  showScreen('prisha');  }
-  if (currentUser === 'rutvik')  { loadRutvik();  showScreen('rutvik');  }
   if (currentUser === 'parent')  { loadParent();  showScreen('parent');  }
-  if (currentUser === 'diyara')  { loadDiyara();  showScreen('diyara');  }
-  if (currentUser === 'parent2') { loadParent2(); showScreen('parent2'); }
 }
 
 function playAgain() {
@@ -3967,7 +3838,7 @@ let vraSessionCount = 0;
 let vraCurrentPassages = [...VRA_PASSAGES]; // will be replaced by AI passages
 
 async function startVoice(kid) {
-  if (kid === 'vivan' || kid === 'diyara') {
+  if (kid === 'vivan') {
     vraPassageIdx = 0;
     vraTranscript = '';
     vraSessionStars = 0;
@@ -3979,7 +3850,8 @@ async function startVoice(kid) {
     startLoadingAnimation('vivan', 'read');
 
     try {
-      const cacheKey = 'sl_aicache_vivan_voice_' + getToday();
+      const d2 = new Date(); const wn = Math.ceil(((d2 - new Date(d2.getFullYear(),0,1))/86400000 + new Date(d2.getFullYear(),0,1).getDay()+1)/7);
+      const cacheKey = 'sl_aicache_vivan_voice_w' + d2.getFullYear() + '_' + wn;
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
         vraCurrentPassages = JSON.parse(cached);
@@ -4481,177 +4353,22 @@ function renderSmallDashboard(prefix, d, goalFillStyle) {
   if (streakEl)  streakEl.textContent  = d.streak       || 0;
 }
 
-async function loadPrisha() {
-  const local = getKidData('prisha');
-  updateStreak(local); saveKidData('prisha', local);
-  renderSmallDashboard('p2', local, 'linear-gradient(90deg,#db2877,#f97316)');
-  ['nums','alpha','shapes','phonics','voice'].forEach(sub => {
-    const el = document.getElementById('p2-' + sub + '-stars');
-    if (el) el.textContent = (local.subjectStars[sub]||0) > 0 ? starsStr(local.subjectStars[sub]) : '—';
-  });
-  renderActivity('p2-activity', local.history, 'prisha');
 
-  const cloud = await sbLoadKidData('prisha');
-  if (cloud) {
-    saveKidData('prisha', {...cloud, todayDate: getToday()});
-    renderSmallDashboard('p2', cloud, 'linear-gradient(90deg,#db2877,#f97316)');
-    ['nums','alpha','shapes','phonics','voice'].forEach(sub => {
-      const el = document.getElementById('p2-' + sub + '-stars');
-      if (el) el.textContent = (cloud.subjectStars[sub]||0) > 0 ? starsStr(cloud.subjectStars[sub]) : '—';
-    });
-    renderActivity('p2-activity', cloud.history, 'prisha');
-  }
-}
 
-async function loadRutvik() {
-  const local = getKidData('rutvik');
-  updateStreak(local); saveKidData('rutvik', local);
-  renderSmallDashboard('rv', local, 'linear-gradient(90deg,#0891b2,#7c3aed)');
-  ['nums','alpha','shapes','phonics','words','voice'].forEach(sub => {
-    const el = document.getElementById('rv-' + sub + '-stars');
-    if (el) el.textContent = (local.subjectStars[sub]||0) > 0 ? starsStr(local.subjectStars[sub]) : '—';
-  });
-  renderActivity('rv-activity', local.history, 'rutvik');
 
-  const cloud = await sbLoadKidData('rutvik');
-  if (cloud) {
-    saveKidData('rutvik', {...cloud, todayDate: getToday()});
-    renderSmallDashboard('rv', cloud, 'linear-gradient(90deg,#0891b2,#7c3aed)');
-    ['nums','alpha','shapes','phonics','words','voice'].forEach(sub => {
-      const el = document.getElementById('rv-' + sub + '-stars');
-      if (el) el.textContent = (cloud.subjectStars[sub]||0) > 0 ? starsStr(cloud.subjectStars[sub]) : '—';
-    });
-    renderActivity('rv-activity', cloud.history, 'rutvik');
-  }
-}
 
-async function loadDiyara() {
-  const local = getKidData('diyara');
-  updateStreak(local); saveKidData('diyara', local);
-  const todayQ = local.todayQuizzes || 0;
-  document.getElementById('dy-goal-text').textContent = todayQ + ' / 4 quizzes';
-  document.getElementById('dy-goal-fill').style.width = Math.min(todayQ/4*100,100) + '%';
-  document.getElementById('dy-total-stars').textContent   = local.totalStars   || 0;
-  document.getElementById('dy-total-quizzes').textContent = local.totalQuizzes || 0;
-  document.getElementById('dy-streak').textContent        = local.streak       || 0;
-  const dyaraSubs = ['math','ela','sci','read','write','voice','spell'];
-  const limits = getSubjectLimits(local.history);
-  dyaraSubs.forEach(sub => {
-    const best = (local.subjectStars||{})[sub] || 0;
-    const cnt  = (local.subjectCount||{})[sub] || 0;
-    const sEl  = document.getElementById('dy-' + sub + '-stars');
-    const cEl  = document.getElementById('dy-' + sub + '-count');
-    if (sEl) sEl.textContent = best > 0 ? starsStr(best) : '—';
-    if (cEl) cEl.textContent = cnt + (sub === 'voice' || sub === 'spell' ? ' session' : ' quiz') + (cnt !== 1 ? 's' : '');
-    applySubjectCardLimit('dy-card-' + sub, sub, limits, dyaraSubs);
-  });
-  renderLimitBanner('dy', limits, dyaraSubs);
-  renderActivity('dy-activity', local.history, 'diyara');
-  sbGetTotalPoints('diyara').then(pts => {
-    const el1 = document.getElementById('dy-pts-val');
-    const el2 = document.getElementById('dy-pts-dollars');
-    if (el1) el1.textContent = pts;
-    if (el2) el2.textContent = '$' + (pts/100).toFixed(2);
-  });
 
-  const cloud = await sbLoadKidData('diyara');
-  if (cloud) {
-    saveKidData('diyara', {...cloud, todayDate: getToday()});
-    const tq = cloud.todayQuizzes || 0;
-    document.getElementById('dy-goal-text').textContent = tq + ' / 4 quizzes';
-    document.getElementById('dy-goal-fill').style.width = Math.min(tq/4*100,100) + '%';
-    document.getElementById('dy-total-stars').textContent   = cloud.totalStars   || 0;
-    document.getElementById('dy-total-quizzes').textContent = cloud.totalQuizzes || 0;
-    document.getElementById('dy-streak').textContent        = cloud.streak       || 0;
-    ['math','ela','sci','read','write','voice','spell'].forEach(sub => {
-      const best = (cloud.subjectStars||{})[sub] || 0;
-      const cnt  = (cloud.subjectCount||{})[sub] || 0;
-      const sEl  = document.getElementById('dy-' + sub + '-stars');
-      const cEl  = document.getElementById('dy-' + sub + '-count');
-      if (sEl) sEl.textContent = best > 0 ? starsStr(best) : '—';
-      if (cEl) cEl.textContent = cnt + (sub === 'voice' || sub === 'spell' ? ' session' : ' quiz') + (cnt !== 1 ? 's' : '');
-    });
-    renderActivity('dy-activity', cloud.history, 'diyara');
-  }
-}
 
 // Spelling launcher that works for any kid (vivan or diyara)
-async function startSpellingFor(kid) {
-  currentUser = kid || currentUser;
-  startSpelling();
-}
 
-async function loadParent2() {
-  const pLocal  = getKidData('prisha');
-  const rLocal  = getKidData('rutvik');
-  const dLocal  = getKidData('diyara');
-  renderParent2Cards(pLocal, rLocal, dLocal);
-  renderParent2History([
-    ...pLocal.history.map(x=>({...x,kid:'prisha'})),
-    ...rLocal.history.map(x=>({...x,kid:'rutvik'})),
-    ...dLocal.history.map(x=>({...x,kid:'diyara'})),
-  ]);
 
-  const [pCloud, rCloud, dCloud] = await Promise.all([
-    sbLoadKidData('prisha'), sbLoadKidData('rutvik'), sbLoadKidData('diyara')
-  ]);
-  const p = pCloud || pLocal;
-  const r = rCloud || rLocal;
-  const d = dCloud || dLocal;
-  if (pCloud) saveKidData('prisha', {...pCloud, todayDate: getToday()});
-  if (rCloud) saveKidData('rutvik',  {...rCloud, todayDate: getToday()});
-  if (dCloud) saveKidData('diyara',  {...dCloud, todayDate: getToday()});
-  renderParent2Cards(p, r, d);
-  renderParent2History([
-    ...p.history.map(x=>({...x,kid:'prisha'})),
-    ...r.history.map(x=>({...x,kid:'rutvik'})),
-    ...d.history.map(x=>({...x,kid:'diyara'})),
-  ]);
-}
 
-function renderParent2Cards(p, r, d) {
-  document.getElementById('p2-v-stars').textContent   = p.totalStars   || 0;
-  document.getElementById('p2-v-quizzes').textContent = p.totalQuizzes || 0;
-  document.getElementById('p2-v-streak').textContent  = p.streak       || 0;
-  document.getElementById('p2-v-goal').style.width    = Math.min((p.todayQuizzes||0)/4*100,100) + '%';
-  document.getElementById('p2-h-stars').textContent   = r.totalStars   || 0;
-  document.getElementById('p2-h-quizzes').textContent = r.totalQuizzes || 0;
-  document.getElementById('p2-h-streak').textContent  = r.streak       || 0;
-  document.getElementById('p2-h-goal').style.width    = Math.min((r.todayQuizzes||0)/4*100,100) + '%';
-  if (d && document.getElementById('p2-dy-stars')) {
-    document.getElementById('p2-dy-stars').textContent   = d.totalStars   || 0;
-    document.getElementById('p2-dy-quizzes').textContent = d.totalQuizzes || 0;
-    document.getElementById('p2-dy-streak').textContent  = d.streak       || 0;
-    document.getElementById('p2-dy-goal').style.width    = Math.min((d.todayQuizzes||0)/4*100,100) + '%';
-  }
-}
 
-function renderParent2History(all) {
-  const tbody = document.getElementById('p2-history-tbody');
-  if (!tbody) return;
-  if (!all || all.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>';
-    return;
-  }
-  const colours = {
-    prisha: { bg:'#fce7f3', fg:'#831843', label:'Prisha' },
-    rutvik: { bg:'#e0f2fe', fg:'#0c4a6e', label:'Rutvik' },
-    diyara: { bg:'#d1fae5', fg:'#064e3b', label:'Diyara' },
-  };
-  tbody.innerHTML = all.slice().reverse().map(h => {
-    const c = colours[h.kid] || { bg:'#f3f4f6', fg:'#374151', label: h.kid };
-    return `<tr>
-      <td><span style="font-weight:700;background:${c.bg};color:${c.fg};border-radius:6px;padding:2px 8px;">${c.label}</span></td>
-      <td>${h.subjectName||h.subject}</td>
-      <td>${h.score}/${h.total} (${h.pct}%)</td>
-      <td>${starsStr(h.stars)}</td>
-      <td>${h.date}</td>
-    </tr>`;
-  }).join('');
-}
+
+
+
 
 /* ── Update subjectNames for new kids ── */
-/* ── Update startQuiz to handle prisha/rutvik ── */
 /* ── Update buildPrompt for Maharashtra board ── */
 
 function starsStr(n) {
@@ -5095,16 +4812,24 @@ async function startSpelling() {
   startLoadingAnimation('vivan', 'write');
 
   try {
-    const cacheKey = 'sl_aicache_vivan_spell_' + getToday();
+    const d3 = new Date(); const wn3 = Math.ceil(((d3 - new Date(d3.getFullYear(),0,1))/86400000 + new Date(d3.getFullYear(),0,1).getDay()+1)/7);
+      const cacheKey = 'sl_aicache_vivan_spell_w' + d3.getFullYear() + '_' + wn3;
     const cached   = localStorage.getItem(cacheKey);
     if (cached) {
       spellWords = JSON.parse(cached);
       console.log('✅ Using cached spelling words');
     } else {
-      const prompt = `Generate 8 spelling words for Vivan, a 7-year-old in 2nd Grade in Texas. English is his second language. Mix of CVC words and slightly harder 2nd grade words. For each word provide a short example sentence.
-Return ONLY this JSON array:
-[{"word":"cat","hint":"The cat sat on the mat.","sentence":"cat. The cat sat on the mat. Cat."},...]
-Rules: word must be all lowercase, sentence must say the word at start, in context, and at end (like a spelling bee). 7-10 words.`;
+      // Get current spelling curriculum topic
+      const spellTopic = getCurrentTopic('vivan', 'spell');
+      const topicName  = spellTopic?.name || 'Dolch 2nd Grade Sight Words';
+      const topicDesc  = spellTopic?.desc || '';
+
+      const prompt = 'Generate 8-10 spelling words for Vivan, a 7-year-old in Texas (TEKS 3rd grade level). English is his second language.'
+        + ' Current spelling topic: "' + topicName + '" — ' + topicDesc
+        + ' Choose words appropriate for this topic. Do NOT use simple CVC words like cat/dog/hat unless the topic specifically calls for it.'
+        + ' Return ONLY a JSON array — no markdown, no backticks:'
+        + ' [{"word":"because","sentence":"because. I stayed home because I was sick. Because."}]'
+        + ' Rules: word lowercase, sentence says word at start then in a natural context sentence then the word again at end (spelling bee format). 8-10 words.';
 
       const res = await fetch(
         'https://zaagldgqqpfypjlgfuix.supabase.co/functions/v1/ai-proxy',
@@ -5162,13 +4887,13 @@ function spellSpeak() {
   // Speak naturally: word, then sentence, then word again — with clear pauses
   speakSequence([
     { text: w.word + '.', rate: 0.75, pitch: 1.0 },
-    { text: w.hint,       rate: 0.88, pitch: 1.0 },
+    { text: w.sentence || w.hint || w.word, rate: 0.88, pitch: 1.0 },
     { text: w.word + '.', rate: 0.75, pitch: 1.0 },
   ], 1200);
-  // Show hint after first word
+  // Hint deliberately hidden — kids must spell from memory
   setTimeout(() => {
-    document.getElementById('spell-hint').textContent = '💡 ' + w.hint;
-  }, 1400);
+    document.getElementById('spell-hint').textContent = '';
+  }, 100);
 }
 
 function checkSpelling() {
@@ -5681,11 +5406,7 @@ window.addEventListener('load', () => {
       const target = USERS[saved].screen;
       if (target === 'vivan')   { loadVivan();   showScreen('vivan');   }
       if (target === 'hridaan') { loadHridaan(); showScreen('hridaan'); }
-      if (target === 'prisha')  { loadPrisha();  showScreen('prisha');  }
-      if (target === 'rutvik')  { loadRutvik();  showScreen('rutvik');  }
       if (target === 'parent')  { loadParent();  showScreen('parent');  }
-      if (target === 'diyara')  { loadDiyara();  showScreen('diyara');  }
-      if (target === 'parent2') { loadParent2(); showScreen('parent2'); }
     }
   } catch(e) {}
 });
@@ -5826,289 +5547,6 @@ window.addEventListener('load', () => {
   <div class="hv-nav">
     <button class="hv-next-btn" id="hvp-next-btn" onclick="hvpNext()" style="display:none;">Next ➡️</button>
     <button onclick="goHome()" style="background:#f3f4f6;border:2px solid #e5e7eb;border-radius:14px;padding:12px 24px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;cursor:pointer;color:#374151;">🏠 Home</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     SCREEN: PRISHA DASHBOARD
-═══════════════════════════════════ -->
-<div id="screen-prisha" class="screen">
-  <div class="app-header">
-    <div class="logo-text">⭐ StarLearn</div>
-    <div class="user-chip" onclick="logout()">👋 Log Out</div>
-  </div>
-  <div class="dash-scroll">
-    <div class="welcome-card">
-      <div class="h-welcome" style="color:#831843;">Hi Prisha! 🌸</div>
-      <div class="h-sub" style="color:#9d174d;">Pre-K · Maharashtra Board (English)</div>
-      <div class="goal-wrap">
-        <div class="goal-label"><span>📅 Today's Goal</span><span id="p2-goal-text">0 / 4 quizzes</span></div>
-        <div class="goal-bar" style="background:#fce7f3;">
-          <div class="goal-fill" id="p2-goal-fill" style="width:0%;background:linear-gradient(90deg,#db2777,#f97316);"></div>
-        </div>
-      </div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="p2-total-stars">0</div><div class="stat-lbl">Total Stars</div></div>
-      <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-val" id="p2-total-quizzes">0</div><div class="stat-lbl">Quizzes Done</div></div>
-      <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="p2-streak">0</div><div class="stat-lbl">Day Streak</div></div>
-    </div>
-    <div class="section-title">🎯 Let's Learn!</div>
-    <div class="h-subject-grid" style="grid-template-columns:1fr 1fr;">
-      <div class="h-subject-card sc-nums" onclick="startQuiz('prisha','nums')"><div class="hs-icon">🔢</div><div class="hs-name">Numbers</div><div class="hs-stars" id="p2-nums-stars">—</div></div>
-      <div class="h-subject-card sc-alpha" onclick="startQuiz('prisha','alpha')"><div class="hs-icon">🔤</div><div class="hs-name">Alphabet</div><div class="hs-stars" id="p2-alpha-stars">—</div></div>
-      <div class="h-subject-card sc-shapes" onclick="startQuiz('prisha','shapes')"><div class="hs-icon">🔵</div><div class="hs-name">Shapes</div><div class="hs-stars" id="p2-shapes-stars">—</div></div>
-      <div class="h-subject-card" style="background:linear-gradient(135deg,#7c3aed,#db2777);" onclick="startQuiz('prisha','phonics')"><div class="hs-icon">🔊</div><div class="hs-name">Phonics</div><div class="hs-stars" id="p2-phonics-stars">—</div></div>
-      <div class="h-subject-card" style="background:linear-gradient(135deg,#ef4444,#f59e0b);grid-column:span 2;" onclick="startVoice('prisha')"><div class="hs-icon">🎤</div><div class="hs-name">Say It! Voice</div><div class="hs-stars" id="p2-voice-stars">—</div></div>
-    </div>
-    <div class="section-title">📋 Recent Activity</div>
-    <div class="activity-list" id="p2-activity">
-      <div class="activity-item"><div class="activity-dot" style="background:#d1d5db"></div><div class="activity-text">No quizzes yet — pick a subject above!</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     SCREEN: RUTVIK DASHBOARD
-═══════════════════════════════════ -->
-<div id="screen-rutvik" class="screen">
-  <div class="app-header">
-    <div class="logo-text">⭐ StarLearn</div>
-    <div class="user-chip" onclick="logout()">👋 Log Out</div>
-  </div>
-  <div class="dash-scroll">
-    <div class="welcome-card">
-      <div class="h-welcome" style="color:#1e3a5f;">Hi Rutvik! 🚀</div>
-      <div class="h-sub" style="color:#1e40af;">KG · Maharashtra Board (English)</div>
-      <div class="goal-wrap">
-        <div class="goal-label"><span>📅 Today's Goal</span><span id="rv-goal-text">0 / 4 quizzes</span></div>
-        <div class="goal-bar" style="background:#e0f2fe;">
-          <div class="goal-fill" id="rv-goal-fill" style="width:0%;background:linear-gradient(90deg,#0891b2,#7c3aed);"></div>
-        </div>
-      </div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="rv-total-stars">0</div><div class="stat-lbl">Total Stars</div></div>
-      <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-val" id="rv-total-quizzes">0</div><div class="stat-lbl">Quizzes Done</div></div>
-      <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="rv-streak">0</div><div class="stat-lbl">Day Streak</div></div>
-    </div>
-    <div class="section-title">🎯 Let's Learn!</div>
-    <div class="h-subject-grid" style="grid-template-columns:1fr 1fr;">
-      <div class="h-subject-card sc-nums" onclick="startQuiz('rutvik','nums')"><div class="hs-icon">🔢</div><div class="hs-name">Numbers</div><div class="hs-stars" id="rv-nums-stars">—</div></div>
-      <div class="h-subject-card sc-alpha" onclick="startQuiz('rutvik','alpha')"><div class="hs-icon">🔤</div><div class="hs-name">Alphabet</div><div class="hs-stars" id="rv-alpha-stars">—</div></div>
-      <div class="h-subject-card sc-shapes" onclick="startQuiz('rutvik','shapes')"><div class="hs-icon">🔵</div><div class="hs-name">Shapes & Colours</div><div class="hs-stars" id="rv-shapes-stars">—</div></div>
-      <div class="h-subject-card" style="background:linear-gradient(135deg,#7c3aed,#db2777);" onclick="startQuiz('rutvik','phonics')"><div class="hs-icon">🔊</div><div class="hs-name">Phonics</div><div class="hs-stars" id="rv-phonics-stars">—</div></div>
-      <div class="h-subject-card" style="background:linear-gradient(135deg,#059669,#0891b2);" onclick="startQuiz('rutvik','words')"><div class="hs-icon">💬</div><div class="hs-name">Simple Words</div><div class="hs-stars" id="rv-words-stars">—</div></div>
-      <div class="h-subject-card" style="background:linear-gradient(135deg,#ef4444,#f59e0b);" onclick="startVoice('rutvik')"><div class="hs-icon">🎤</div><div class="hs-name">Say It! Voice</div><div class="hs-stars" id="rv-voice-stars">—</div></div>
-    </div>
-    <div class="section-title">📋 Recent Activity</div>
-    <div class="activity-list" id="rv-activity">
-      <div class="activity-item"><div class="activity-dot" style="background:#d1d5db"></div><div class="activity-text">No quizzes yet — pick a subject above!</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     SCREEN: PARENT2 DASHBOARD
-═══════════════════════════════════ -->
-<!-- ═══════════════════════════════════
-     SCREEN: DIYARA DASHBOARD
-═══════════════════════════════════ -->
-<div id="screen-diyara" class="screen">
-  <div class="app-header">
-    <div class="logo-text">⭐ StarLearn</div>
-    <div class="user-chip" onclick="logout()">👋 Log Out</div>
-  </div>
-  <div class="dash-scroll">
-    <div class="welcome-card">
-      <div class="welcome-name" style="color:#064e3b;">Hi Diyara! 🌺</div>
-      <div class="welcome-sub">Class 2 · CBSE Board</div>
-      <div class="goal-wrap">
-        <div class="goal-label"><span>📅 Today's Goal</span><span id="dy-goal-text">0 / 4 quizzes</span></div>
-        <div class="goal-bar" style="background:#d1fae5;">
-          <div class="goal-fill" id="dy-goal-fill" style="width:0%;background:linear-gradient(90deg,#059669,#0891b2);"></div>
-        </div>
-      </div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="dy-total-stars">0</div><div class="stat-lbl">Stars</div></div>
-      <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-val" id="dy-total-quizzes">0</div><div class="stat-lbl">Quizzes</div></div>
-      <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-val" id="dy-streak">0</div><div class="stat-lbl">Streak</div></div>
-      <div class="stat-card" style="border-top:3px solid #f59e0b;">
-        <div class="stat-icon">💰</div>
-        <div class="stat-val" id="dy-pts-val" style="font-size:1.1rem;color:#d97706;">0</div>
-        <div class="stat-lbl">Pts = <span id="dy-pts-dollars" style="color:#059669;font-weight:800;">$0.00</span></div>
-      </div>
-    </div>
-    <div class="section-title">📚 Choose a Subject</div>
-    <div id="dy-limit-banner" style="display:none;color:white;border-radius:14px;padding:11px 16px;font-size:0.88rem;font-weight:700;margin-bottom:12px;line-height:1.4;"></div>
-    <div class="subject-grid" style="grid-template-columns:1fr 1fr 1fr;">
-      <div class="subject-card sc-math" id="dy-card-math" onclick="startQuiz('diyara','math')">
-        <div class="s-icon">🔢</div><div class="s-name">Maths</div><div class="s-teks">CBSE Class 2</div>
-        <div class="s-stars" id="dy-math-stars">—</div><div class="s-count" id="dy-math-count">0 quizzes</div>
-      </div>
-      <div class="subject-card sc-ela" id="dy-card-ela" onclick="startQuiz('diyara','ela')">
-        <div class="s-icon">📖</div><div class="s-name">English</div><div class="s-teks">CBSE Class 2</div>
-        <div class="s-stars" id="dy-ela-stars">—</div><div class="s-count" id="dy-ela-count">0 quizzes</div>
-      </div>
-      <div class="subject-card sc-sci" id="dy-card-sci" onclick="startQuiz('diyara','sci')">
-        <div class="s-icon">🌿</div><div class="s-name">EVS</div><div class="s-teks">CBSE Class 2</div>
-        <div class="s-stars" id="dy-sci-stars">—</div><div class="s-count" id="dy-sci-count">0 quizzes</div>
-      </div>
-      <div class="subject-card sc-voice" id="dy-card-spell" onclick="startSpellingFor('diyara')" style="grid-column:span 1;">
-        <div class="s-icon">🔤</div><div class="s-name">Spelling</div><div class="s-teks">Listen & Spell</div>
-        <div class="s-stars" id="dy-spell-stars">—</div><div class="s-count" id="dy-spell-count">0 sessions</div>
-      </div>
-      <div class="subject-card sc-read" id="dy-card-read" onclick="startQuiz('diyara','read')" style="grid-column:span 1;">
-        <div class="s-icon">📚</div><div class="s-name">Reading</div><div class="s-teks">Comprehension</div>
-        <div class="s-stars" id="dy-read-stars">—</div><div class="s-count" id="dy-read-count">0 quizzes</div>
-      </div>
-      <div class="subject-card sc-write" id="dy-card-write" onclick="startQuiz('diyara','write')" style="grid-column:span 1;">
-        <div class="s-icon">✍️</div><div class="s-name">Writing</div><div class="s-teks">Sentences</div>
-        <div class="s-stars" id="dy-write-stars">—</div><div class="s-count" id="dy-write-count">0 quizzes</div>
-      </div>
-      <div class="subject-card sc-voice" id="dy-card-voice" onclick="startVoice('diyara')" style="grid-column:span 3;background:linear-gradient(135deg,#059669,#0891b2);">
-        <div class="s-icon">🎤</div><div class="s-name">Read Aloud</div><div class="s-teks">Voice Practice</div>
-        <div class="s-stars" id="dy-voice-stars">—</div><div class="s-count" id="dy-voice-count">0 sessions</div>
-      </div>
-    </div>
-    <div class="section-title">📋 Recent Activity</div>
-    <div class="activity-list" id="dy-activity">
-      <div class="activity-item"><div class="activity-dot" style="background:#d1d5db"></div><div class="activity-text">No quizzes yet — pick a subject above!</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     SCREEN: PARENT2 DASHBOARD (updated with Diyara)
-═══════════════════════════════════ -->
-<div id="screen-parent2" class="screen">
-  <div class="app-header">
-    <div class="logo-text">⭐ StarLearn — Parent View</div>
-    <div class="user-chip" onclick="logout()">👋 Log Out</div>
-  </div>
-  <div class="dash-scroll">
-    <div class="section-title" style="margin-bottom:14px;">👦 Kids Summary</div>
-    <div class="parent-grid" style="grid-template-columns:1fr 1fr;">
-      <div class="kid-summary-card" style="border-top:5px solid #db2777;">
-        <div class="kid-card-name">Prisha</div>
-        <div class="kid-card-grade">Pre-K · Maharashtra Board</div>
-        <div class="kid-stat-row">
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-v-stars">0</div><div class="kid-stat-lbl">⭐ Stars</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-v-quizzes">0</div><div class="kid-stat-lbl">📝 Quizzes</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-v-streak">0</div><div class="kid-stat-lbl">🔥 Streak</div></div>
-        </div>
-        <div style="margin-top:10px;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;margin-bottom:6px;">Today's Progress</div>
-          <div class="goal-bar" style="background:#fce7f3;"><div class="goal-fill" id="p2-v-goal" style="width:0%;background:linear-gradient(90deg,#db2777,#f97316);"></div></div>
-        </div>
-      </div>
-      <div class="kid-summary-card" style="border-top:5px solid #0891b2;">
-        <div class="kid-card-name">Rutvik</div>
-        <div class="kid-card-grade">KG · Maharashtra Board</div>
-        <div class="kid-stat-row">
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-h-stars">0</div><div class="kid-stat-lbl">⭐ Stars</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-h-quizzes">0</div><div class="kid-stat-lbl">📝 Quizzes</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-h-streak">0</div><div class="kid-stat-lbl">🔥 Streak</div></div>
-        </div>
-        <div style="margin-top:10px;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;margin-bottom:6px;">Today's Progress</div>
-          <div class="goal-bar" style="background:#e0f2fe;"><div class="goal-fill" id="p2-h-goal" style="width:0%;background:linear-gradient(90deg,#0891b2,#7c3aed);"></div></div>
-        </div>
-      </div>
-      <div class="kid-summary-card" style="border-top:5px solid #059669;grid-column:span 2;">
-        <div class="kid-card-name">Diyara</div>
-        <div class="kid-card-grade">Class 2 · CBSE Board</div>
-        <div class="kid-stat-row">
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-dy-stars">0</div><div class="kid-stat-lbl">⭐ Stars</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-dy-quizzes">0</div><div class="kid-stat-lbl">📝 Quizzes</div></div>
-          <div class="kid-stat-item"><div class="kid-stat-val" id="p2-dy-streak">0</div><div class="kid-stat-lbl">🔥 Streak</div></div>
-        </div>
-        <div style="margin-top:10px;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;margin-bottom:6px;">Today's Progress</div>
-          <div class="goal-bar" style="background:#d1fae5;"><div class="goal-fill" id="p2-dy-goal" style="width:0%;background:linear-gradient(90deg,#059669,#0891b2);"></div></div>
-        </div>
-      </div>
-    </div>
-    <div class="parent-section-title" style="margin-top:8px;">📋 Quiz History</div>
-    <div class="history-table-wrap">
-      <table class="history-table">
-        <thead><tr><th>Kid</th><th>Subject</th><th>Score</th><th>Stars</th><th>Date</th></tr></thead>
-        <tbody id="p2-history-tbody">
-          <tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:20px;">No quiz history yet.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     SCREEN: CURRICULUM MANAGER (Parent)
-═══════════════════════════════════ -->
-<div id="screen-curriculum" class="screen" style="background:#f8fafc;">
-  <div style="background:linear-gradient(135deg,#1e3a5f,#7c3aed);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;">
-    <button onclick="goHome()" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);color:white;border-radius:10px;padding:7px 14px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;font-size:0.9rem;">← Back</button>
-    <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:white;flex:1;">📚 Curriculum Manager</div>
-  </div>
-
-  <!-- Kid + Subject selectors -->
-  <div style="background:white;padding:14px 18px;border-bottom:2px solid #e5e7eb;flex-shrink:0;">
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <button class="prog-filter-btn active" id="cm-kid-vivan" onclick="cmSelectKid('vivan')">👦 Vivan</button>
-      <button class="prog-filter-btn" id="cm-kid-hridaan" onclick="cmSelectKid('hridaan')">👶 Hridaan</button>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;" id="cm-subject-tabs"></div>
-  </div>
-
-  <!-- AI suggestions banner -->
-  <div id="cm-suggestions-banner" style="display:none;background:linear-gradient(135deg,#fef3c7,#fde68a);padding:12px 18px;border-bottom:2px solid #fbbf24;flex-shrink:0;">
-    <div style="font-family:'Baloo 2',cursive;font-size:0.88rem;font-weight:800;color:#92400e;margin-bottom:4px;">🤖 AI has revision suggestions this week</div>
-    <div style="font-size:0.8rem;color:#78350f;font-weight:600;" id="cm-suggestions-text"></div>
-    <div style="display:flex;gap:8px;margin-top:8px;" id="cm-suggestions-btns"></div>
-  </div>
-
-  <!-- Progress summary bar -->
-  <div style="background:white;padding:12px 18px;border-bottom:1px solid #f3f4f6;flex-shrink:0;" id="cm-progress-bar-wrap">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-      <div style="font-family:'Baloo 2',cursive;font-size:0.88rem;font-weight:800;color:#374151;" id="cm-subject-title">Maths</div>
-      <div style="font-size:0.78rem;font-weight:700;color:#6b7280;" id="cm-progress-text">0 / 13 mastered</div>
-    </div>
-    <div style="background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;">
-      <div id="cm-progress-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#3b82f6,#7c3aed);transition:width 0.4s;width:0%;"></div>
-    </div>
-  </div>
-
-  <!-- Topic list -->
-  <div style="flex:1;overflow-y:auto;padding:14px 16px 30px;" id="cm-topic-list"></div>
-
-  <!-- Add custom topic -->
-  <div style="background:white;border-top:2px solid #e5e7eb;padding:14px 18px;flex-shrink:0;">
-    <button onclick="cmShowAddTopic()" style="width:100%;background:linear-gradient(135deg,#1e3a5f,#7c3aed);color:white;border:none;border-radius:12px;padding:12px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;">
-      + Add Custom Topic
-    </button>
-  </div>
-
-  <!-- Add topic modal -->
-  <div id="cm-add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:white;border-radius:20px;padding:24px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#1f2937;margin-bottom:16px;">➕ Add Custom Topic</div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Topic Name</label>
-        <input id="cm-new-topic-name" type="text" placeholder="e.g. Mixed Fraction Practice" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Description (optional)</label>
-        <input id="cm-new-topic-desc" type="text" placeholder="What this topic covers" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
-      </div>
-      <div style="margin-bottom:16px;">
-        <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;">Insert after topic #</label>
-        <select id="cm-new-topic-after" style="width:100%;border:2px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;"></select>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button onclick="cmHideAddTopic()" style="flex:1;background:#f3f4f6;border:2px solid #e5e7eb;border-radius:10px;padding:11px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:700;cursor:pointer;color:#374151;">Cancel</button>
-        <button onclick="cmSaveNewTopic()" style="flex:1;background:linear-gradient(135deg,#1e3a5f,#7c3aed);border:none;border-radius:10px;padding:11px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;cursor:pointer;color:white;">Add Topic</button>
-      </div>
-    </div>
   </div>
 </div>
 
