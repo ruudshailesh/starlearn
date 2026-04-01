@@ -2,12 +2,29 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.2                                                ║
+║  Version: 2.3                                                ║
 ║  Date:    2026-04-01                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
 ╠══════════════════════════════════════════════════════════════╣
-║  v2.2  2026-04-01                                            ║
+║  v2.3  2026-04-01                                            ║
+║    + Universal Lesson Engine (all subjects, both kids)       ║
+║      - Lesson shown before every quiz for every subject      ║
+║      - Slide count adapts to performance:                    ║
+║        3 slides: new topic or avg below 70%  (~2.5 min)     ║
+║        2 slides: avg 70-85%                 (~1.5 min)      ║
+║        1 slide:  avg above 85%              (~30 sec)        ║
+║        0 slides: topic mastered — skip to quiz directly      ║
+║      - Topic-aware AI prompts per subject type               ║
+║        (Maths=worked example, Science=fun fact, etc)         ║
+║      - Hridaan mode: emoji-heavy, slower TTS, bigger chips   ║
+║      - Voice picker saved across sessions                    ║
+║      - Covers all subjects: Maths, ELA, Science, Reading,    ║
+║        Writing, Spelling + Hridaan: Nums, Alpha, Shapes,     ║
+║        Phonics                                               ║
+║    - Removed standalone ELA-only intro (superseded above)    ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.2  2026-04-01                                            ║                                            ║
 ║    + ELA Intro Slideshow (5 slides before each ELA quiz)     ║
 ║      - Gemini generates fresh teacher-style explanation each ║
 ║        session, topic-aware (uses current curriculum topic)  ║
@@ -51,16 +68,15 @@
 ║    + Read Aloud voice practice                               ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  PENDING                                                     ║
-║    - Block Next button until TTS finishes (ELA intro)        ║
+║    - Block Next button until TTS finishes reading            ║
 ║    - TTS voice naturalness investigation Windows Chrome      ║
-║    - ELA intro: topic-specific slides for all 16 ELA topics  ║
 ╚══════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.2</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1502,6 +1518,83 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 20px;
 }
 
+
+/* ════════════════════════════
+   UNIVERSAL LESSON SCREEN
+════════════════════════════ */
+#screen-lesson {
+  background: linear-gradient(160deg, #1e1b4b 0%, #1e3a5f 35%, #f0f9ff 35%);
+}
+#screen-lesson .app-header { background: transparent; }
+
+.lesson-slide-card {
+  background: white; border-radius: 22px; padding: 20px 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10); margin-bottom: 12px;
+  animation: popIn 0.3s cubic-bezier(.34,1.2,.64,1);
+}
+.lesson-badge {
+  display: inline-block; border-radius: 99px; padding: 4px 14px;
+  font-size: 0.72rem; font-weight: 800; margin-bottom: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.lesson-slide-title {
+  font-family: 'Baloo 2', cursive; font-size: 1.4rem; font-weight: 800;
+  color: #1f2937; margin-bottom: 3px; line-height: 1.2;
+}
+.lesson-slide-subtitle { font-size: 0.85rem; color: #6b7280; font-weight: 600; margin-bottom: 14px; }
+.lesson-bubble {
+  border-radius: 16px; padding: 14px 16px; font-size: 0.92rem; line-height: 1.75;
+  color: #1f2937; font-weight: 600; margin-bottom: 12px; min-height: 60px;
+  border: 2px solid transparent; transition: border-color 0.3s; background: #f9fafb;
+}
+.lesson-bubble.speaking { border-color: var(--lesson-accent, #3b82f6); }
+.lesson-loading { display: flex; align-items: center; gap: 8px; color: #9ca3af; font-size: 0.88rem; font-style: italic; }
+.lesson-dot-pulse { display: flex; gap: 4px; align-items: center; }
+.lesson-dot-pulse span { width: 6px; height: 6px; border-radius: 50%; background: var(--lesson-accent,#3b82f6); animation: lessonPulse 0.8s ease-in-out infinite; }
+.lesson-dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.lesson-dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes lessonPulse { 0%,100%{transform:scale(0.6);opacity:0.4;} 50%{transform:scale(1);opacity:1;} }
+.lesson-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.lesson-chip {
+  border-radius: 10px; padding: 5px 13px; font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; transition: transform 0.15s; user-select: none;
+}
+.lesson-chip:active { transform: scale(0.95); }
+.lesson-example-card { border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; border: 1.5px dashed rgba(0,0,0,0.1); }
+.lesson-example-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; color: #9ca3af; }
+.lesson-example-text { font-size: 0.95rem; color: #1f2937; font-weight: 700; line-height: 1.6; }
+.lesson-example-text mark { border-radius: 5px; padding: 1px 5px; font-style: normal; }
+.lesson-tip-box { border-radius: 12px; padding: 10px 13px; font-size: 0.82rem; font-weight: 700; line-height: 1.5; margin-top: 4px; }
+.lesson-cta-card {
+  border-radius: 18px; padding: 18px; text-align: center; margin-bottom: 12px;
+  background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+}
+.lesson-cta-card h2 { font-family: 'Baloo 2', cursive; color: white; font-size: 1.2rem; margin-bottom: 4px; }
+.lesson-cta-card p { color: rgba(255,255,255,0.85); font-size: 0.85rem; font-weight: 600; }
+.lesson-controls {
+  background: white; border-radius: 22px 22px 0 0; padding: 13px 18px 18px;
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.07);
+}
+.lesson-speak-btn {
+  width: 42px; height: 42px; border-radius: 50%; border: 2px solid #e5e7eb;
+  background: white; font-size: 1.1rem; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.lesson-speak-btn.speaking { border-color: var(--lesson-accent,#3b82f6); background: #eff6ff; animation: lessonSpeakPulse 1s ease-in-out infinite; }
+@keyframes lessonSpeakPulse { 0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,0.3);} 50%{box-shadow:0 0 0 8px rgba(59,130,246,0);} }
+.lesson-btn-back { background: #f3f4f6; border: none; border-radius: 12px; padding: 10px 16px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; color: #374151; cursor: pointer; }
+.lesson-btn-back:disabled { opacity: 0.3; cursor: default; }
+.lesson-btn-next { border: none; border-radius: 12px; padding: 10px 22px; font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 800; color: white; cursor: pointer; background: linear-gradient(135deg, #1e3a5f, #3b82f6); box-shadow: 0 4px 14px rgba(59,130,246,0.35); transition: opacity 0.2s; }
+.lesson-dots-row { display: flex; justify-content: center; gap: 7px; padding: 6px 0 8px; flex-shrink: 0; }
+.lesson-sdot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); transition: all 0.3s; }
+.lesson-sdot.active { background: white; width: 22px; border-radius: 99px; }
+.lesson-sdot.done { background: rgba(255,255,255,0.6); }
+.lesson-skip-btn { font-size: 0.78rem; color: #9ca3af; background: none; border: none; cursor: pointer; font-weight: 600; text-decoration: underline; padding: 4px 6px; flex-shrink: 0; }
+/* Hridaan lesson — bigger, emoji-forward */
+.lesson-bubble.hridaan-mode { font-size: 1.05rem; line-height: 1.9; }
+.lesson-chip.hridaan-mode { font-size: 1rem; padding: 8px 16px; }
+
 </style>
 </head>
 <body>
@@ -1769,6 +1862,30 @@ body {
 <!-- ═══════════════════════════════════
      SCREEN 3: QUIZ (Vivan)
 ═══════════════════════════════════ -->
+
+<!-- ═══════════════════════════════════
+     SCREEN: UNIVERSAL LESSON
+═══════════════════════════════════ -->
+<div id="screen-lesson" class="screen">
+  <div class="app-header">
+    <button onclick="lessonSkip()" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);color:white;border-radius:10px;padding:7px 14px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;font-size:0.9rem;">← Back</button>
+    <div class="logo-text" id="lesson-header-title">📖 Lesson</div>
+    <div id="lesson-slide-counter" style="font-family:'Baloo 2',cursive;font-weight:800;font-size:0.9rem;color:rgba(255,255,255,0.85);">1 of 2</div>
+  </div>
+  <div class="lesson-dots-row" id="lesson-dots-row"></div>
+  <div style="flex:1;overflow-y:auto;padding:0 16px 12px;" id="lesson-scroll"></div>
+  <div id="lesson-voice-panel" style="display:none;background:white;margin:0 16px 8px;border-radius:16px;padding:14px 16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);"></div>
+  <div class="lesson-controls">
+    <button class="lesson-speak-btn" id="lesson-speak-btn" onclick="lessonReplaySpeak()" title="Replay">🔊</button>
+    <button onclick="lessonToggleVoicePicker()" style="background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;" title="Choose voice">⚙️</button>
+    <div style="display:flex;gap:8px;flex:1;justify-content:flex-end;align-items:center;">
+      <button class="lesson-btn-back" id="lesson-btn-back" onclick="lessonGoSlide(-1)" disabled>← Back</button>
+      <button class="lesson-btn-next" id="lesson-btn-next" onclick="lessonGoSlide(1)">Next →</button>
+      <button class="lesson-skip-btn" onclick="lessonSkip()">Skip</button>
+    </div>
+  </div>
+</div>
+
 <div id="screen-quiz" class="screen">
   <div class="quiz-header">
     <button class="quiz-back" onclick="goBack()">← Back</button>
@@ -3308,18 +3425,17 @@ async function startQuiz(kid, subject) {
   // Small pause so 100% is visible briefly
   await new Promise(r => setTimeout(r, 400));
 
-  // Route to correct quiz screen
-  if (subject === 'read')    { loadReadingQuiz();  showScreen('reading'); return; }
-  if (subject === 'write')   { loadWritingQuiz();  showScreen('writing'); return; }
-  if (subject === 'phonics') { loadPhonicsQuiz();  showScreen('phonics'); return; }
-  if (kid === 'hridaan') { loadHridaanQuiz(); showScreen('hquiz'); return; }
-  // ELA: show intro slideshow first, then quiz
-  if (kid === 'vivan' && subject === 'ela') {
-    // currentQuizKey already set, currentQuizData will be set after intro
-    startElaIntro();
-    return;
-  }
-  loadVivanQuiz(); showScreen('quiz');
+  // Route through lesson first, then to quiz
+  // Define what to do after lesson completes for each subject
+  const launchQuiz = () => {
+    if (subject === 'read')              { loadReadingQuiz();  showScreen('reading'); return; }
+    if (subject === 'write')             { loadWritingQuiz();  showScreen('writing'); return; }
+    if (subject === 'phonics')           { loadPhonicsQuiz();  showScreen('phonics'); return; }
+    if (kid === 'hridaan')               { loadHridaanQuiz();  showScreen('hquiz');   return; }
+    loadVivanQuiz(); showScreen('quiz');
+  };
+  // All subjects: show lesson first (engine decides count, may skip if mastered)
+  startLesson(kid, subject, launchQuiz);
 }
 
 /* ── VIVAN QUIZ ── */
@@ -5150,8 +5266,12 @@ async function startSpelling() {
 
   stopLoadingAnimation();
   await new Promise(r => setTimeout(r, 300));
-  loadSpellQuestion();
-  showScreen('spelling');
+
+  // Show lesson first, then spelling
+  await startLesson('vivan', 'spell', () => {
+    loadSpellQuestion();
+    showScreen('spelling');
+  });
 }
 
 function loadSpellQuestion() {
@@ -6310,6 +6430,454 @@ async function startElaIntro() {
   await elaGetVoices();
   elaRenderCurrentSlide();
   showScreen('ela-intro');
+}
+
+
+/* ════════════════════════════════════════════
+   UNIVERSAL LESSON ENGINE
+   Replaces ELA-specific intro with a system
+   that works for all subjects + both kids.
+════════════════════════════════════════════ */
+
+/* ── Subject themes ── */
+const LESSON_THEMES = {
+  math:   { accent:'#3b82f6', bg:'#eff6ff',  chipBg:'#dbeafe', chipColor:'#1d4ed8', exBg:'#eff6ff',  markBg:'#93c5fd', markColor:'#1e3a8a', tipBg:'#eff6ff',  tipColor:'#1e40af', icon:'🔢', label:'Maths Lesson' },
+  ela:    { accent:'#db2877', bg:'#fdf2f8',  chipBg:'#fce7f3', chipColor:'#9d174d', exBg:'#fdf2f8',  markBg:'#f9a8d4', markColor:'#831843', tipBg:'#fdf2f8',  tipColor:'#9d174d', icon:'📖', label:'English Lesson' },
+  sci:    { accent:'#059669', bg:'#f0fdf4',  chipBg:'#dcfce7', chipColor:'#065f46', exBg:'#f0fdf4',  markBg:'#6ee7b7', markColor:'#065f46', tipBg:'#f0fdf4',  tipColor:'#065f46', icon:'🔬', label:'Science Lesson' },
+  read:   { accent:'#7c3aed', bg:'#f5f3ff',  chipBg:'#ede9fe', chipColor:'#4c1d95', exBg:'#f5f3ff',  markBg:'#c4b5fd', markColor:'#3c3489', tipBg:'#f5f3ff',  tipColor:'#4c1d95', icon:'📚', label:'Reading Lesson' },
+  write:  { accent:'#d97706', bg:'#fffbeb',  chipBg:'#fef3c7', chipColor:'#92400e', exBg:'#fffbeb',  markBg:'#fcd34d', markColor:'#78350f', tipBg:'#fffbeb',  tipColor:'#92400e', icon:'✍️', label:'Writing Lesson' },
+  spell:  { accent:'#0891b2', bg:'#ecfeff',  chipBg:'#cffafe', chipColor:'#164e63', exBg:'#ecfeff',  markBg:'#67e8f9', markColor:'#164e63', tipBg:'#ecfeff',  tipColor:'#0e7490', icon:'🔤', label:'Spelling Lesson' },
+  nums:   { accent:'#f59e0b', bg:'#fffbeb',  chipBg:'#fef3c7', chipColor:'#92400e', exBg:'#fffbeb',  markBg:'#fcd34d', markColor:'#78350f', tipBg:'#fffbeb',  tipColor:'#92400e', icon:'🔢', label:'Numbers Lesson' },
+  alpha:  { accent:'#8b5cf6', bg:'#f5f3ff',  chipBg:'#ede9fe', chipColor:'#4c1d95', exBg:'#f5f3ff',  markBg:'#c4b5fd', markColor:'#3c3489', tipBg:'#f5f3ff',  tipColor:'#4c1d95', icon:'🔤', label:'Alphabet Lesson' },
+  shapes: { accent:'#059669', bg:'#f0fdf4',  chipBg:'#dcfce7', chipColor:'#065f46', exBg:'#f0fdf4',  markBg:'#6ee7b7', markColor:'#065f46', tipBg:'#f0fdf4',  tipColor:'#065f46', icon:'🔵', label:'Shapes Lesson' },
+  phonics:{ accent:'#ec4899', bg:'#fdf2f8',  chipBg:'#fce7f3', chipColor:'#9d174d', exBg:'#fdf2f8',  markBg:'#f9a8d4', markColor:'#831843', tipBg:'#fdf2f8',  tipColor:'#9d174d', icon:'🔊', label:'Phonics Lesson' },
+};
+
+/* ── State ── */
+let lessonCurrentSlide = 0;
+let lessonSlideData    = {};   // { idx: {explanation, chips, example, highlights, tip} }
+let lessonSlides       = [];   // array of slide config objects
+let lessonKid          = 'vivan';
+let lessonSubject      = 'math';
+let lessonTopic        = { name:'', desc:'' };
+let lessonIsSpeaking   = false;
+let lessonVoices       = [];
+let lessonSynth        = window.speechSynthesis;
+// Where to go after lesson finishes
+let lessonOnComplete   = null;
+
+/* ── Decide how many slides based on performance ── */
+function lessonDecideSlideCount(kid, subject) {
+  const prog = (kid === 'vivan' ? vivCurriculum : hridaanCurriculum)[subject];
+  if (!prog) return 2;
+
+  const passCount     = prog.passCount     || 0;
+  const masteredCount = prog.masteredCount || 0;
+  const topicIdx      = prog.topicIdx      || 0;
+
+  // Topic already mastered — skip lesson entirely
+  if (masteredCount > topicIdx) return 0;
+
+  // Look at local history for recent scores on this subject+topic
+  const data      = getKidData(kid);
+  const topicName = getCurrentTopic(kid, subject)?.name || '';
+  const recent    = (data.history || [])
+    .filter(h => h.subject === subject)
+    .slice(-6);  // last 6 attempts
+
+  if (recent.length === 0) return 3;  // brand new — full lesson
+
+  const avgPct = Math.round(recent.reduce((s, h) => s + h.pct, 0) / recent.length);
+
+  if (avgPct >= 85) return 1;   // doing great — just a quick tip
+  if (avgPct >= 70) return 2;   // doing ok — brief recap
+  return 3;                      // struggling — full lesson
+}
+
+/* ── Build slide configs for a subject+topic ── */
+function lessonBuildSlides(kid, subject, topic, count) {
+  if (count === 0) return [];
+  const isHridaan = kid === 'hridaan';
+
+  // Slide structures vary by count
+  if (count === 1) {
+    return [{ type:'quicktip', isLast:true }];
+  }
+  if (count === 2) {
+    return [
+      { type:'concept', isLast:false },
+      { type:'example', isLast:true  },
+    ];
+  }
+  // count === 3
+  return [
+    { type:'concept',  isLast:false },
+    { type:'example',  isLast:false },
+    { type:'practice', isLast:true  },
+  ];
+}
+
+/* ── Build AI prompt per slide type + subject ── */
+function lessonBuildPrompt(kid, subject, topic, slideType) {
+  const isHridaan = kid === 'hridaan';
+  const topicName = topic.name || subject;
+  const topicDesc = topic.desc || '';
+  const style = isHridaan
+    ? 'Use very simple words, lots of emoji, short sentences. For a 3-4 year old child.'
+    : 'Clear and simple English for a 7-year-old ESL learner in Texas. Friendly teacher tone.';
+
+  const subjectPrompts = {
+    math:    { concept:'the maths concept', example:'a worked example', practice:'a quick mental maths trick or shortcut' },
+    ela:     { concept:'the grammar concept', example:'example sentences', practice:'a common mistake to avoid' },
+    sci:     { concept:'the science idea', example:'a real-world example', practice:'a fun fact or memory trick' },
+    read:    { concept:'this reading skill', example:'how to answer this question type', practice:'a strategy tip' },
+    write:   { concept:'the writing rule', example:'a before/after example sentence', practice:'a common mistake to avoid' },
+    spell:   { concept:'the spelling pattern', example:'example words with this pattern', practice:'a pronunciation tip' },
+    nums:    { concept:'the number concept', example:'a fun counting or calculation example', practice:'a quick number game idea' },
+    alpha:   { concept:'these letters and sounds', example:'words that start with these sounds', practice:'a recognition tip' },
+    shapes:  { concept:'these shapes', example:'real-world objects that match', practice:'a fun way to remember them' },
+    phonics: { concept:'this sound', example:'words that use this sound', practice:'a blending tip' },
+  };
+
+  const sp = subjectPrompts[subject] || subjectPrompts.ela;
+  const slideGoal = sp[slideType] || sp.concept;
+
+  return `You are a warm children's teacher. ${style}
+Today's topic: "${topicName}" — ${topicDesc}
+
+Generate a lesson slide about ${slideGoal}.
+Return ONLY this JSON (no markdown, no backticks):
+{
+  "title": "Short catchy slide title (max 5 words)",
+  "subtitle": "One line explaining what this slide covers",
+  "explanation": "${isHridaan ? '2-3 very short sentences with emoji. Simple words only.' : '3-4 conversational sentences. Sound like a real teacher, not a textbook.'}",
+  "chips": [${isHridaan ? '"4-5 fun emoji+word examples like 🍎 Apple"' : '"5-6 key words or examples related to this topic"'}],
+  "example": "One ${isHridaan ? 'very simple' : 'vivid'} example sentence",
+  "highlights": ["key words from the example sentence to highlight"],
+  "tip": "💡 One memorable ${isHridaan ? 'simple' : 'clever'} tip or trick"
+}`;
+}
+
+/* ── Fetch one slide's AI content ── */
+async function lessonFetchSlide(slideIdx) {
+  if (lessonSlideData[slideIdx]) return lessonSlideData[slideIdx];
+
+  const slide = lessonSlides[slideIdx];
+  const prompt = lessonBuildPrompt(lessonKid, lessonSubject, lessonTopic, slide.type);
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/functions/v1/ai-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({
+        model: 'gemini-2.0-flash', max_tokens: 500,
+        system: "You are a JSON generator for a children's educational app. Return ONLY valid JSON — no markdown, no backticks.",
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const raw  = await res.json();
+    let text   = raw.content?.find(b => b.type === 'text')?.text?.trim() || '';
+    text = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+    const json = JSON.parse(text);
+    const data = {
+      title:       json.title       || lessonTopic.name,
+      subtitle:    json.subtitle    || '',
+      explanation: json.explanation || '',
+      chips:       Array.isArray(json.chips) ? json.chips : [],
+      example:     json.example     || '',
+      highlights:  Array.isArray(json.highlights) ? json.highlights : [],
+      tip:         json.tip         || '',
+    };
+    lessonSlideData[slideIdx] = data;
+    return data;
+  } catch(e) {
+    console.warn('Lesson slide fetch failed:', e.message);
+    // Fallback
+    const data = {
+      title:       lessonTopic.name || 'Let\'s Learn!',
+      subtitle:    lessonTopic.desc || '',
+      explanation: `Today we are learning about ${lessonTopic.name}. ${lessonTopic.desc} Pay attention and you will do great in the quiz!`,
+      chips:       [],
+      example:     '',
+      highlights:  [],
+      tip:         '💡 Read each question carefully before answering!',
+    };
+    lessonSlideData[slideIdx] = data;
+    return data;
+  }
+}
+
+/* ── Voice helpers ── */
+async function lessonGetVoices() {
+  return new Promise(resolve => {
+    let v = lessonSynth.getVoices();
+    if (v.length) { lessonVoices = v; resolve(v); return; }
+    let tries = 0;
+    const iv = setInterval(() => {
+      v = lessonSynth.getVoices(); tries++;
+      if (v.length || tries > 30) { clearInterval(iv); lessonVoices = v; resolve(v); }
+    }, 100);
+  });
+}
+
+function lessonGetBestVoice() {
+  if (!lessonVoices.length) lessonVoices = lessonSynth.getVoices();
+  const saved = localStorage.getItem('sl_voice_name');
+  if (saved) { const p = lessonVoices.find(v => v.name === saved); if (p) return p; }
+  const preferred = ['Google US English','Google UK English Female','Moira','Karen','Samantha'];
+  for (const name of preferred) {
+    const v = lessonVoices.find(v => v.name === name || v.name.includes(name));
+    if (v) return v;
+  }
+  return lessonVoices.find(v => v.lang==='en-US' && !v.name.includes('Microsoft'))
+    || lessonVoices.find(v => v.lang.startsWith('en') && !v.name.includes('Microsoft'))
+    || lessonVoices.find(v => v.lang.startsWith('en'))
+    || null;
+}
+
+function lessonSetSpeakingUI(on) {
+  lessonIsSpeaking = on;
+  document.getElementById('lesson-speak-btn')?.classList.toggle('speaking', on);
+  document.getElementById('lesson-bubble')?.classList.toggle('speaking', on);
+}
+
+async function lessonSpeak(text) {
+  if (!lessonSynth || !text) return;
+  lessonSynth.cancel();
+  await lessonGetVoices();
+  setTimeout(() => {
+    lessonSetSpeakingUI(true);
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US'; utt.rate = lessonKid === 'hridaan' ? 0.78 : 0.85; utt.pitch = 1.0; utt.volume = 1.0;
+    const v = lessonGetBestVoice(); if (v) utt.voice = v;
+    utt.onend   = () => lessonSetSpeakingUI(false);
+    utt.onerror = () => lessonSetSpeakingUI(false);
+    lessonSynth.speak(utt);
+  }, 150);
+}
+
+function lessonReplaySpeak() {
+  const d = lessonSlideData[lessonCurrentSlide];
+  if (d?.explanation) lessonSpeak(d.explanation);
+}
+
+function lessonSpeakChip(word) {
+  lessonSynth.cancel();
+  setTimeout(async () => {
+    await lessonGetVoices();
+    const utt = new SpeechSynthesisUtterance(word.replace(/[^\w\s]/g,''));
+    utt.rate = 0.78; utt.lang = 'en-US';
+    const v = lessonGetBestVoice(); if (v) utt.voice = v;
+    lessonSynth.speak(utt);
+  }, 80);
+}
+
+async function lessonToggleVoicePicker() {
+  const panel = document.getElementById('lesson-voice-panel');
+  if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+  await lessonGetVoices();
+  const enVoices = lessonVoices.filter(v => v.lang.startsWith('en'));
+  const saved = localStorage.getItem('sl_voice_name') || lessonGetBestVoice()?.name || '';
+  panel.innerHTML = `
+    <div style="font-size:0.75rem;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">🎙️ Choose voice</div>
+    <select id="lesson-voice-select" style="width:100%;padding:8px 10px;border-radius:10px;border:2px solid #e5e7eb;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;color:#1f2937;background:white;margin-bottom:8px;">
+      ${enVoices.map(v=>`<option value="${v.name}"${v.name===saved?' selected':''}>${v.name} (${v.lang})</option>`).join('')}
+    </select>
+    <div style="display:flex;gap:8px;">
+      <button onclick="lessonPreviewVoice(document.getElementById('lesson-voice-select').value)"
+        style="flex:1;padding:7px;border-radius:9px;border:2px solid #3b82f6;background:white;color:#3b82f6;font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;">▶ Preview</button>
+      <button onclick="lessonSaveVoice(document.getElementById('lesson-voice-select').value)"
+        style="flex:1;padding:7px;border-radius:9px;border:none;background:#3b82f6;color:white;font-family:'Nunito',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;">✓ Save</button>
+    </div>
+    <div id="lesson-voice-msg" style="font-size:0.75rem;color:#15803d;font-weight:700;margin-top:5px;min-height:16px;"></div>`;
+  panel.style.display = 'block';
+}
+
+function lessonPreviewVoice(name) {
+  lessonSynth.cancel();
+  const v = lessonVoices.find(v => v.name === name); if (!v) return;
+  const utt = new SpeechSynthesisUtterance("Hi! I am your StarLearn teacher. Let us learn together!");
+  utt.voice = v; utt.rate = 0.85; utt.lang = 'en-US';
+  lessonSynth.speak(utt);
+}
+
+function lessonSaveVoice(name) {
+  localStorage.setItem('sl_voice_name', name);
+  const msg = document.getElementById('lesson-voice-msg');
+  if (msg) { msg.textContent = '✓ Saved!'; setTimeout(()=>msg.textContent='',2000); }
+}
+
+/* ── Render dots ── */
+function lessonRenderDots() {
+  const el = document.getElementById('lesson-dots-row');
+  if (!el) return;
+  el.innerHTML = lessonSlides.map((_,i) =>
+    `<div class="lesson-sdot${i===lessonCurrentSlide?' active':i<lessonCurrentSlide?' done':''}"></div>`
+  ).join('');
+}
+
+/* ── Highlight words in sentence ── */
+function lessonHighlight(sentence, words, markBg, markColor) {
+  if (!words.length) return sentence;
+  let r = sentence;
+  words.forEach(w => {
+    const re = new RegExp(`\\b(${w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})\\b`, 'gi');
+    r = r.replace(re, `<mark style="background:${markBg};color:${markColor};border-radius:4px;padding:1px 4px;">$1</mark>`);
+  });
+  return r;
+}
+
+/* ── Render one slide ── */
+async function lessonRenderSlide() {
+  const theme  = LESSON_THEMES[lessonSubject] || LESSON_THEMES.math;
+  const slide  = lessonSlides[lessonCurrentSlide];
+  const total  = lessonSlides.length;
+  const isLast = lessonCurrentSlide === total - 1;
+  const isH    = lessonKid === 'hridaan';
+
+  // Set CSS accent variable
+  document.getElementById('screen-lesson').style.setProperty('--lesson-accent', theme.accent);
+
+  document.getElementById('lesson-header-title').textContent = theme.icon + ' ' + theme.label;
+  document.getElementById('lesson-slide-counter').textContent = `${lessonCurrentSlide+1} of ${total}`;
+  document.getElementById('lesson-btn-back').disabled = lessonCurrentSlide === 0;
+  document.getElementById('lesson-btn-next').textContent = isLast ? '🎯 Start Quiz →' : 'Next →';
+  document.getElementById('lesson-btn-next').style.background = `linear-gradient(135deg, #1e3a5f, ${theme.accent})`;
+  lessonRenderDots();
+
+  // Skeleton
+  const scroll = document.getElementById('lesson-scroll');
+  scroll.innerHTML = `
+    <div class="lesson-slide-card">
+      <div class="lesson-bubble${isH?' hridaan-mode':''}" id="lesson-bubble">
+        <div class="lesson-loading">
+          <div class="lesson-dot-pulse"><span></span><span></span><span></span></div>
+          Preparing your lesson…
+        </div>
+      </div>
+      <div class="lesson-chips" id="lesson-chips"></div>
+      <div id="lesson-example-area"></div>
+      <div id="lesson-tip-area"></div>
+    </div>
+    ${isLast ? `<div class="lesson-cta-card" style="background:linear-gradient(135deg,#1e3a5f,${theme.accent})">
+      <h2>${isH ? '🌟 Great job! Quiz time!' : 'You are ready! 🌟'}</h2>
+      <p>${isH ? 'Tap Next for the quiz! 🎉' : 'Great work — the quiz is up next!'}</p>
+    </div>` : ''}`;
+
+  lessonSynth?.cancel();
+
+  // Fetch AI content
+  const data = await lessonFetchSlide(lessonCurrentSlide);
+
+  // Update slide title/subtitle in card
+  scroll.innerHTML = `
+    <div class="lesson-slide-card">
+      <span class="lesson-badge" style="background:${theme.chipBg};color:${theme.chipColor};">${lessonTopic.name}</span>
+      <div class="lesson-slide-title">${data.title}</div>
+      <div class="lesson-slide-subtitle">${data.subtitle}</div>
+      <div class="lesson-bubble${isH?' hridaan-mode':''}" id="lesson-bubble">${data.explanation}</div>
+      <div class="lesson-chips" id="lesson-chips"></div>
+      <div id="lesson-example-area"></div>
+      <div id="lesson-tip-area"></div>
+    </div>
+    ${isLast ? `<div class="lesson-cta-card" style="background:linear-gradient(135deg,#1e3a5f,${theme.accent})">
+      <h2>${isH ? '🌟 Great job! Quiz time!' : 'You are ready! 🌟'}</h2>
+      <p>${isH ? 'Tap Next for the quiz! 🎉' : 'Great work — the quiz is up next!'}</p>
+    </div>` : ''}`;
+
+  // Chips
+  const chipRow = document.getElementById('lesson-chips');
+  if (chipRow && data.chips.length) {
+    chipRow.innerHTML = data.chips.map(c =>
+      `<span class="lesson-chip${isH?' hridaan-mode':''}"
+        style="background:${theme.chipBg};color:${theme.chipColor};"
+        onclick="lessonSpeakChip('${c.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
+        🔊 ${c}
+      </span>`
+    ).join('');
+  }
+
+  // Example
+  const exArea = document.getElementById('lesson-example-area');
+  if (exArea && data.example) {
+    const hl = lessonHighlight(data.example, data.highlights, theme.markBg, theme.markColor);
+    exArea.innerHTML = `<div class="lesson-example-card" style="background:${theme.exBg};">
+      <div class="lesson-example-label">Example</div>
+      <div class="lesson-example-text">${hl}</div>
+    </div>`;
+  }
+
+  // Tip
+  const tipArea = document.getElementById('lesson-tip-area');
+  if (tipArea && data.tip) {
+    tipArea.innerHTML = `<div class="lesson-tip-box" style="background:${theme.tipBg};color:${theme.tipColor};">${data.tip}</div>`;
+  }
+
+  // Pre-fetch next slide
+  if (lessonCurrentSlide + 1 < lessonSlides.length) lessonFetchSlide(lessonCurrentSlide + 1);
+
+  // Auto-speak
+  lessonSpeak(data.explanation);
+}
+
+/* ── Navigation ── */
+function lessonGoSlide(dir) {
+  lessonSynth?.cancel();
+  lessonSetSpeakingUI(false);
+  const next = lessonCurrentSlide + dir;
+  if (next < 0) { lessonSkip(); return; }
+  if (next >= lessonSlides.length) {
+    // Done — launch quiz
+    lessonSynth?.cancel();
+    if (lessonOnComplete) lessonOnComplete();
+    return;
+  }
+  lessonCurrentSlide = next;
+  lessonRenderSlide();
+}
+
+function lessonSkip() {
+  lessonSynth?.cancel();
+  lessonSetSpeakingUI(false);
+  if (lessonOnComplete) lessonOnComplete();
+  else goHome();
+}
+
+/* ── Main entry point — call this instead of going to quiz directly ── */
+async function startLesson(kid, subject, onComplete) {
+  lessonKid          = kid;
+  lessonSubject      = subject;
+  lessonCurrentSlide = 0;
+  lessonSlideData    = {};
+  lessonVoices       = [];
+  lessonOnComplete   = onComplete;
+
+  const topic = getCurrentTopic(kid, subject);
+  lessonTopic = { name: topic?.name || subject, desc: topic?.desc || '' };
+
+  // Decide slide count based on performance
+  const count = lessonDecideSlideCount(kid, subject);
+
+  // If 0 — skip lesson entirely
+  if (count === 0) {
+    console.log('Lesson skipped — topic mastered');
+    if (onComplete) onComplete();
+    return;
+  }
+
+  lessonSlides = lessonBuildSlides(kid, subject, lessonTopic, count);
+
+  // Show loading while fetching slide 0
+  showScreen('loading');
+  startLoadingAnimation(kid, subject);
+  await lessonFetchSlide(0);
+  stopLoadingAnimation();
+  await new Promise(r => setTimeout(r, 300));
+
+  await lessonGetVoices();
+  lessonRenderSlide();
+  showScreen('lesson');
 }
 
 window.addEventListener('load', () => {
