@@ -2,12 +2,28 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.3                                                ║
+║  Version: 2.4                                                ║
 ║  Date:    2026-04-01                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
 ╠══════════════════════════════════════════════════════════════╣
-║  v2.3  2026-04-01                                            ║
+║  v2.4  2026-04-01                                            ║
+║    + TTS reads full slide (explanation + example + tip)      ║
+║      - Sentence-by-sentence chunking for natural pacing      ║
+║      - 180ms pause between sentences                         ║
+║      - Replay button speaks full slide every time            ║
+║    + AI prompts rewritten — engaging, kid-relevant content   ║
+║      - Examples use soccer, Minecraft, Sonic, superheroes    ║
+║      - Max 20 words per sentence rule enforced               ║
+║      - Hridaan: silly emoji-heavy toddler-friendly prompts   ║
+║      - Each slide type (concept/example/practice) has        ║
+║        subject-specific goals tied to quiz content           ║
+║    + AI provider: Groq first, Gemini fallback                ║
+║      - Changed model field to groq so edge function          ║
+║        uses fast free Groq tier, falls back to Gemini        ║
+║    + Fallback content improved — still fun without AI        ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.3  2026-04-01                                            ║                                            ║
 ║    + Universal Lesson Engine (all subjects, both kids)       ║
 ║      - Lesson shown before every quiz for every subject      ║
 ║      - Slide count adapts to performance:                    ║
@@ -69,14 +85,14 @@
 ╠══════════════════════════════════════════════════════════════╣
 ║  PENDING                                                     ║
 ║    - Block Next button until TTS finishes reading            ║
-║    - TTS voice naturalness investigation Windows Chrome      ║
+║    - Test Groq JSON reliability vs Gemini for lesson slides  ║
 ╚══════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.3</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.4</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -6519,42 +6535,96 @@ function lessonBuildSlides(kid, subject, topic, count) {
 
 /* ── Build AI prompt per slide type + subject ── */
 function lessonBuildPrompt(kid, subject, topic, slideType) {
-  const isHridaan = kid === 'hridaan';
+  const isH       = kid === 'hridaan';
   const topicName = topic.name || subject;
   const topicDesc = topic.desc || '';
-  const style = isHridaan
-    ? 'Use very simple words, lots of emoji, short sentences. For a 3-4 year old child.'
-    : 'Clear and simple English for a 7-year-old ESL learner in Texas. Friendly teacher tone.';
 
-  const subjectPrompts = {
-    math:    { concept:'the maths concept', example:'a worked example', practice:'a quick mental maths trick or shortcut' },
-    ela:     { concept:'the grammar concept', example:'example sentences', practice:'a common mistake to avoid' },
-    sci:     { concept:'the science idea', example:'a real-world example', practice:'a fun fact or memory trick' },
-    read:    { concept:'this reading skill', example:'how to answer this question type', practice:'a strategy tip' },
-    write:   { concept:'the writing rule', example:'a before/after example sentence', practice:'a common mistake to avoid' },
-    spell:   { concept:'the spelling pattern', example:'example words with this pattern', practice:'a pronunciation tip' },
-    nums:    { concept:'the number concept', example:'a fun counting or calculation example', practice:'a quick number game idea' },
-    alpha:   { concept:'these letters and sounds', example:'words that start with these sounds', practice:'a recognition tip' },
-    shapes:  { concept:'these shapes', example:'real-world objects that match', practice:'a fun way to remember them' },
-    phonics: { concept:'this sound', example:'words that use this sound', practice:'a blending tip' },
+  // Kid interests to weave into examples
+  const vivanCtx = 'Vivan is a 7-year-old boy in Texas. He loves soccer, Minecraft, Sonic, superheroes (Spider-Man, Iron Man), playing with friends, and travelling. English is his second language.';
+  const hridaanCtx = 'Hridaan is a 3-year-old boy. He loves Peppa Pig, dinosaurs, cars, football, animals, and anything his big brother Vivan does.';
+  const kidCtx = isH ? hridaanCtx : vivanCtx;
+
+  // What each slide type should focus on
+  const slideGoals = {
+    concept: {
+      math:    'Explain the maths concept clearly. What is it? How does it work? Use a fun example involving something Vivan loves.',
+      ela:     'Explain the grammar concept in plain English. What is this word type/rule? Why does it matter? One memorable example sentence.',
+      sci:     'Explain the science idea simply. What is it? What makes it cool or surprising? Connect it to something in everyday life.',
+      read:    'Explain this reading question type. What is the quiz asking? How should you think about it? One quick tip for answering it.',
+      write:   'Explain the writing rule clearly. What should you do? What does correct look like? Keep it super simple.',
+      spell:   'Explain the spelling pattern. What sound or rule connects these words? Give the key pattern in simple terms.',
+      nums:    'Explain the number concept. What is it? Show it with objects or counting. Make it feel easy and fun.',
+      alpha:   'Explain these letters and their sounds clearly. What do they look like? What sound do they make? One fun word for each.',
+      shapes:  'Describe these shapes. How many sides? What do they look like? Name something in real life that is this shape.',
+      phonics: 'Explain this sound clearly. How do your mouth and lips move to make it? One clear example word.',
+    },
+    example: {
+      math:    'Show a worked example using something Vivan loves — a Minecraft calculation, soccer scores, superhero numbers. Walk through the steps.',
+      ela:     'Show 2-3 example sentences using this grammar concept. Make them funny or surprising — Sonic tripping, Spider-Man doing homework.',
+      sci:     'Give a real-world or funny example of this science concept. Connect it to something the kid would actually see or do.',
+      read:    'Show exactly how to answer this reading question type. Give a mini passage and the right thinking process.',
+      write:   'Show a before/after — a wrong sentence and then the corrected version. Make the wrong one funny.',
+      spell:   'Give 4-5 example words that follow this spelling pattern. Say each one out loud in a sentence.',
+      nums:    'Show the concept using objects the kid loves — Minecraft blocks, soccer balls, dinosaurs. Make the numbers visual.',
+      alpha:   'Give a fun word for each letter that the kid knows — animals, food, toys, superheroes.',
+      shapes:  'Name 3-4 real objects that are this shape. Include something fun like a pizza slice or a Minecraft block.',
+      phonics: 'Give 3 words that use this sound. Use words a 3-year-old knows — cat, dog, ball, car, mum, dad.',
+    },
+    practice: {
+      math:    'Give one quick mental maths trick or shortcut for this topic. Something that makes it faster or easier to remember.',
+      ela:     'Point out the most common mistake kids make with this grammar rule. Show the wrong version then the right version.',
+      sci:     'Give one surprising or funny fact about this science topic that will stick in the memory.',
+      read:    'Give one simple strategy for this question type. Something like: "First look for... then check if..."',
+      write:   'Give one simple rule to remember — something that fits on a sticky note. Short and punchy.',
+      spell:   'Give one pronunciation tip or rhyme that helps remember this spelling pattern.',
+      nums:    'Give a quick fun game or trick for practising this number skill — something to try at home.',
+      alpha:   'Give one fun trick for remembering this letter — a shape it looks like, a word it sounds like.',
+      phonics: 'Give a silly sentence where every word starts with this sound. Make it funny.',
+    },
   };
 
-  const sp = subjectPrompts[subject] || subjectPrompts.ela;
-  const slideGoal = sp[slideType] || sp.concept;
+  const goals = slideGoals[slideType] || slideGoals.concept;
+  const slideGoal = goals[subject] || goals.ela;
 
-  return `You are a warm children's teacher. ${style}
-Today's topic: "${topicName}" — ${topicDesc}
+  if (isH) {
+    return `You are a fun, energetic teacher for a 3-year-old. ${kidCtx}
+Topic today: "${topicName}" — ${topicDesc}
+Goal: ${slideGoal}
 
-Generate a lesson slide about ${slideGoal}.
+Rules: Use LOTS of emoji. Max 2 short sentences. Words a 3-year-old knows. Be silly and exciting. NO big words.
+
+Return ONLY this JSON:
+{
+  "title": "3-4 word fun title with emoji",
+  "subtitle": "One tiny phrase like 'Let us count!'",
+  "explanation": "2 very short silly sentences with emoji. A toddler must understand every word.",
+  "chips": ["4-5 items like '⚽ ball', '🦕 dino', '🚗 car' — tap to hear"],
+  "example": "One super simple sentence a 3-year-old can follow",
+  "highlights": ["1-2 key words to highlight"],
+  "tip": "💡 One silly fun tip with emoji"
+}`;
+  }
+
+  return `You are Vivan's favourite teacher — fun, energetic, talks like a real person not a textbook. ${kidCtx}
+Topic today: "${topicName}" — ${topicDesc}
+Goal: ${slideGoal}
+
+Critical rules:
+- Use short punchy sentences. Max 20 words per sentence.
+- At least ONE example must involve soccer, Minecraft, Sonic, superheroes, or something boys love.
+- NO textbook language. Talk like a cool teacher having a chat.
+- Keep it under 60 words total in the explanation.
+- The example sentence should be funny or surprising — make Vivan want to read it.
+
 Return ONLY this JSON (no markdown, no backticks):
 {
-  "title": "Short catchy slide title (max 5 words)",
-  "subtitle": "One line explaining what this slide covers",
-  "explanation": "${isHridaan ? '2-3 very short sentences with emoji. Simple words only.' : '3-4 conversational sentences. Sound like a real teacher, not a textbook.'}",
-  "chips": [${isHridaan ? '"4-5 fun emoji+word examples like 🍎 Apple"' : '"5-6 key words or examples related to this topic"'}],
-  "example": "One ${isHridaan ? 'very simple' : 'vivid'} example sentence",
-  "highlights": ["key words from the example sentence to highlight"],
-  "tip": "💡 One memorable ${isHridaan ? 'simple' : 'clever'} tip or trick"
+  "title": "Catchy 4-5 word title — make it sound exciting",
+  "subtitle": "One line, plain English, tells him what this is about",
+  "explanation": "2-3 short punchy sentences. Fun, direct, zero textbook vibes. One sentence must mention something Vivan loves.",
+  "chips": ["5-6 words or examples directly from this topic — things that will appear in the quiz"],
+  "example": "One funny or surprising sentence using something Vivan loves. Highlight the key concept word.",
+  "highlights": ["2-3 key concept words from the example sentence"],
+  "tip": "💡 One clever memory trick. Make it rhyme OR make it silly. Max 15 words."
 }`;
 }
 
@@ -6570,8 +6640,9 @@ async function lessonFetchSlide(slideIdx) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash', max_tokens: 500,
-        system: "You are a JSON generator for a children's educational app. Return ONLY valid JSON — no markdown, no backticks.",
+        model: 'groq',  // Use Groq (fast, free) first; edge function falls back to Gemini
+        max_tokens: 600,
+        system: "You are a JSON generator for a children's educational app. Return ONLY valid JSON — no markdown, no backticks, no extra text before or after the JSON.",
         messages: [{ role: 'user', content: prompt }],
       }),
     });
@@ -6579,6 +6650,9 @@ async function lessonFetchSlide(slideIdx) {
     const raw  = await res.json();
     let text   = raw.content?.find(b => b.type === 'text')?.text?.trim() || '';
     text = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+    // Find first { in case model adds preamble despite instructions
+    const jsonStart = text.indexOf('{');
+    if (jsonStart > 0) text = text.slice(jsonStart);
     const json = JSON.parse(text);
     const data = {
       title:       json.title       || lessonTopic.name,
@@ -6593,15 +6667,20 @@ async function lessonFetchSlide(slideIdx) {
     return data;
   } catch(e) {
     console.warn('Lesson slide fetch failed:', e.message);
-    // Fallback
+    // Fallback — still engaging even without AI
+    const funIntros = [
+      `Okay ${lessonKid==='hridaan'?'Hridaan':'Vivan'}, time to power up your brain! ⚡ Today is all about ${lessonTopic.name}. ${lessonTopic.desc} You have got this — let us go!`,
+      `Hey ${lessonKid==='hridaan'?'Hridaan':'Vivan'}! Before the quiz, here is a quick boost. ${lessonTopic.name} — ${lessonTopic.desc} Think of it like levelling up in a game. Ready?`,
+      `${lessonKid==='hridaan'?'Hridaan':'Vivan'}, you are about to learn something cool! ${lessonTopic.name} is today's topic. ${lessonTopic.desc} Read carefully and the quiz will feel easy!`,
+    ];
     const data = {
-      title:       lessonTopic.name || 'Let\'s Learn!',
-      subtitle:    lessonTopic.desc || '',
-      explanation: `Today we are learning about ${lessonTopic.name}. ${lessonTopic.desc} Pay attention and you will do great in the quiz!`,
+      title:       'Quick Power-Up! ⚡',
+      subtitle:    lessonTopic.name,
+      explanation: funIntros[lessonCurrentSlide % funIntros.length],
       chips:       [],
       example:     '',
       highlights:  [],
-      tip:         '💡 Read each question carefully before answering!',
+      tip:         '💡 Read every question twice before answering. The answer is always in the details!',
     };
     lessonSlideData[slideIdx] = data;
     return data;
@@ -6642,24 +6721,47 @@ function lessonSetSpeakingUI(on) {
   document.getElementById('lesson-bubble')?.classList.toggle('speaking', on);
 }
 
+/* Speak full slide content — explanation, then example, then tip.
+   Uses sentence chunks with natural pauses for better flow. */
 async function lessonSpeak(text) {
   if (!lessonSynth || !text) return;
   lessonSynth.cancel();
   await lessonGetVoices();
-  setTimeout(() => {
-    lessonSetSpeakingUI(true);
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = 'en-US'; utt.rate = lessonKid === 'hridaan' ? 0.78 : 0.85; utt.pitch = 1.0; utt.volume = 1.0;
-    const v = lessonGetBestVoice(); if (v) utt.voice = v;
-    utt.onend   = () => lessonSetSpeakingUI(false);
-    utt.onerror = () => lessonSetSpeakingUI(false);
+  const rate = lessonKid === 'hridaan' ? 0.78 : 0.86;
+  const v    = lessonGetBestVoice();
+
+  // Split into sentences for more natural pacing
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+
+  lessonSetSpeakingUI(true);
+  let idx = 0;
+
+  function speakNext() {
+    if (idx >= sentences.length) { lessonSetSpeakingUI(false); return; }
+    const utt = new SpeechSynthesisUtterance(sentences[idx].trim());
+    utt.lang = 'en-US'; utt.rate = rate; utt.pitch = 1.0; utt.volume = 1.0;
+    if (v) utt.voice = v;
+    utt.onend   = () => { idx++; setTimeout(speakNext, 180); };
+    utt.onerror = () => { idx++; setTimeout(speakNext, 180); };
     lessonSynth.speak(utt);
-  }, 150);
+  }
+  setTimeout(speakNext, 150);
+}
+
+/* Speak full slide: explanation + example + tip */
+function lessonSpeakFullSlide() {
+  const d = lessonSlideData[lessonCurrentSlide];
+  if (!d) return;
+  const isH   = lessonKid === 'hridaan';
+  const parts = [];
+  if (d.explanation) parts.push(d.explanation);
+  if (d.example)     parts.push(isH ? d.example : 'For example. ' + d.example);
+  if (d.tip)         parts.push(d.tip.replace(/^💡\s*/,'Remember. '));
+  lessonSpeak(parts.join(' '));
 }
 
 function lessonReplaySpeak() {
-  const d = lessonSlideData[lessonCurrentSlide];
-  if (d?.explanation) lessonSpeak(d.explanation);
+  lessonSpeakFullSlide();
 }
 
 function lessonSpeakChip(word) {
@@ -6817,8 +6919,8 @@ async function lessonRenderSlide() {
   // Pre-fetch next slide
   if (lessonCurrentSlide + 1 < lessonSlides.length) lessonFetchSlide(lessonCurrentSlide + 1);
 
-  // Auto-speak
-  lessonSpeak(data.explanation);
+  // Auto-speak full slide
+  lessonSpeakFullSlide();
 }
 
 /* ── Navigation ── */
