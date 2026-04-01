@@ -2,7 +2,7 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.4                                                ║
+║  Version: 2.5                                                ║
 ║  Date:    2026-04-01                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
@@ -19,8 +19,7 @@
 ║      - Each slide type (concept/example/practice) has        ║
 ║        subject-specific goals tied to quiz content           ║
 ║    + AI provider: Groq first, Gemini fallback                ║
-║      - Changed model field to groq so edge function          ║
-║        uses fast free Groq tier, falls back to Gemini        ║
+║      - Gemini first for lesson slides, Groq fallback         ║
 ║    + Fallback content improved — still fun without AI        ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  v2.3  2026-04-01                                            ║                                            ║
@@ -92,7 +91,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.4</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.5</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -6539,93 +6538,132 @@ function lessonBuildPrompt(kid, subject, topic, slideType) {
   const topicName = topic.name || subject;
   const topicDesc = topic.desc || '';
 
-  // Kid interests to weave into examples
-  const vivanCtx = 'Vivan is a 7-year-old boy in Texas. He loves soccer, Minecraft, Sonic, superheroes (Spider-Man, Iron Man), playing with friends, and travelling. English is his second language.';
-  const hridaanCtx = 'Hridaan is a 3-year-old boy. He loves Peppa Pig, dinosaurs, cars, football, animals, and anything his big brother Vivan does.';
-  const kidCtx = isH ? hridaanCtx : vivanCtx;
+  // Pick a random format for variety
+  // Maths: A/B | Science: A/B | Writing: A/B | Spelling: A/B/C | ELA: A/B | Reading: A/B
+  // Hridaan subjects: A/B simplified
+  const formatRoll = Math.random();
+  let format;
+  if (['spell'].includes(subject))      format = formatRoll < 0.33 ? 'A' : formatRoll < 0.66 ? 'B' : 'C';
+  else                                  format = formatRoll < 0.5  ? 'A' : 'B';
 
-  // What each slide type should focus on
-  const slideGoals = {
-    concept: {
-      math:    'Explain the maths concept clearly. What is it? How does it work? Use a fun example involving something Vivan loves.',
-      ela:     'Explain the grammar concept in plain English. What is this word type/rule? Why does it matter? One memorable example sentence.',
-      sci:     'Explain the science idea simply. What is it? What makes it cool or surprising? Connect it to something in everyday life.',
-      read:    'Explain this reading question type. What is the quiz asking? How should you think about it? One quick tip for answering it.',
-      write:   'Explain the writing rule clearly. What should you do? What does correct look like? Keep it super simple.',
-      spell:   'Explain the spelling pattern. What sound or rule connects these words? Give the key pattern in simple terms.',
-      nums:    'Explain the number concept. What is it? Show it with objects or counting. Make it feel easy and fun.',
-      alpha:   'Explain these letters and their sounds clearly. What do they look like? What sound do they make? One fun word for each.',
-      shapes:  'Describe these shapes. How many sides? What do they look like? Name something in real life that is this shape.',
-      phonics: 'Explain this sound clearly. How do your mouth and lips move to make it? One clear example word.',
+  // 30% chance of using kid interests in the example character/context
+  // 70% basic relatable everyday examples
+  const useInterest = Math.random() < 0.30;
+  const vivanInterests = ['a footballer scoring a goal','two friends playing in the park','a boy finding treasure','a kid on a school trip','a young inventor in his garage'];
+  const interestCtx    = vivanInterests[Math.floor(Math.random() * vivanInterests.length)];
+  const basicCtx       = ['a cat and a dog','two friends at school','a family at the market','a girl learning to ride a bike','a boy making breakfast','kids at the playground'];
+  const storyCtx       = useInterest ? interestCtx : basicCtx[Math.floor(Math.random() * basicCtx.length)];
+
+  // ── HRIDAAN (3-4 year old) ──
+  if (isH) {
+    const hExamples = {
+      nums:    { A: `EXAMPLE OF FORMAT A:\nInput: topic=Counting 1-5\nOutput: {"title":"Let us count! 🎉","subtitle":"Count with me!","explanation":"One 🍎 two 🍎 three 🍎 four 🍎 five 🍎. Count each one! 1... 2... 3... 4... 5!","chips":["1️⃣ one","2️⃣ two","3️⃣ three","4️⃣ four","5️⃣ five"],"example":"I have 3 apples 🍎🍎🍎","highlights":["3"],"tip":"💡 Point to each one and say the number out loud!"}`, B: `EXAMPLE OF FORMAT B:\nInput: topic=Addition within 10\nOutput: {"title":"Add them up! ➕","subtitle":"Put groups together!","explanation":"You have 2 balls 🏀🏀. You get 3 more 🏀🏀🏀. Now you have 5! 2 + 3 = 5 🎉","chips":["2️⃣ + 3️⃣ = 5️⃣","1 + 1 = 2","4 + 0 = 4"],"example":"2 cats plus 3 cats = 5 cats 🐱🐱🐱🐱🐱","highlights":["5"],"tip":"💡 Use your fingers to count on!"}` },
+      alpha:   { A: `EXAMPLE OF FORMAT A:\nInput: topic=Letters A-J\nOutput: {"title":"A B C time! 🔤","subtitle":"Learn your letters!","explanation":"A is for Apple 🍎. B is for Ball 🏀. C is for Cat 🐱. Each letter makes a sound!","chips":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog","🥚 Egg"],"example":"Apple starts with A 🍎","highlights":["A"],"tip":"💡 Point to the letter and say its sound out loud!"}`, B: `EXAMPLE OF FORMAT B:\nInput: topic=Beginning Sounds\nOutput: {"title":"What sound? 🔊","subtitle":"Listen to the first sound!","explanation":"DOG starts with D. Say it — D-D-Dog! 🐶 CAT starts with C. Say it — C-C-Cat! 🐱 Can you hear it?","chips":["🐶 D-Dog","🐱 C-Cat","🏀 B-Ball","🍎 A-Apple"],"example":"Sun starts with S ☀️","highlights":["S"],"tip":"💡 Say the word slowly — the first sound is the letter!"}` },
+      shapes:  { A: `EXAMPLE OF FORMAT A:\nInput: topic=2D Shapes\nOutput: {"title":"Shapes everywhere! 🔵","subtitle":"Look around you!","explanation":"A circle is round like a ball 🏀. A square has 4 equal sides like a window. A triangle has 3 sides like a slice of pizza 🍕!","chips":["🔵 circle","🟥 square","🔺 triangle","🟩 rectangle"],"example":"A wheel is a circle 🔵","highlights":["circle"],"tip":"💡 Look around the room — can you find each shape?"}`, B: `EXAMPLE OF FORMAT B:\nInput: topic=Sides and Corners\nOutput: {"title":"Count the sides! 🔢","subtitle":"How many sides?","explanation":"A triangle has 3 sides and 3 corners. Count them! 1-2-3 sides. 1-2-3 corners. ✋","chips":["🔺 3 sides","🟥 4 sides","⭐ 5 sides","🔵 0 sides"],"example":"A square has 4 sides and 4 corners","highlights":["4"],"tip":"💡 Trace the shape with your finger and count each side!"}` },
+      phonics: { A: `EXAMPLE OF FORMAT A:\nInput: topic=Letter Sounds A-J\nOutput: {"title":"Say the sound! 🔊","subtitle":"What sound does it make?","explanation":"A says aah like Apple 🍎. B says buh like Ball 🏀. Open your mouth wide and try it!","chips":["🍎 aah","🏀 buh","🐱 kuh","🐶 duh","🥚 eh"],"example":"A-A-Apple! The first sound is aah 🍎","highlights":["aah"],"tip":"💡 Make the sound 3 times — aah aah aah!"}`, B: `EXAMPLE OF FORMAT B:\nInput: topic=Rhyming Words\nOutput: {"title":"They rhyme! 🎵","subtitle":"Same ending sound!","explanation":"CAT and HAT rhyme! They both end in AT. 🐱🎩 Say them together — cat, hat, mat, sat! Do you hear it?","chips":["🐱 cat","🎩 hat","🪑 mat","☀️ sat"],"example":"Cat and bat both end in AT 🦇","highlights":["AT"],"tip":"💡 Clap when you hear the same ending sound!"}` },
+    };
+    const ex = hExamples[subject] || hExamples.nums;
+    const fmtEx = (format === 'B' && ex.B) ? ex.B : ex.A;
+    return `You are a fun energetic teacher for a 3-year-old. Short sentences. Lots of emoji. Simple words only. Silly and exciting.
+Topic: "${topicName}" — ${topicDesc}
+
+${fmtEx}
+
+Now write the SAME FORMAT for topic: "${topicName}" — ${topicDesc}
+Return ONLY valid JSON matching the exact structure above. No markdown. No backticks.`;
+  }
+
+  // ── VIVAN (7 year old) ──
+  // Few-shot examples per subject and format
+  const examples = {
+    math: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=Multiplication Basics, context=two friends collecting stickers
+Output: {"title":"Groups make multiplication!","subtitle":"Repeated adding — but faster","explanation":"Sam and Priya each collect stickers. Sam has 4 pages with 3 stickers on each page. Instead of counting 3+3+3+3, they just write 4×3. Multiplication means groups of the same number added together.","chips":["4 × 3 = 12","groups of","arrays","repeated addition","times tables"],"example":"4 rows of 3 stars = 4 × 3 = 12 stars ⭐","highlights":["4 × 3","12"],"tip":"💡 × means groups of. 4 × 3 = 4 groups of 3."}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Fractions — Understanding, context=sharing food
+Output: {"title":"Fractions = fair sharing!","subtitle":"Splitting things into equal parts","explanation":"You order a pizza. There are 4 slices and 4 friends. Each person gets 1 out of 4 slices. That is one quarter — written as 1/4. The bottom number says how many equal parts. The top number says how many you take.","chips":["1/2 half","1/4 quarter","1/3 third","numerator","denominator"],"example":"Tom ate 2 out of 8 pizza slices — that is 2/8 or one quarter 🍕","highlights":["2/8","one quarter"],"tip":"💡 Bottom = how many pieces total. Top = how many you grabbed."}`,
     },
-    example: {
-      math:    'Show a worked example using something Vivan loves — a Minecraft calculation, soccer scores, superhero numbers. Walk through the steps.',
-      ela:     'Show 2-3 example sentences using this grammar concept. Make them funny or surprising — Sonic tripping, Spider-Man doing homework.',
-      sci:     'Give a real-world or funny example of this science concept. Connect it to something the kid would actually see or do.',
-      read:    'Show exactly how to answer this reading question type. Give a mini passage and the right thinking process.',
-      write:   'Show a before/after — a wrong sentence and then the corrected version. Make the wrong one funny.',
-      spell:   'Give 4-5 example words that follow this spelling pattern. Say each one out loud in a sentence.',
-      nums:    'Show the concept using objects the kid loves — Minecraft blocks, soccer balls, dinosaurs. Make the numbers visual.',
-      alpha:   'Give a fun word for each letter that the kid knows — animals, food, toys, superheroes.',
-      shapes:  'Name 3-4 real objects that are this shape. Include something fun like a pizza slice or a Minecraft block.',
-      phonics: 'Give 3 words that use this sound. Use words a 3-year-old knows — cat, dog, ball, car, mum, dad.',
+    sci: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=States of Matter, context=making breakfast
+Output: {"title":"Same stuff, three looks!","subtitle":"Solid, liquid and gas — all the same thing","explanation":"Mum puts ice in a glass of juice. The ice is a solid — it holds its shape. As it warms up it melts into liquid water. Leave it in the sun and the water slowly disappears as gas into the air. Same water, three different states!","chips":["solid","liquid","gas","melting","evaporation"],"example":"Ice → water → steam. Same water, three states! 🧊💧💨","highlights":["solid","liquid","gas"],"tip":"💡 Heat makes things change state. Cool them down and they change back."}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Forces Push and Pull, context=playground
+Output: {"title":"Push it or pull it!","subtitle":"Every movement is a force","explanation":"You push a swing to make it go forward. You pull a door to open it. Pushing and pulling are both forces — they make things move, stop, or change direction. Even gravity is a force pulling you down to the ground right now!","chips":["push","pull","gravity","force","direction"],"example":"Kicking a ball is a push force — the ball moves away from your foot ⚽","highlights":["push force"],"tip":"💡 Ask yourself — am I moving it away from me (push) or towards me (pull)?"}`,
     },
-    practice: {
-      math:    'Give one quick mental maths trick or shortcut for this topic. Something that makes it faster or easier to remember.',
-      ela:     'Point out the most common mistake kids make with this grammar rule. Show the wrong version then the right version.',
-      sci:     'Give one surprising or funny fact about this science topic that will stick in the memory.',
-      read:    'Give one simple strategy for this question type. Something like: "First look for... then check if..."',
-      write:   'Give one simple rule to remember — something that fits on a sticky note. Short and punchy.',
-      spell:   'Give one pronunciation tip or rhyme that helps remember this spelling pattern.',
-      nums:    'Give a quick fun game or trick for practising this number skill — something to try at home.',
-      alpha:   'Give one fun trick for remembering this letter — a shape it looks like, a word it sounds like.',
-      phonics: 'Give a silly sentence where every word starts with this sound. Make it funny.',
+    ela: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=Nouns, context=a girl at the market
+Output: {"title":"Nouns are name tags!","subtitle":"Names for people, places, animals and things","explanation":"Anya went to the market with her mum. In that sentence — Anya is a noun (person), market is a noun (place), mum is a noun (person). Nouns are the name tags of the world. Every person, place, animal and thing has a noun.","chips":["Anya (person)","market (place)","dog (animal)","book (thing)","London (place)"],"example":"The girl put the apple in her bag at the shop.","highlights":["girl","apple","bag","shop"],"tip":"💡 Ask: can I put 'the' in front of it? The dog, the school, the pizza — all nouns!"}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Verbs and Tenses, context=everyday actions
+Output: {"title":"Verbs are action words!","subtitle":"What is happening in the sentence?","explanation":"Every sentence needs a verb — the action word. Walk, run, eat, think, sleep — all verbs. Tense tells you WHEN: 'I walk' is now. 'I walked' is past. 'I will walk' is future. Change the verb and you change the time!","chips":["walk / walked","eat / ate","run / ran","present tense","past tense"],"example":"Yesterday he ran to school. Today he walks. Tomorrow he will cycle. 🚴","highlights":["ran","walks","will cycle"],"tip":"💡 If you can put yesterday in front of it — it is past tense!"}`,
+    },
+    read: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=Literal Recall, context=a short passage
+Output: {"title":"The answer is right there!","subtitle":"Find it directly in the text","explanation":"Literal recall questions have the answer hiding in the passage — you just need to find it. Read the question first, then scan the passage for those exact words. The answer will often use the same words as the question.","chips":["find it","scan","key words","directly stated","in the text"],"example":"Question: Where did Sam go? Passage says: Sam went to the park. Answer: the park ✅","highlights":["Sam went to the park"],"tip":"💡 Read the question → circle key words → find those words in the passage."}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Inference — Basic, context=reading between the lines
+Output: {"title":"Read between the lines!","subtitle":"The answer is not written — you have to work it out","explanation":"Sometimes the passage does not say the answer directly — you have to be a detective. If it says 'she grabbed her umbrella before leaving', it does not say it is raining. But you can figure it out! That is an inference.","chips":["clue","evidence","figure it out","probably","because"],"example":"He was shivering and blowing on his hands. We can infer he was cold. 🥶","highlights":["shivering","blowing on his hands","cold"],"tip":"💡 Clue + thinking = inference. Always point to the part of the text that gave you the clue."}`,
+    },
+    write: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=Sentence Basics, context=writing a note
+Output: {"title":"Every sentence needs two things!","subtitle":"Capital letter to open, full stop to close","explanation":"Leo wrote a note to his teacher: 'the dog ate my book i need a new one please'. His teacher could not tell where one idea ended and another began. Every sentence needs a capital letter at the start and a full stop at the end — like opening and closing a box for each idea.","chips":["Capital letter","full stop","start","end","complete idea"],"example":"The dog ate my book. I need a new one please. ✅","highlights":["The","book.","I","please."],"tip":"💡 Read it out loud — where you naturally pause and breathe is where the full stop goes."}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Compound Sentences, context=joining ideas
+Output: {"title":"Join two ideas together!","subtitle":"Use a joining word — and, but, because, so","explanation":"Two short sentences can become one stronger sentence. 'It rained. We stayed inside.' becomes 'It rained so we stayed inside.' The joining word shows how the ideas connect. And = adding, But = surprise, Because = reason, So = result.","chips":["and","but","because","so","joining word"],"example":"She was tired but she finished her homework. ✅","highlights":["but"],"tip":"💡 FANBOYS — For And Nor But Or Yet So — all joining words for compound sentences."}`,
+    },
+    spell: {
+      A: `EXAMPLE OF FORMAT A (Story Problem):
+Input: topic=Homophones, context=writing a message
+Output: {"title":"Same sound, different word!","subtitle":"Homophones — they sound alike but mean different things","explanation":"Jake texted his friend: 'their going to the park over there'. His friend was confused — two words that sound the same used wrongly. THERE = a place. THEIR = belonging to them. THEY'RE = they are. Same sound, completely different meaning.","chips":["there (place)","their (belonging)","they're (they are)","to / too / two","hear / here"],"example":"They're going to their house over there. ✅","highlights":["They're","their","there"],"tip":"💡 THEY'RE = THEY ARE. Try replacing it — if 'they are' fits, use they're!"}`,
+      B: `EXAMPLE OF FORMAT B (Funny Hook):
+Input: topic=Dolch 2nd Grade Sight Words, context=reading speed
+Output: {"title":"Words you must just know!","subtitle":"Sight words — read them without sounding out","explanation":"Some words are so common you need to recognise them instantly — like your own name. Because, before, always, should, would, could. These words follow unusual spelling rules so sounding them out is tricky. The trick is to just memorise them.","chips":["because","before","always","should","would","could"],"example":"I could not sleep because I was too excited. ✅","highlights":["could","because"],"tip":"💡 Write each sight word 5 times and use it in a sentence. That is the fastest way to lock it in."}`,
+      C: `EXAMPLE OF FORMAT C (Spot the Mistake):
+Input: topic=Contractions Spelling, context=apostrophes
+Output: {"title":"The apostrophe shows what is missing!","subtitle":"Contractions = two words squished into one","explanation":"A contraction squishes two words together and uses an apostrophe to show where letters were removed. Do not → don't. The apostrophe sits where the missing letter was. It is NOT a possessive — it just marks the gap.","chips":["don't = do not","won't = will not","it's = it is","they're = they are","couldn't = could not"],"example":"She couldn't find her bag because it's very small. ✅","highlights":["couldn't","it's"],"tip":"💡 Expand it first — say the two full words. Then squish them and add the apostrophe where letters vanished."}`,
     },
   };
 
-  const goals = slideGoals[slideType] || slideGoals.concept;
-  const slideGoal = goals[subject] || goals.ela;
+  // Build subject example block
+  const subExamples = examples[subject] || examples.ela;
+  let fmtExample;
+  if (format === 'C' && subExamples.C) fmtExample = subExamples.C;
+  else if (format === 'B') fmtExample = subExamples.B;
+  else fmtExample = subExamples.A;
 
-  if (isH) {
-    return `You are a fun, energetic teacher for a 3-year-old. ${kidCtx}
-Topic today: "${topicName}" — ${topicDesc}
-Goal: ${slideGoal}
+  // Format descriptions for the instruction
+  const formatDesc = {
+    A: 'FORMAT A — Story Problem: A short relatable story where the concept IS the plot. Setup → problem or discovery → rule revealed → example fixed or shown.',
+    B: 'FORMAT B — Funny/Surprising Hook: Start with something surprising, funny, or a bit wrong. Then reveal the rule that explains it. Punchy and memorable.',
+    C: 'FORMAT C — Spot the Mistake: Show a wrong version first, then the corrected version. Walk through exactly what was wrong and why the fix works.',
+  };
 
-Rules: Use LOTS of emoji. Max 2 short sentences. Words a 3-year-old knows. Be silly and exciting. NO big words.
+  return `You are writing a 60-second lesson slide for Vivan — a 7-year-old ESL learner in Texas who loves football, games, and adventures.
 
-Return ONLY this JSON:
-{
-  "title": "3-4 word fun title with emoji",
-  "subtitle": "One tiny phrase like 'Let us count!'",
-  "explanation": "2 very short silly sentences with emoji. A toddler must understand every word.",
-  "chips": ["4-5 items like '⚽ ball', '🦕 dino', '🚗 car' — tap to hear"],
-  "example": "One super simple sentence a 3-year-old can follow",
-  "highlights": ["1-2 key words to highlight"],
-  "tip": "💡 One silly fun tip with emoji"
-}`;
-  }
+RULES (follow strictly):
+- Max 3 sentences in explanation. Max 20 words per sentence.
+- Story context for this slide: "${storyCtx}"
+- Zero textbook language. Write like a cool teacher having a chat.
+- The example sentence must be funny, surprising, or satisfying to read.
+- Chips must be the KEY WORDS that will appear in the actual quiz — not generic examples.
+- Tip must be a memory trick — a rhyme, a silly rule, or a pattern. Max 15 words.
+- No negative content, no destruction, no bad behaviour in examples.
 
-  return `You are Vivan's favourite teacher — fun, energetic, talks like a real person not a textbook. ${kidCtx}
-Topic today: "${topicName}" — ${topicDesc}
-Goal: ${slideGoal}
+${formatDesc[format]}
 
-Critical rules:
-- Use short punchy sentences. Max 20 words per sentence.
-- At least ONE example must involve soccer, Minecraft, Sonic, superheroes, or something boys love.
-- NO textbook language. Talk like a cool teacher having a chat.
-- Keep it under 60 words total in the explanation.
-- The example sentence should be funny or surprising — make Vivan want to read it.
+${fmtExample}
 
-Return ONLY this JSON (no markdown, no backticks):
-{
-  "title": "Catchy 4-5 word title — make it sound exciting",
-  "subtitle": "One line, plain English, tells him what this is about",
-  "explanation": "2-3 short punchy sentences. Fun, direct, zero textbook vibes. One sentence must mention something Vivan loves.",
-  "chips": ["5-6 words or examples directly from this topic — things that will appear in the quiz"],
-  "example": "One funny or surprising sentence using something Vivan loves. Highlight the key concept word.",
-  "highlights": ["2-3 key concept words from the example sentence"],
-  "tip": "💡 One clever memory trick. Make it rhyme OR make it silly. Max 15 words."
-}`;
+Now write the SAME FORMAT for:
+Topic: "${topicName}"
+Description: "${topicDesc}"
+Story context to use: "${storyCtx}"
+
+Return ONLY valid JSON matching the exact structure above. No markdown. No backticks.`;
 }
 
 /* ── Fetch one slide's AI content ── */
@@ -6640,7 +6678,7 @@ async function lessonFetchSlide(slideIdx) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
       body: JSON.stringify({
-        model: 'groq',  // Use Groq (fast, free) first; edge function falls back to Gemini
+        model: 'gemini-2.0-flash',  // Gemini first; edge function falls back to Groq
         max_tokens: 600,
         system: "You are a JSON generator for a children's educational app. Return ONLY valid JSON — no markdown, no backticks, no extra text before or after the JSON.",
         messages: [{ role: 'user', content: prompt }],
