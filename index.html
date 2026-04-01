@@ -1,9 +1,56 @@
+✅ CSS injected
+✅ HTML sections injected
+✅ JS functions injected
+✅ loadParent() hooked
+✅ Cloud refresh hook added
+
+Final file size: 259261 chars
 <!DOCTYPE html>
+<!--
+╔══════════════════════════════════════════════════════════════╗
+║  StarLearn — Kids Learning App                               ║
+║  Version: 2.1                                                ║
+║  Date:    2026-04-01                                         ║
+╠══════════════════════════════════════════════════════════════╣
+║  CHANGE LOG                                                  ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.1  2026-04-01                                            ║
+║    + Parent Dashboard: Progress bar chart (last 14 days)     ║
+║      - Kid selector (Vivan / Hridaan)                        ║
+║      - Subject filter buttons (All / per subject)            ║
+║      - Colour coded: green 80%+, yellow 60-79%, red <60%     ║
+║    + Parent Dashboard: Weekly Tracker table                  ║
+║      - Shows all subjects for both kids                      ║
+║      - Done vs target (5/week) with mini progress bar        ║
+║      - Status chips: Done / On track / Behind / Not started  ║
+║    + Parent Dashboard: Quiz Summaries panel                  ║
+║      - Loads from quiz_summaries Supabase table              ║
+║      - AI-generated insights per quiz                        ║
+║      - Shows weak areas (red) and strong areas (green) tags  ║
+║      - Kid tabs (Vivan / Hridaan) + Refresh button           ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.0  (previous — base file uploaded by Shailesh)           ║
+║    + Vivan: Full curriculum progression system               ║
+║    + Vivan: AI quiz summary generation to Supabase           ║
+║    + Parent: Curriculum Manager UI                           ║
+║    + Behaviour points system with Pay Reward                 ║
+║    + Subject attempt limits (daily/weekly) + Power User      ║
+║    + Weekly progress targets                                 ║
+║    + Writing exercises with keyboard typing                  ║
+║    + Spelling using Dolch sight words                        ║
+║    + Read Aloud voice practice                               ║
+╠══════════════════════════════════════════════════════════════╣
+║  PENDING                                                     ║
+║    - ELA intro slideshow integration (ela-intro.html built)  ║
+║    - Hridaan curriculum progression build-out                ║
+║    - Parent quiz summary review UI (data exists, UI TBD)     ║
+╚══════════════════════════════════════════════════════════════╝
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1308,6 +1355,69 @@ body {
   .stats-row { gap: 8px; }
   .login-box { padding: 30px 22px; }
 }
+
+/* ════════════════════════════
+   PARENT — PROGRESS CHART
+════════════════════════════ */
+.chart-wrap{background:white;border-radius:20px;padding:18px 16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:20px;}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.chart-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:#1f2937;}
+.chart-filters{display:flex;gap:6px;flex-wrap:wrap;}
+.prog-filter-btn{border:2px solid #e5e7eb;background:white;border-radius:99px;padding:4px 12px;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;color:#6b7280;transition:all 0.15s;}
+.prog-filter-btn.active{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-color:transparent;color:white;}
+.prog-filter-btn.active-h{background:linear-gradient(135deg,#f59e0b,#ef4444);border-color:transparent;color:white;}
+.bar-chart-area{overflow-x:auto;padding-bottom:4px;}
+.bar-chart-inner{display:flex;align-items:flex-end;gap:5px;height:120px;min-width:100%;padding:0 2px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:22px;max-width:36px;height:100%;justify-content:flex-end;gap:3px;}
+.bar-fill{width:100%;border-radius:5px 5px 0 0;transition:height 0.4s ease;min-height:3px;cursor:pointer;}
+.bar-fill.green{background:linear-gradient(180deg,#22c55e,#16a34a);}
+.bar-fill.yellow{background:linear-gradient(180deg,#fbbf24,#d97706);}
+.bar-fill.red{background:linear-gradient(180deg,#f87171,#dc2626);}
+.bar-fill.empty{background:#e5e7eb;}
+.bar-date{font-size:0.58rem;color:#9ca3af;font-weight:700;text-align:center;white-space:nowrap;}
+.bar-pct{font-size:0.62rem;color:#6b7280;font-weight:800;text-align:center;}
+.chart-legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;}
+.chart-empty{text-align:center;color:#9ca3af;font-size:0.85rem;padding:30px 10px;font-weight:600;}
+/* ════════════════════════════
+   PARENT — WEEKLY TRACKER
+════════════════════════════ */
+.weekly-tracker-wrap{background:white;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:20px;}
+.weekly-tracker-header{background:linear-gradient(135deg,#1e3a5f,#7c3aed);color:white;padding:13px 18px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;display:flex;justify-content:space-between;align-items:center;}
+.weekly-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+.weekly-table th{background:#f5f3ff;padding:8px 12px;text-align:left;font-weight:700;color:#4c1d95;border-bottom:2px solid #ede9fe;font-size:0.78rem;}
+.weekly-table td{padding:9px 12px;border-bottom:1px solid #f3f4f6;color:#374151;vertical-align:middle;}
+.weekly-table tr:last-child td{border-bottom:none;}
+.weekly-prog-bar{background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;min-width:60px;}
+.weekly-prog-fill{height:100%;border-radius:99px;transition:width 0.4s;}
+.status-chip{border-radius:99px;padding:3px 10px;font-size:0.72rem;font-weight:800;white-space:nowrap;}
+.status-done{background:#dcfce7;color:#15803d;}
+.status-ok{background:#dbeafe;color:#1d4ed8;}
+.status-behind{background:#fee2e2;color:#b91c1c;}
+/* ════════════════════════════
+   PARENT — QUIZ SUMMARIES
+════════════════════════════ */
+.summaries-wrap{background:white;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:20px;}
+.summaries-header{background:linear-gradient(135deg,#db2777,#7c3aed);color:white;padding:13px 18px;font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;display:flex;justify-content:space-between;align-items:center;}
+.summary-kid-tabs{display:flex;gap:6px;padding:10px 14px;border-bottom:2px solid #f3f4f6;background:#fafafa;}
+.summary-kid-tab{border:2px solid #e5e7eb;background:white;border-radius:99px;padding:4px 14px;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;color:#6b7280;transition:all 0.15s;}
+.summary-kid-tab.active-v{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-color:transparent;color:white;}
+.summary-kid-tab.active-h{background:linear-gradient(135deg,#f59e0b,#ef4444);border-color:transparent;color:white;}
+.summary-list{max-height:480px;overflow-y:auto;}
+.summary-card{padding:13px 16px;border-bottom:1px solid #f3f4f6;}
+.summary-card:last-child{border-bottom:none;}
+.summary-top-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
+.summary-subject-tag{border-radius:6px;padding:2px 9px;font-size:0.72rem;font-weight:800;}
+.summary-topic{font-family:'Baloo 2',cursive;font-size:0.82rem;font-weight:800;color:#1f2937;flex:1;}
+.summary-score-chip{font-family:'Baloo 2',cursive;font-size:0.8rem;font-weight:800;padding:2px 9px;border-radius:99px;}
+.summary-date{font-size:0.7rem;color:#9ca3af;font-weight:600;}
+.summary-ai-text{font-size:0.82rem;color:#374151;font-weight:600;line-height:1.5;margin-bottom:6px;}
+.summary-areas{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.area-tag{border-radius:6px;padding:2px 8px;font-size:0.7rem;font-weight:700;}
+.area-weak{background:#fee2e2;color:#b91c1c;}
+.area-strong{background:#dcfce7;color:#15803d;}
+.summary-empty{text-align:center;color:#9ca3af;padding:30px 20px;font-size:0.85rem;font-weight:600;}
+
 </style>
 </head>
 <body>
@@ -1698,6 +1808,51 @@ body {
         📚 Curriculum Manager
       </button>
     </div>
+    
+    <!-- ═══ PROGRESS CHART ═══ -->
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <div class="chart-title">📊 Progress Chart (Last 14 Days)</div>
+        <div class="chart-filters">
+          <button class="prog-filter-btn active" id="chart-kid-v" onclick="chartSelectKid('vivan')">👦 Vivan</button>
+          <button class="prog-filter-btn" id="chart-kid-h" onclick="chartSelectKid('hridaan')">👶 Hridaan</button>
+        </div>
+      </div>
+      <div class="chart-filters" id="chart-subject-filters" style="margin-bottom:12px;"></div>
+      <div class="bar-chart-area">
+        <div class="bar-chart-inner" id="chart-bars"><div class="chart-empty">Loading…</div></div>
+      </div>
+      <div class="chart-legend">
+        <span style="font-size:0.75rem;color:#6b7280;font-weight:600;">
+          <span class="legend-dot" style="background:#22c55e;"></span>80%+ great &nbsp;
+          <span class="legend-dot" style="background:#fbbf24;"></span>60–79% ok &nbsp;
+          <span class="legend-dot" style="background:#f87171;"></span>&lt;60% needs work
+        </span>
+      </div>
+    </div>
+
+    <!-- ═══ WEEKLY TRACKER ═══ -->
+    <div class="weekly-tracker-wrap">
+      <div class="weekly-tracker-header">
+        <span>📅 This Week's Tracker</span>
+        <span id="weekly-tracker-range" style="font-size:0.78rem;opacity:0.8;"></span>
+      </div>
+      <div id="weekly-tracker-body"><div style="padding:20px;text-align:center;color:#9ca3af;font-size:0.85rem;">Loading…</div></div>
+    </div>
+
+    <!-- ═══ QUIZ SUMMARIES ═══ -->
+    <div class="summaries-wrap">
+      <div class="summaries-header">
+        <span>📝 Quiz Summaries (AI Insights)</span>
+        <button onclick="refreshSummaries()" style="background:rgba(255,255,255,0.2);border:none;color:white;border-radius:8px;padding:4px 12px;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">Refresh</button>
+      </div>
+      <div class="summary-kid-tabs">
+        <button class="summary-kid-tab active-v" id="sum-tab-v" onclick="sumSelectKid('vivan')">👦 Vivan</button>
+        <button class="summary-kid-tab" id="sum-tab-h" onclick="sumSelectKid('hridaan')">👶 Hridaan</button>
+      </div>
+      <div class="summary-list" id="summary-list"><div class="summary-empty">Loading summaries…</div></div>
+    </div>
+
     <div class="parent-section-title" style="margin-top:8px;">📋 Quiz History <button class="clear-btn" onclick="clearHistory()" style="float:right;">Clear All</button></div>
     <div class="history-table-wrap">
       <table class="history-table">
@@ -2671,6 +2826,10 @@ async function loadParent() {
   ]);
   refreshDiagnostic();
   loadPointsHistory(); // load behaviour points
+  // NEW: render chart, weekly tracker, quiz summaries
+  renderProgressChart('vivan', 'all', vLocal.history || []);
+  renderWeeklyTracker(vLocal.history || [], hLocal.history || []);
+  loadQuizSummaries('vivan');
 
   // Then refresh from Supabase
   const [vCloud, hCloud] = await Promise.all([sbLoadKidData('vivan'), sbLoadKidData('hridaan')]);
@@ -2684,6 +2843,9 @@ async function loadParent() {
     ...h.history.map(x=>({...x,kid:'hridaan'}))
   ]);
   refreshDiagnostic();
+  // Refresh chart + tracker with cloud data
+  renderProgressChart(chartKid, chartSubject, (chartKid==='vivan'?v:h).history||[]);
+  renderWeeklyTracker(v.history||[], h.history||[]);
 }
 
 function renderParentCards(v, h) {
@@ -5396,6 +5558,213 @@ function showToast(msg) {
   toast.style.opacity = '1';
   clearTimeout(toast._timer);
   toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+}
+
+
+/* ════════════════════════════════════════════
+   PARENT: PROGRESS CHART
+════════════════════════════════════════════ */
+let chartKid = 'vivan';
+let chartSubject = 'all';
+
+function chartSelectKid(kid) {
+  chartKid = kid;
+  chartSubject = 'all';
+  const vBtn = document.getElementById('chart-kid-v');
+  const hBtn = document.getElementById('chart-kid-h');
+  if (vBtn) { vBtn.className = 'prog-filter-btn' + (kid==='vivan'?' active':''); }
+  if (hBtn) { hBtn.className = 'prog-filter-btn' + (kid==='hridaan'?' active-h':''); }
+  const data = getKidData(kid);
+  renderProgressChart(kid, 'all', data.history || []);
+}
+
+function chartSelectSubject(sub) {
+  chartSubject = sub;
+  const data = getKidData(chartKid);
+  renderProgressChart(chartKid, sub, data.history || []);
+  document.querySelectorAll('#chart-subject-filters .prog-filter-btn').forEach(b => {
+    const isA = b.dataset.sub === sub;
+    b.className = 'prog-filter-btn' + (isA ? (chartKid==='hridaan'?' active-h':' active') : '');
+  });
+}
+
+function renderProgressChart(kid, subject, history) {
+  const vSubs = [{key:'all',label:'All'},{key:'math',label:'Maths'},{key:'ela',label:'English'},
+    {key:'sci',label:'Science'},{key:'read',label:'Reading'},{key:'write',label:'Writing'},{key:'spell',label:'Spelling'}];
+  const hSubs = [{key:'all',label:'All'},{key:'nums',label:'Numbers'},{key:'alpha',label:'Alphabet'},
+    {key:'shapes',label:'Shapes'},{key:'phonics',label:'Phonics'}];
+  const subs = kid === 'vivan' ? vSubs : hSubs;
+
+  const filterEl = document.getElementById('chart-subject-filters');
+  if (filterEl) {
+    filterEl.innerHTML = subs.map(s => {
+      const isA = chartSubject === s.key;
+      const cls = isA ? (kid==='hridaan'?'prog-filter-btn active-h':'prog-filter-btn active') : 'prog-filter-btn';
+      return `<button class="${cls}" data-sub="${s.key}" onclick="chartSelectSubject('${s.key}')">${s.label}</button>`;
+    }).join('');
+  }
+
+  // Last 14 days
+  const today = new Date();
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    days.push(d.toISOString().slice(0,10));
+  }
+
+  const filtered = (history||[]).filter(h => (subject==='all'||h.subject===subject) && days.includes(h.date));
+  const byDate = {};
+  filtered.forEach(h => {
+    if (!byDate[h.date]) byDate[h.date] = {sum:0,count:0,subs:{}};
+    byDate[h.date].sum += h.pct; byDate[h.date].count++;
+    if (!byDate[h.date].subs[h.subject]) byDate[h.date].subs[h.subject]=[];
+    byDate[h.date].subs[h.subject].push(h.pct);
+  });
+
+  const barsEl = document.getElementById('chart-bars');
+  if (!barsEl) return;
+
+  if (!days.some(d => byDate[d])) {
+    barsEl.innerHTML = '<div class="chart-empty">No quiz data in the last 14 days yet — take some quizzes!</div>';
+    return;
+  }
+
+  barsEl.innerHTML = days.map(date => {
+    const entry = byDate[date];
+    if (!entry) {
+      return `<div class="bar-col"><div class="bar-fill empty" style="height:4px;" title="${date}: no quizzes"></div><div class="bar-date">${date.slice(5)}</div></div>`;
+    }
+    const avg = Math.round(entry.sum / entry.count);
+    const colClass = avg >= 80 ? 'green' : avg >= 60 ? 'yellow' : 'red';
+    const h = Math.max(8, Math.round(avg/100*110));
+    const subInfo = Object.entries(entry.subs).map(([s,ps])=>s+':'+Math.round(ps.reduce((a,b)=>a+b,0)/ps.length)+'%').join(' | ');
+    return `<div class="bar-col">
+      <div class="bar-pct">${avg}%</div>
+      <div class="bar-fill ${colClass}" style="height:${h}px;" title="${date}&#10;${subInfo}&#10;${entry.count} quiz(es)"></div>
+      <div class="bar-date">${date.slice(5)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════
+   WEEKLY TRACKER
+════════════════════════════════════════════ */
+function renderWeeklyTracker(vHistory, hHistory) {
+  const weekStart = getWeekStart();
+  const weekEnd   = getWeekEnd();
+  const rangeEl   = document.getElementById('weekly-tracker-range');
+  if (rangeEl) rangeEl.textContent = weekStart.slice(5) + ' – ' + weekEnd.slice(5);
+
+  const TARGET = 5;
+  const vSubs = [
+    {key:'math',label:'🔢 Maths'},{key:'ela',label:'📖 English'},
+    {key:'sci',label:'🔬 Science'},{key:'read',label:'📚 Reading'},
+    {key:'write',label:'✍️ Writing'},{key:'spell',label:'🔤 Spelling'},
+  ];
+  const hSubs = [
+    {key:'nums',label:'🔢 Numbers'},{key:'alpha',label:'🔤 Alphabet'},
+    {key:'shapes',label:'🔵 Shapes'},{key:'phonics',label:'🔊 Phonics'},
+  ];
+
+  function count(hist, sub) {
+    return (hist||[]).filter(h => h.subject===sub && h.date>=weekStart && h.date<=weekEnd).length;
+  }
+  function rows(kid, subs, hist, colour) {
+    return subs.map(s => {
+      const done = count(hist, s.key);
+      const pct  = Math.min(done/TARGET*100, 100);
+      let sc, st;
+      if (done >= TARGET)                          { sc='status-done';   st='✅ Done'; }
+      else if (done >= Math.ceil(TARGET/2))        { sc='status-ok';     st='🔵 On track'; }
+      else if (done === 0)                         { sc='status-behind'; st='❌ Not started'; }
+      else                                         { sc='status-behind'; st='⚠️ Behind'; }
+      return `<tr>
+        <td style="font-size:0.72rem;font-weight:700;color:#9ca3af;">${kid}</td>
+        <td style="font-weight:700;">${s.label}</td>
+        <td style="font-weight:800;color:${colour};">${done}/${TARGET}</td>
+        <td><div class="weekly-prog-bar"><div class="weekly-prog-fill" style="width:${pct}%;background:${colour};"></div></div></td>
+        <td><span class="status-chip ${sc}">${st}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  const tbody = rows('Vivan',vSubs,vHistory,'#3b82f6') + rows('Hridaan',hSubs,hHistory,'#f59e0b');
+  document.getElementById('weekly-tracker-body').innerHTML = `
+    <table class="weekly-table">
+      <thead><tr><th>Kid</th><th>Subject</th><th>Done</th><th style="min-width:80px;">Progress</th><th>Status</th></tr></thead>
+      <tbody>${tbody}</tbody>
+    </table>`;
+}
+
+/* ════════════════════════════════════════════
+   QUIZ SUMMARIES
+════════════════════════════════════════════ */
+let summaryKid = 'vivan';
+
+function sumSelectKid(kid) {
+  summaryKid = kid;
+  document.getElementById('sum-tab-v').className = 'summary-kid-tab' + (kid==='vivan'?' active-v':'');
+  document.getElementById('sum-tab-h').className = 'summary-kid-tab' + (kid==='hridaan'?' active-h':'');
+  loadQuizSummaries(kid);
+}
+
+function refreshSummaries() { loadQuizSummaries(summaryKid); }
+
+async function loadQuizSummaries(kid) {
+  const el = document.getElementById('summary-list');
+  if (!el) return;
+  el.innerHTML = '<div class="summary-empty">Loading…</div>';
+  try {
+    const rows = await sbFetch('quiz_summaries?kid=eq.'+kid+'&order=created_at.desc&limit=15');
+    renderQuizSummaries(rows||[], kid);
+  } catch(e) {
+    el.innerHTML = '<div class="summary-empty">Could not load summaries — check connection.</div>';
+  }
+}
+
+function renderQuizSummaries(rows, kid) {
+  const el = document.getElementById('summary-list');
+  if (!el) return;
+  if (!rows.length) {
+    el.innerHTML = '<div class="summary-empty">No summaries yet!<br>Complete a quiz to generate AI insights.</div>';
+    return;
+  }
+  const SC = {
+    math:  {bg:'#dbeafe',color:'#1d4ed8',label:'Maths'},
+    ela:   {bg:'#fce7f3',color:'#9d174d',label:'English'},
+    sci:   {bg:'#d1fae5',color:'#065f46',label:'Science'},
+    read:  {bg:'#ede9fe',color:'#4c1d95',label:'Reading'},
+    write: {bg:'#fef3c7',color:'#92400e',label:'Writing'},
+    spell: {bg:'#e0f2fe',color:'#0c4a6e',label:'Spelling'},
+    nums:  {bg:'#fef3c7',color:'#92400e',label:'Numbers'},
+    alpha: {bg:'#ede9fe',color:'#4c1d95',label:'Alphabet'},
+    shapes:{bg:'#d1fae5',color:'#065f46',label:'Shapes'},
+    phonics:{bg:'#fce7f3',color:'#9d174d',label:'Phonics'},
+  };
+  el.innerHTML = rows.map(r => {
+    const sc = SC[r.subject] || {bg:'#f3f4f6',color:'#374151',label:r.subject};
+    const pct = r.pct || 0;
+    const sbg = pct>=80?'#dcfce7':pct>=60?'#fef3c7':'#fee2e2';
+    const sc2 = pct>=80?'#15803d':pct>=60?'#92400e':'#b91c1c';
+    const weak   = Array.isArray(r.weak_areas)   ? r.weak_areas   : [];
+    const strong = Array.isArray(r.strong_areas) ? r.strong_areas : [];
+    const areas = (weak.length||strong.length) ? `<div class="summary-areas">
+      ${strong.map(a=>`<span class="area-tag area-strong">✓ ${a}</span>`).join('')}
+      ${weak.map(a=>`<span class="area-tag area-weak">✗ ${a}</span>`).join('')}
+    </div>` : '';
+    return `<div class="summary-card">
+      <div class="summary-top-row">
+        <span class="summary-subject-tag" style="background:${sc.bg};color:${sc.color};">${sc.label}</span>
+        <span class="summary-topic">${r.topic_name||'General'}</span>
+        <span class="summary-score-chip" style="background:${sbg};color:${sc2};">${r.score}/${r.total} · ${pct}%</span>
+      </div>
+      <div class="summary-date">${r.date||''}</div>
+      ${r.ai_summary
+        ? `<div class="summary-ai-text" style="margin-top:5px;">🤖 ${r.ai_summary}</div>`
+        : `<div class="summary-ai-text" style="color:#9ca3af;margin-top:5px;font-style:italic;">AI summary generating…</div>`}
+      ${areas}
+    </div>`;
+  }).join('');
 }
 
 window.addEventListener('load', () => {
