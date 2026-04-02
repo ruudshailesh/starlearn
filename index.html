@@ -2,7 +2,7 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.5                                                ║
+║  Version: 2.5.1                                                ║
 ║  Date:    2026-04-01                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
@@ -91,7 +91,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.5</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.5.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -3205,8 +3205,8 @@ function buildPrompt(kid, subject) {
 
     if (subject === 'math') return `${base}
 Generate 10 maths questions. Mix of 6 MCQ and 4 number-input questions. Slightly above 2nd grade level (early 3rd grade concepts OK): addition/subtraction within 1000, place value, simple multiplication intro, word problems.
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"} or {"text":"question","type":"input","answer":"number as string"}]
-Make sure ALL answers are mathematically correct. Double-check every calculation.`;
+Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"} or {"text":"question","type":"input","answer":"number as string"}]
+CRITICAL: options must be the ACTUAL answer text (e.g. ["12","14","16","18"]), NOT letters like a/b/c/d. The answer field must exactly match one of the options. Double-check every calculation.`;
 
     if (subject === 'ela') return `${base}
 Generate 10 English language arts questions. All MCQ. Topics: plurals, opposites, verb tense, rhyming words, nouns/verbs/adjectives, simple grammar, fill-in-the-blank sentences. Keep vocabulary simple (ESL-friendly).
@@ -3221,15 +3221,18 @@ Examples of good hints:
 - opposite: "An opposite is a word that means the very different — like hot and cold."
 - rhyme: "Rhyming words have the same ending sound — like 'cat' and 'hat'."
 
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option","hint":"kid-friendly explanation or empty string if not needed"}]`;
+Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct","hint":"kid-friendly explanation or empty string if not needed"}]
+CRITICAL: options must be ACTUAL WORDS (e.g. ["cats","cates","caties","cat's"]), NOT letters a/b/c/d. The answer must exactly match one of the 4 options.`;
 
     if (subject === 'sci') return `${base}
 Generate 10 science questions. All MCQ. Topics: animals (habitats, diet, classification), plants, weather, simple forces, human body, materials. Slightly above 2nd grade (3rd grade OK).
-Return JSON array: [{"text":"question","type":"mcq","options":["a","b","c","d"],"answer":"correct option"}]`;
+Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"}]
+CRITICAL: options must be ACTUAL WORDS OR PHRASES (e.g. ["evaporation","condensation","melting","freezing"]), NOT letters a/b/c/d. The answer must exactly match one of the 4 options.`;
 
     if (subject === 'read') return `${base}
 Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on any interesting topic (animals, nature, a child's adventure, science, food, etc). Then write 4 MCQ comprehension questions about the passage. Keep language ESL-friendly.
-Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["a","b","c","d"],"answer":"correct option"}]}
+Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"}]}
+CRITICAL: options must be ACTUAL WORDS, NOT letters a/b/c/d. Answer must exactly match one option.
 The answer MUST be directly supported by the passage text.`;
 
     if (subject === 'write') return `${base}
