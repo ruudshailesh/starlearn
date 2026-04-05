@@ -2,7 +2,7 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.5.1                                                ║
+║  Version: 2.6                                                  ║
 ║  Date:    2026-04-01                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
@@ -91,7 +91,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.5.1</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.6</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1697,7 +1697,7 @@ body {
         <div class="s-stars" id="v-math-stars">—</div>
         <div class="s-count" id="v-math-count">0 quizzes</div>
       </div>
-      <div id="v-card-ela" class="subject-card sc-ela" onclick="startQuiz('vivan','ela')">
+      <div id="v-card-ela" class="subject-card sc-ela" style="display:none;" onclick="startQuiz('vivan','ela')">
         <div class="s-icon">📖</div>
         <div class="s-name">English</div>
         <div class="s-teks">TEKS 2.2 / 2.5</div>
@@ -1889,10 +1889,9 @@ body {
   </div>
   <div class="lesson-dots-row" id="lesson-dots-row"></div>
   <div style="flex:1;overflow-y:auto;padding:0 16px 12px;" id="lesson-scroll"></div>
-  <div id="lesson-voice-panel" style="display:none;background:white;margin:0 16px 8px;border-radius:16px;padding:14px 16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);"></div>
+  <!-- voice panel disabled v2.6 -->
   <div class="lesson-controls">
-    <button class="lesson-speak-btn" id="lesson-speak-btn" onclick="lessonReplaySpeak()" title="Replay">🔊</button>
-    <button onclick="lessonToggleVoicePicker()" style="background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;" title="Choose voice">⚙️</button>
+    <!-- TTS buttons disabled v2.6 -->
     <div style="display:flex;gap:8px;flex:1;justify-content:flex-end;align-items:center;">
       <button class="lesson-btn-back" id="lesson-btn-back" onclick="lessonGoSlide(-1)" disabled>← Back</button>
       <button class="lesson-btn-next" id="lesson-btn-next" onclick="lessonGoSlide(1)">Next →</button>
@@ -2290,7 +2289,7 @@ async function loadCurriculumProgress(kid) {
     }
     // Fill in any missing subjects with defaults
     if (kid === 'vivan') {
-      const subjects = ['math','ela','sci','read','write','spell'];
+      const subjects = ['math','sci','read','write','spell'];
       subjects.forEach(sub => {
         if (!result[sub]) result[sub] = { topicIdx: 0, passCount: 0, masteredCount: 0, topicId: null };
       });
@@ -2956,7 +2955,7 @@ function renderDashboard(who, d) {
     document.getElementById('v-total-stars').textContent   = d.totalStars;
     document.getElementById('v-total-quizzes').textContent = d.totalQuizzes;
     document.getElementById('v-streak').textContent        = d.streak;
-    const vivanSubs = ['math','ela','sci','read','write','voice','spell'];
+    const vivanSubs = ['math','sci','read','write','voice','spell'];
     const limits = getSubjectLimits(d.history);
     vivanSubs.forEach(sub => {
       const best    = (d.subjectStars || {})[sub] || 0;
@@ -3204,35 +3203,53 @@ function buildPrompt(kid, subject) {
     const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is AHEAD of grade level — treat him as an advanced 3rd grader. Return ONLY valid JSON, no markdown, no explanation.${topicFocus}`;
 
     if (subject === 'math') return `${base}
-Generate 10 maths questions. Mix of 6 MCQ and 4 number-input questions. Slightly above 2nd grade level (early 3rd grade concepts OK): addition/subtraction within 1000, place value, simple multiplication intro, word problems.
-Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"} or {"text":"question","type":"input","answer":"number as string"}]
-CRITICAL: options must be the ACTUAL answer text (e.g. ["12","14","16","18"]), NOT letters like a/b/c/d. The answer field must exactly match one of the options. Double-check every calculation.`;
+Generate 10 maths questions focused on: ${currTopic ? currTopic.name : 'maths'}.
 
-    if (subject === 'ela') return `${base}
-Generate 10 English language arts questions. All MCQ. Topics: plurals, opposites, verb tense, rhyming words, nouns/verbs/adjectives, simple grammar, fill-in-the-blank sentences. Keep vocabulary simple (ESL-friendly).
+STRICT RULES:
+- Mix: 6 MCQ + 4 number-input
+- MCQ options: all 4 must be plausible — use common wrong answers kids make (off by 1, forgot to carry, confused operation). NEVER use obviously wrong numbers like 99 for a small multiplication.
+- The answer field must be copied EXACTLY from the options array — identical string, no extra spaces
+- For input questions: answer is a number as a string e.g. "42"
+- Double-check every single calculation
 
-IMPORTANT: Whenever a question involves a grammar concept (noun, verb, adjective, plural, opposite, rhyme, tense), you MUST include a "hint" field with a short, simple child-friendly explanation of that concept.
+WORKED EXAMPLES (follow this exact format):
+{"text":"What is 6 × 7?","type":"mcq","options":["36","40","42","48"],"answer":"42"}
+{"text":"What is 144 ÷ 12?","type":"mcq","options":["10","11","12","13"],"answer":"12"}
+{"text":"Round 347 to the nearest 100.","type":"mcq","options":["300","340","350","400"],"answer":"300"}
+{"text":"A rectangle is 9cm long and 4cm wide. What is its area?","type":"input","answer":"36"}
+{"text":"What is 25 + 48?","type":"input","answer":"73"}
 
-Examples of good hints:
-- noun: "A noun is a word for a person, place, or thing — like 'dog', 'school', or 'Vivan'."
-- verb: "A verb is an action word — something you do, like 'run', 'eat', or 'jump'."
-- adjective: "An adjective describes something — like 'big', 'red', or 'happy'."
-- plural: "A plural means more than one — we usually add 's' or 'es' to the end."
-- opposite: "An opposite is a word that means the very different — like hot and cold."
-- rhyme: "Rhyming words have the same ending sound — like 'cat' and 'hat'."
+Return ONLY a JSON array. No markdown. No backticks. No text before or after the [].`;
 
-Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct","hint":"kid-friendly explanation or empty string if not needed"}]
-CRITICAL: options must be ACTUAL WORDS (e.g. ["cats","cates","caties","cat's"]), NOT letters a/b/c/d. The answer must exactly match one of the 4 options.`;
+    if (subject === 'ela') return '[]'; // ELA disabled v2.6
 
     if (subject === 'sci') return `${base}
-Generate 10 science questions. All MCQ. Topics: animals (habitats, diet, classification), plants, weather, simple forces, human body, materials. Slightly above 2nd grade (3rd grade OK).
-Return JSON array: [{"text":"question","type":"mcq","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"}]
-CRITICAL: options must be ACTUAL WORDS OR PHRASES (e.g. ["evaporation","condensation","melting","freezing"]), NOT letters a/b/c/d. The answer must exactly match one of the 4 options.`;
+Generate 10 science questions focused on: ${currTopic ? currTopic.name : 'science'}.
+
+STRICT RULES:
+- All MCQ, 4 options each
+- All 4 options must be plausible science words/phrases — wrong options should be related concepts the student might genuinely confuse, not random words
+- The answer field must be copied EXACTLY from the options array — identical string
+- Questions should test understanding not just name recall
+
+WORKED EXAMPLES (follow this exact format):
+{"text":"What happens to water when it is heated to 100°C?","type":"mcq","options":["It freezes","It evaporates","It condenses","It expands"],"answer":"It evaporates"}
+{"text":"Which of these is a producer in a food chain?","type":"mcq","options":["Lion","Rabbit","Grass","Eagle"],"answer":"Grass"}
+{"text":"What force pulls objects towards the Earth?","type":"mcq","options":["Magnetism","Friction","Gravity","Tension"],"answer":"Gravity"}
+{"text":"What state of matter takes the shape of its container?","type":"mcq","options":["Solid","Liquid","Gas","Crystal"],"answer":"Liquid"}
+
+Return ONLY a JSON array. No markdown. No backticks. No text before or after the [].`;
 
     if (subject === 'read') return `${base}
 Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on any interesting topic (animals, nature, a child's adventure, science, food, etc). Then write 4 MCQ comprehension questions about the passage. Keep language ESL-friendly.
-Return JSON: {"title":"📖 Story Title","passage":"The full passage text.","questions":[{"text":"question","options":["option text 1","option text 2","option text 3","option text 4"],"answer":"exact option text that is correct"}]}
-CRITICAL: options must be ACTUAL WORDS, NOT letters a/b/c/d. Answer must exactly match one option.
+Return JSON:
+{"title":"📖 Story Title","passage":"The full passage text here.","questions":[{"text":"question text","options":["first option","second option","third option","fourth option"],"answer":"first option"}]}
+
+CRITICAL RULES:
+- answer must be copied EXACTLY from one of the 4 options — identical string
+- All 4 options must make sense as possible answers — not obviously wrong
+- The passage must directly support the correct answer
+- No letters a/b/c/d as options — use actual words/phrases
 The answer MUST be directly supported by the passage text.`;
 
     if (subject === 'write') return `${base}
@@ -5504,7 +5521,7 @@ let cmProg    = {}; // curriculum progress for current kid
 const CM_SUBJECTS = {
   vivan:   [
     { key:'math',  label:'🔢 Maths'   },
-    { key:'ela',   label:'📖 English' },
+    // ELA disabled v2.6
     { key:'sci',   label:'🔬 Science' },
     { key:'read',  label:'📚 Reading' },
     { key:'write', label:'✍️ Writing' },
@@ -6960,8 +6977,7 @@ async function lessonRenderSlide() {
   // Pre-fetch next slide
   if (lessonCurrentSlide + 1 < lessonSlides.length) lessonFetchSlide(lessonCurrentSlide + 1);
 
-  // Auto-speak full slide
-  lessonSpeakFullSlide();
+  // TTS auto-speak disabled v2.6
 }
 
 /* ── Navigation ── */
