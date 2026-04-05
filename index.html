@@ -5255,8 +5255,8 @@ async function startSpelling() {
   startLoadingAnimation('vivan', 'write');
 
   try {
-    const d3 = new Date(); const wn3 = Math.ceil(((d3 - new Date(d3.getFullYear(),0,1))/86400000 + new Date(d3.getFullYear(),0,1).getDay()+1)/7);
-      const cacheKey = 'sl_aicache_vivan_spell_w' + d3.getFullYear() + '_' + wn3;
+    const d3 = new Date();
+      const cacheKey = 'sl_aicache_vivan_spell_' + d3.toISOString().slice(0,10); // daily cache — new words every day
     const cached   = localStorage.getItem(cacheKey);
     if (cached) {
       spellWords = JSON.parse(cached);
@@ -5269,10 +5269,11 @@ async function startSpelling() {
 
       const prompt = 'Generate 8-10 spelling words for Vivan, a 7-year-old in Texas (TEKS 3rd grade level). English is his second language.'
         + ' Current spelling topic: "' + topicName + '" — ' + topicDesc
-        + ' Choose words appropriate for this topic. Do NOT use simple CVC words like cat/dog/hat unless the topic specifically calls for it.'
-        + ' Return ONLY a JSON array — no markdown, no backticks:'
-        + ' [{"word":"because","sentence":"because. I stayed home because I was sick. Because."}]'
-        + ' Rules: word lowercase, sentence says word at start then in a natural context sentence then the word again at end (spelling bee format). 8-10 words.';
+        + ' IMPORTANT: Choose DIFFERENT words every time — do not repeat the same words from previous sessions. Pick from a wide variety within this topic.'
+        + ' Return ONLY a JSON array — no markdown, no backticks.'
+        + ' Format example (use this structure but generate COMPLETELY DIFFERENT words for the topic):'
+        + ' [{"word":"REPLACE_WITH_REAL_WORD","sentence":"WORD. Use the word in a natural sentence here. WORD."}]'
+        + ' Rules: word lowercase, sentence format = word at start, then word used naturally in a sentence, then word again at end (spelling bee format). Generate 8-10 words.';
 
       const res = await fetch(
         'https://zaagldgqqpfypjlgfuix.supabase.co/functions/v1/ai-proxy',
