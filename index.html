@@ -3196,10 +3196,10 @@ function buildPrompt(kid, subject) {
     // Get current curriculum topic to focus questions on
     const currTopic = getCurrentTopic('vivan', subject);
     const topicFocus = currTopic ? `\n\nCURRENT LEARNING TOPIC: "${currTopic.name}" — ${currTopic.desc}\nFocus ALL questions on this specific topic. This is topic ${currTopic.idx + 1} of ${currTopic.total} in the curriculum.` : '';
-    const base = `You are generating quiz questions for Vivan, a 7-year-old in 2nd Grade in Texas (TEKS curriculum). English is his second language so keep language clear and simple. He is AHEAD of grade level — treat him as an advanced 3rd grader. Return ONLY valid JSON, no markdown, no explanation.${topicFocus}`;
+    const base = `You are generating quiz questions for Vivan, a 7-year-old BOY in 2nd Grade in Texas (TEKS curriculum). English is his second language — keep language clear and simple. He is AHEAD of grade level — treat him as an advanced 3rd grader. Always use he/him when referring to the student. Return ONLY valid JSON, no markdown, no explanation.${topicFocus}`;
 
     if (subject === 'math') return `${base}
-Generate 10 maths questions focused on: ${currTopic ? currTopic.name : 'maths'}.
+Generate 8 maths questions focused on: ${currTopic ? currTopic.name : 'maths'}.
 
 STRICT RULES:
 - Mix: 6 MCQ + 4 number-input
@@ -3220,13 +3220,15 @@ Return ONLY a JSON array. No markdown. No backticks. No text before or after the
     if (subject === 'ela') return '[]'; // ELA disabled v2.6
 
     if (subject === 'sci') return `${base}
-Generate 10 science questions focused on: ${currTopic ? currTopic.name : 'science'}.
+Generate 8 science questions focused on: ${currTopic ? currTopic.name : 'science'}.
 
 STRICT RULES:
 - All MCQ, 4 options each
-- All 4 options must be plausible science words/phrases — wrong options should be related concepts the student might genuinely confuse, not random words
+- Write questions in simple language — max 15 words per question, words an 8-year-old knows
+- All 4 options plausible — wrong options are related concepts the student might confuse
 - The answer field must be copied EXACTLY from the options array — identical string
-- Questions should test understanding not just name recall
+- No complex vocabulary in questions — if a science word is needed, keep it short
+- Do NOT refer to any student as she/her — use neutral language
 
 WORKED EXAMPLES (follow this exact format):
 {"text":"What happens to water when it is heated to 100°C?","type":"mcq","options":["It freezes","It evaporates","It condenses","It expands"],"answer":"It evaporates"}
@@ -3237,18 +3239,27 @@ WORKED EXAMPLES (follow this exact format):
 Return ONLY a JSON array. No markdown. No backticks. No text before or after the [].`;
 
     if (subject === 'read') return `${base}
-Create ONE short reading passage (exactly 5-6 sentences) for a 7-year-old ESL learner. Choose an interesting topic: animals, nature, a child's adventure, science, food, sport, or space. Then write EXACTLY 4 MCQ comprehension questions. You MUST write all 4 — do not stop at 3.
+Create ONE short reading passage for Vivan — a 7-year-old BOY. He is an ESL learner so use very simple words and short sentences. Max 12 words per sentence.
+
+PASSAGE RULES:
+- Exactly 5 sentences
+- Each sentence max 12 words
+- Simple vocabulary — words a 7-year-old knows
+- Interesting topic: animals, sport, space, food, adventure, nature, science
+- If there is a character, use a boy's name (like Leo, Sam, Jake, Raj, or Vivan)
+- Do NOT use she/her — use he/him if needed
+
+Then write EXACTLY 4 MCQ questions. You MUST write all 4.
 
 Return JSON (exactly this structure):
-{"title":"📖 Story Title","passage":"The full passage text here.","questions":[{"text":"question 1","options":["option A","option B","option C","option D"],"answer":"option A"},{"text":"question 2","options":["option A","option B","option C","option D"],"answer":"option B"},{"text":"question 3","options":["option A","option B","option C","option D"],"answer":"option C"},{"text":"question 4","options":["option A","option B","option C","option D"],"answer":"option D"}]}
+{"title":"📖 Story Title","passage":"Sentence one. Sentence two. Sentence three. Sentence four. Sentence five.","questions":[{"text":"question 1","options":["option A","option B","option C","option D"],"answer":"option A"},{"text":"question 2","options":["option A","option B","option C","option D"],"answer":"option B"},{"text":"question 3","options":["option A","option B","option C","option D"],"answer":"option C"},{"text":"question 4","options":["option A","option B","option C","option D"],"answer":"option D"}]}
 
 CRITICAL RULES:
-- questions array MUST have exactly 4 items — not 3, not 5, exactly 4
-- answer must be copied EXACTLY from one of the 4 options — identical string
-- All 4 options must make sense as possible answers — not obviously wrong
-- The passage must directly support every correct answer
-- Options are actual words/phrases — never letters like a/b/c/d
-- Cover different question types across the 4 questions: literal recall, inference, vocabulary, main idea`;
+- questions array MUST have exactly 4 items
+- answer copied EXACTLY from one of the 4 options
+- All 4 options plausible — not obviously wrong
+- Each question tests something different: who/what/where, why/how, word meaning, main idea
+- Options are words/phrases — never letters a/b/c/d`;
 
     if (subject === 'write') return `${base}
 Generate 5 sentence-builder questions and 5 spot-the-mistake questions for a 7-year-old (ESL).
@@ -3329,31 +3340,45 @@ function stopLoadingAnimation() {
 // Parse Claude API response — handles JSON wrapped in markdown or raw
 function parseAIResponse(text) {
   text = text.trim();
-
-  // Strip ALL markdown code fences (```json ... ``` or ``` ... ```)
   text = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-
-  // Sometimes the model wraps in extra prose — find the first [ or {
   const arrStart = text.indexOf('[');
   const objStart = text.indexOf('{');
   let start = -1;
   if (arrStart !== -1 && objStart !== -1) start = Math.min(arrStart, objStart);
   else if (arrStart !== -1) start = arrStart;
   else if (objStart !== -1) start = objStart;
-
   if (start > 0) text = text.slice(start);
-
-  // Trim trailing prose after the last ] or }
   const arrEnd = text.lastIndexOf(']');
   const objEnd = text.lastIndexOf('}');
   const end = Math.max(arrEnd, objEnd);
   if (end !== -1 && end < text.length - 1) text = text.slice(0, end + 1);
 
-  const parsed = JSON.parse(text);
-
-  // Validate it's usable
-  if (!parsed || (typeof parsed !== 'object')) throw new Error('Invalid response format');
-  return parsed;
+  try {
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== 'object') throw new Error('Invalid');
+    return parsed;
+  } catch(e) {
+    // Truncated array — salvage all complete JSON objects
+    if (text.trimStart().startsWith('[')) {
+      const items = [];
+      let depth = 0, iStart = -1;
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === '{') { if (depth === 0) iStart = i; depth++; }
+        else if (text[i] === '}') {
+          depth--;
+          if (depth === 0 && iStart >= 0) {
+            try { items.push(JSON.parse(text.slice(iStart, i + 1))); } catch(e2) {}
+            iStart = -1;
+          }
+        }
+      }
+      if (items.length > 0) {
+        console.warn('Truncated JSON salvaged:', items.length, 'items');
+        return items;
+      }
+    }
+    throw e;
+  }
 }
 
 // Main AI fetch function
@@ -3384,7 +3409,7 @@ async function fetchAIQuestions(kid, subject) {
       },
       body: JSON.stringify({
         model: 'gemini-2.0-flash',
-        max_tokens: 2500,
+        max_tokens: 4000,
         system: 'You are a children\'s quiz generator. You ALWAYS respond with raw JSON only — no markdown, no code fences, no explanation, no preamble. Just the JSON object or array, nothing else.',
         messages: [{ role: 'user', content: prompt }],
       })
@@ -3890,7 +3915,9 @@ function loadReadingQuiz() {
     <div class="reading-layout">
       <div class="reading-passage-col">
         <div class="reading-passage-label">📖 Read this carefully:</div>
-        ${quiz.passage}
+        <div style="font-size:1.05rem;line-height:2.1;color:#1f2937;font-weight:500;">
+          ${quiz.passage.split(/(?<=[.!?])\s+/).map(s => `<div style="margin-bottom:8px;">• ${s}</div>`).join('')}
+        </div>
       </div>
       <div class="reading-questions-col">
         <div class="reading-questions-label">📝 Answer the questions:</div>
@@ -6618,7 +6645,7 @@ Output: {"title":"Push it or pull it!","subtitle":"Every movement is a force","e
     ela: {
       A: `EXAMPLE OF FORMAT A (Story Problem):
 Input: topic=Nouns, context=a girl at the market
-Output: {"title":"Nouns are name tags!","subtitle":"Names for people, places, animals and things","explanation":"Anya went to the market with her mum. In that sentence — Anya is a noun (person), market is a noun (place), mum is a noun (person). Nouns are the name tags of the world. Every person, place, animal and thing has a noun.","chips":["Anya (person)","market (place)","dog (animal)","book (thing)","London (place)"],"example":"The girl put the apple in her bag at the shop.","highlights":["girl","apple","bag","shop"],"tip":"💡 Ask: can I put 'the' in front of it? The dog, the school, the pizza — all nouns!"}`,
+Output: {"title":"Nouns are name tags!","subtitle":"Names for people, places, animals and things","explanation":"Raj went to the market with his dad. In that sentence — Raj is a noun (person), market is a noun (place), dad is a noun (person). Nouns are the name tags of the world. Every person, place, animal and thing has a noun.","chips":["Anya (person)","market (place)","dog (animal)","book (thing)","London (place)"],"example":"Raj put the apple in his bag at the shop.","highlights":["girl","apple","bag","shop"],"tip":"💡 Ask: can I put 'the' in front of it? The dog, the school, the pizza — all nouns!"}`,
       B: `EXAMPLE OF FORMAT B (Funny Hook):
 Input: topic=Verbs and Tenses, context=everyday actions
 Output: {"title":"Verbs are action words!","subtitle":"What is happening in the sentence?","explanation":"Every sentence needs a verb — the action word. Walk, run, eat, think, sleep — all verbs. Tense tells you WHEN: 'I walk' is now. 'I walked' is past. 'I will walk' is future. Change the verb and you change the time!","chips":["walk / walked","eat / ate","run / ran","present tense","past tense"],"example":"Yesterday he ran to school. Today he walks. Tomorrow he will cycle. 🚴","highlights":["ran","walks","will cycle"],"tip":"💡 If you can put yesterday in front of it — it is past tense!"}`,
@@ -6629,7 +6656,7 @@ Input: topic=Literal Recall, context=a short passage
 Output: {"title":"The answer is right there!","subtitle":"Find it directly in the text","explanation":"Literal recall questions have the answer hiding in the passage — you just need to find it. Read the question first, then scan the passage for those exact words. The answer will often use the same words as the question.","chips":["find it","scan","key words","directly stated","in the text"],"example":"Question: Where did Sam go? Passage says: Sam went to the park. Answer: the park ✅","highlights":["Sam went to the park"],"tip":"💡 Read the question → circle key words → find those words in the passage."}`,
       B: `EXAMPLE OF FORMAT B (Funny Hook):
 Input: topic=Inference — Basic, context=reading between the lines
-Output: {"title":"Read between the lines!","subtitle":"The answer is not written — you have to work it out","explanation":"Sometimes the passage does not say the answer directly — you have to be a detective. If it says 'she grabbed her umbrella before leaving', it does not say it is raining. But you can figure it out! That is an inference.","chips":["clue","evidence","figure it out","probably","because"],"example":"He was shivering and blowing on his hands. We can infer he was cold. 🥶","highlights":["shivering","blowing on his hands","cold"],"tip":"💡 Clue + thinking = inference. Always point to the part of the text that gave you the clue."}`,
+Output: {"title":"Read between the lines!","subtitle":"The answer is not written — you have to work it out","explanation":"Sometimes the passage does not say the answer directly — you have to be a detective. If it says 'he grabbed his umbrella before leaving', it does not say it is raining. But you can figure it out! That is an inference.","chips":["clue","evidence","figure it out","probably","because"],"example":"He was shivering and blowing on his hands. We can infer he was cold. 🥶","highlights":["shivering","blowing on his hands","cold"],"tip":"💡 Clue + thinking = inference. Always point to the part of the text that gave you the clue."}`,
     },
     write: {
       A: `EXAMPLE OF FORMAT A (Story Problem):
@@ -6637,7 +6664,7 @@ Input: topic=Sentence Basics, context=writing a note
 Output: {"title":"Every sentence needs two things!","subtitle":"Capital letter to open, full stop to close","explanation":"Leo wrote a note to his teacher: 'the dog ate my book i need a new one please'. His teacher could not tell where one idea ended and another began. Every sentence needs a capital letter at the start and a full stop at the end — like opening and closing a box for each idea.","chips":["Capital letter","full stop","start","end","complete idea"],"example":"The dog ate my book. I need a new one please. ✅","highlights":["The","book.","I","please."],"tip":"💡 Read it out loud — where you naturally pause and breathe is where the full stop goes."}`,
       B: `EXAMPLE OF FORMAT B (Funny Hook):
 Input: topic=Compound Sentences, context=joining ideas
-Output: {"title":"Join two ideas together!","subtitle":"Use a joining word — and, but, because, so","explanation":"Two short sentences can become one stronger sentence. 'It rained. We stayed inside.' becomes 'It rained so we stayed inside.' The joining word shows how the ideas connect. And = adding, But = surprise, Because = reason, So = result.","chips":["and","but","because","so","joining word"],"example":"She was tired but she finished her homework. ✅","highlights":["but"],"tip":"💡 FANBOYS — For And Nor But Or Yet So — all joining words for compound sentences."}`,
+Output: {"title":"Join two ideas together!","subtitle":"Use a joining word — and, but, because, so","explanation":"Two short sentences can become one stronger sentence. 'It rained. We stayed inside.' becomes 'It rained so we stayed inside.' The joining word shows how the ideas connect. And = adding, But = surprise, Because = reason, So = result.","chips":["and","but","because","so","joining word"],"example":"He was tired but he finished his homework. ✅","highlights":["but"],"tip":"💡 FANBOYS — For And Nor But Or Yet So — all joining words for compound sentences."}`,
     },
     spell: {
       A: `EXAMPLE OF FORMAT A (Story Problem):
@@ -6648,7 +6675,7 @@ Input: topic=Dolch 2nd Grade Sight Words, context=reading speed
 Output: {"title":"Words you must just know!","subtitle":"Sight words — read them without sounding out","explanation":"Some words are so common you need to recognise them instantly — like your own name. Because, before, always, should, would, could. These words follow unusual spelling rules so sounding them out is tricky. The trick is to just memorise them.","chips":["because","before","always","should","would","could"],"example":"I could not sleep because I was too excited. ✅","highlights":["could","because"],"tip":"💡 Write each sight word 5 times and use it in a sentence. That is the fastest way to lock it in."}`,
       C: `EXAMPLE OF FORMAT C (Spot the Mistake):
 Input: topic=Contractions Spelling, context=apostrophes
-Output: {"title":"The apostrophe shows what is missing!","subtitle":"Contractions = two words squished into one","explanation":"A contraction squishes two words together and uses an apostrophe to show where letters were removed. Do not → don't. The apostrophe sits where the missing letter was. It is NOT a possessive — it just marks the gap.","chips":["don't = do not","won't = will not","it's = it is","they're = they are","couldn't = could not"],"example":"She couldn't find her bag because it's very small. ✅","highlights":["couldn't","it's"],"tip":"💡 Expand it first — say the two full words. Then squish them and add the apostrophe where letters vanished."}`,
+Output: {"title":"The apostrophe shows what is missing!","subtitle":"Contractions = two words squished into one","explanation":"A contraction squishes two words together and uses an apostrophe to show where letters were removed. Do not → don't. The apostrophe sits where the missing letter was. It is NOT a possessive — it just marks the gap.","chips":["don't = do not","won't = will not","it's = it is","they're = they are","couldn't = could not"],"example":"He couldn't find his bag because it's very small. ✅","highlights":["couldn't","it's"],"tip":"💡 Expand it first — say the two full words. Then squish them and add the apostrophe where letters vanished."}`,
     },
   };
 
@@ -6666,7 +6693,7 @@ Output: {"title":"The apostrophe shows what is missing!","subtitle":"Contraction
     C: 'FORMAT C — Spot the Mistake: Show a wrong version first, then the corrected version. Walk through exactly what was wrong and why the fix works.',
   };
 
-  return `You are writing a 60-second lesson slide for Vivan — a 7-year-old ESL learner in Texas who loves football, games, and adventures.
+  return `You are writing a 60-second lesson slide for Vivan — a 7-year-old BOY and ESL learner in Texas who loves football, games, and adventures.
 
 RULES (follow strictly):
 - Max 3 sentences in explanation. Max 20 words per sentence.
