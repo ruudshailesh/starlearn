@@ -2,96 +2,75 @@
 <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  StarLearn — Kids Learning App                               ║
-║  Version: 2.6                                                  ║
-║  Date:    2026-04-01                                         ║
+║  Version: 2.7                                                ║
+║  Date:    2026-04-05                                         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  CHANGE LOG                                                  ║
 ╠══════════════════════════════════════════════════════════════╣
+║  v2.7  2026-04-05                                            ║
+║    + Reading quiz: side-by-side layout on tablet/web         ║
+║      Passage left (sticky), questions right (scrollable)     ║
+║      Mobile: passage collapses to scrollable top section     ║
+║    ~ Writing: progress bar fixed (was hardcoded at 25%)      ║
+║    ~ Version log: rebuilt cleanly with all versions          ║
+║    ~ All layout gaps audited — no other issues found         ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.6  2026-04-01                                            ║
+║    - ELA subject disabled (hallucinating, will fix later)    ║
+║    - Lesson TTS auto-speak removed (will revisit)            ║
+║    + Math quiz: few-shot prompt, wrong options = common      ║
+║      mistakes, answer must exactly match option text         ║
+║    + Science quiz: few-shot prompt, all 4 options plausible  ║
+║    + Reading: answer exact-match rule hardened               ║
+║    + All prompts: no a/b/c/d letters, exact match enforced   ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.5.1  2026-04-01                                          ║
+║    ~ Provider order corrected: Gemini first, Groq fallback   ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.5  2026-04-01                                            ║
+║    + Few-shot lesson prompt engine                           ║
+║      3 formats per subject (A=Story, B=Hook, C=SpotMistake) ║
+║      70/30 basic vs kid interests, randomised each session   ║
+║      Chips = quiz keywords, tips = memory tricks only        ║
+║      No negative content enforced                            ║
+║      Hridaan: separate toddler-optimised few-shot set        ║
+╠══════════════════════════════════════════════════════════════╣
+║  v2.4.1  2026-04-01                                          ║
+║    ~ Provider: all lesson slides use Gemini first            ║
+╠══════════════════════════════════════════════════════════════╣
 ║  v2.4  2026-04-01                                            ║
 ║    + TTS reads full slide (explanation + example + tip)      ║
-║      - Sentence-by-sentence chunking for natural pacing      ║
-║      - 180ms pause between sentences                         ║
-║      - Replay button speaks full slide every time            ║
-║    + AI prompts rewritten — engaging, kid-relevant content   ║
-║      - Examples use soccer, Minecraft, Sonic, superheroes    ║
-║      - Max 20 words per sentence rule enforced               ║
-║      - Hridaan: silly emoji-heavy toddler-friendly prompts   ║
-║      - Each slide type (concept/example/practice) has        ║
-║        subject-specific goals tied to quiz content           ║
-║    + AI provider: Groq first, Gemini fallback                ║
-║      - Gemini first for lesson slides, Groq fallback         ║
-║    + Fallback content improved — still fun without AI        ║
+║    + AI prompts rewritten with kid-relevant content          ║
+║    + AI provider: Gemini first, Groq fallback via edge fn    ║
 ╠══════════════════════════════════════════════════════════════╣
-║  v2.3  2026-04-01                                            ║                                            ║
-║    + Universal Lesson Engine (all subjects, both kids)       ║
-║      - Lesson shown before every quiz for every subject      ║
-║      - Slide count adapts to performance:                    ║
-║        3 slides: new topic or avg below 70%  (~2.5 min)     ║
-║        2 slides: avg 70-85%                 (~1.5 min)      ║
-║        1 slide:  avg above 85%              (~30 sec)        ║
-║        0 slides: topic mastered — skip to quiz directly      ║
-║      - Topic-aware AI prompts per subject type               ║
-║        (Maths=worked example, Science=fun fact, etc)         ║
-║      - Hridaan mode: emoji-heavy, slower TTS, bigger chips   ║
-║      - Voice picker saved across sessions                    ║
-║      - Covers all subjects: Maths, ELA, Science, Reading,    ║
-║        Writing, Spelling + Hridaan: Nums, Alpha, Shapes,     ║
-║        Phonics                                               ║
-║    - Removed standalone ELA-only intro (superseded above)    ║
+║  v2.3  2026-04-01                                            ║
+║    + Universal Lesson Engine — all subjects, both kids       ║
+║      Slide count adapts to performance (0-3 slides)          ║
+║      Topic-aware AI prompts per subject type                 ║
 ╠══════════════════════════════════════════════════════════════╣
-║  v2.2  2026-04-01                                            ║                                            ║
-║    + ELA Intro Slideshow (5 slides before each ELA quiz)     ║
-║      - Gemini generates fresh teacher-style explanation each ║
-║        session, topic-aware (uses current curriculum topic)  ║
-║      - TTS reads each slide aloud automatically              ║
-║      - Word chips to tap and hear individual words           ║
-║      - Voice picker (save preferred TTS voice)               ║
-║      - Skip lesson button available at any time              ║
-║      - Fallback content if Gemini unavailable                ║
+║  v2.2  2026-04-01                                            ║
+║    + ELA Intro Slideshow (5 slides, TTS, word chips)         ║
 ║    + Hridaan Curriculum Progression System                   ║
-║      - Full topic maps: nums(10), alpha(6), shapes(6),       ║
-║        phonics(8) — from approved curriculum                 ║
-║      - Same mastery system as Vivan (70%+ twice to advance)  ║
-║      - Learning Journey map on Hridaan dashboard             ║
-║      - Curriculum Manager tab already works for Hridaan      ║
-║      - checkAndAdvanceCurriculum now handles both kids       ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  v2.1  2026-04-01                                            ║
-║    + Parent Dashboard: Progress bar chart (last 14 days)     ║
-║      - Kid selector (Vivan / Hridaan)                        ║
-║      - Subject filter buttons (All / per subject)            ║
-║      - Colour coded: green 80%+, yellow 60-79%, red <60%     ║
-║    + Parent Dashboard: Weekly Tracker table                  ║
-║      - Shows all subjects for both kids                      ║
-║      - Done vs target (5/week) with mini progress bar        ║
-║      - Status chips: Done / On track / Behind / Not started  ║
-║    + Parent Dashboard: Quiz Summaries panel                  ║
-║      - Loads from quiz_summaries Supabase table              ║
-║      - AI-generated insights per quiz                        ║
-║      - Shows weak areas (red) and strong areas (green) tags  ║
-║      - Kid tabs (Vivan / Hridaan) + Refresh button           ║
+║    + Parent: Progress bar chart (last 14 days)               ║
+║    + Parent: Weekly tracker table                            ║
+║    + Parent: Quiz summaries panel (AI insights)              ║
 ╠══════════════════════════════════════════════════════════════╣
-║  v2.0  (previous — base file uploaded by Shailesh)           ║
-║    + Vivan: Full curriculum progression system               ║
-║    + Vivan: AI quiz summary generation to Supabase           ║
-║    + Parent: Curriculum Manager UI                           ║
-║    + Behaviour points system with Pay Reward                 ║
-║    + Subject attempt limits (daily/weekly) + Power User      ║
-║    + Weekly progress targets                                 ║
-║    + Writing exercises with keyboard typing                  ║
-║    + Spelling using Dolch sight words                        ║
-║    + Read Aloud voice practice                               ║
+║  v2.0  (base — uploaded by Shailesh)                         ║
+║    Curriculum progression, behaviour points, quiz summaries, ║
+║    subject limits, weekly targets, writing, spelling         ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  PENDING                                                     ║
-║    - Block Next button until TTS finishes reading            ║
-║    - Test Groq JSON reliability vs Gemini for lesson slides  ║
+║    - ELA quiz: fix hallucination, re-enable                  ║
+║    - Lesson TTS: fix naturalness then re-enable              ║
+║    - Block Next until TTS finishes reading                   ║
 ╚══════════════════════════════════════════════════════════════╝
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.6</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.7.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1386,6 +1365,89 @@ body {
 /* ════════════════════════════
    RESPONSIVE
 ════════════════════════════ */
+/* ════════════════════════════
+   READING QUIZ — SIDE BY SIDE
+════════════════════════════ */
+.reading-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+.reading-passage-col {
+  background: #fffbeb;
+  border: 2px solid #fde68a;
+  border-radius: 16px;
+  padding: 18px 20px;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: #1f2937;
+  font-weight: 500;
+}
+.reading-passage-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #92400e;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.reading-questions-col {
+  flex: 1;
+  overflow-y: auto;
+}
+.reading-questions-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #374151;
+  margin-bottom: 14px;
+}
+
+/* Mobile: stacked, passage collapses */
+@media (max-width: 767px) {
+  .reading-layout {
+    flex-direction: column;
+  }
+  .reading-passage-col {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+  }
+}
+
+/* Tablet / web: side by side */
+@media (min-width: 768px) {
+  #screen-reading {
+    flex-direction: column;
+  }
+  .reading-layout {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 20px;
+    height: 100%;
+    overflow: hidden;
+  }
+  .reading-passage-col {
+    width: 42%;
+    flex-shrink: 0;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-height: calc(100vh - 160px);
+  }
+  .reading-questions-col {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+  }
+}
+
 @media (max-width: 600px) {
   .subject-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .subject-card { padding: 14px 8px; }
@@ -3241,16 +3303,18 @@ WORKED EXAMPLES (follow this exact format):
 Return ONLY a JSON array. No markdown. No backticks. No text before or after the [].`;
 
     if (subject === 'read') return `${base}
-Create ONE short reading passage (exactly 5-6 sentences) suitable for age 7, on any interesting topic (animals, nature, a child's adventure, science, food, etc). Then write 4 MCQ comprehension questions about the passage. Keep language ESL-friendly.
-Return JSON:
-{"title":"📖 Story Title","passage":"The full passage text here.","questions":[{"text":"question text","options":["first option","second option","third option","fourth option"],"answer":"first option"}]}
+Create ONE short reading passage (exactly 5-6 sentences) for a 7-year-old ESL learner. Choose an interesting topic: animals, nature, a child's adventure, science, food, sport, or space. Then write EXACTLY 4 MCQ comprehension questions. You MUST write all 4 — do not stop at 3.
+
+Return JSON (exactly this structure):
+{"title":"📖 Story Title","passage":"The full passage text here.","questions":[{"text":"question 1","options":["option A","option B","option C","option D"],"answer":"option A"},{"text":"question 2","options":["option A","option B","option C","option D"],"answer":"option B"},{"text":"question 3","options":["option A","option B","option C","option D"],"answer":"option C"},{"text":"question 4","options":["option A","option B","option C","option D"],"answer":"option D"}]}
 
 CRITICAL RULES:
+- questions array MUST have exactly 4 items — not 3, not 5, exactly 4
 - answer must be copied EXACTLY from one of the 4 options — identical string
 - All 4 options must make sense as possible answers — not obviously wrong
-- The passage must directly support the correct answer
-- No letters a/b/c/d as options — use actual words/phrases
-The answer MUST be directly supported by the passage text.`;
+- The passage must directly support every correct answer
+- Options are actual words/phrases — never letters like a/b/c/d
+- Cover different question types across the 4 questions: literal recall, inference, vocabulary, main idea`;
 
     if (subject === 'write') return `${base}
 Generate 5 sentence-builder questions and 5 spot-the-mistake questions for a 7-year-old (ESL).
@@ -3889,23 +3953,27 @@ function loadReadingQuiz() {
 
   const body = document.getElementById('reading-body');
   body.innerHTML = `
-    <div class="passage-card">
-      <div class="passage-title">📖 Read this carefully:</div>
-      ${quiz.passage}
-    </div>
-    <div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:#374151;margin-bottom:14px;">📝 Answer the questions:</div>
-    ${quiz.questions.map((q,i) => `
-      <div class="q-card" id="rq-${i}" style="margin-bottom:14px;">
-        <div class="q-num-badge" style="background:linear-gradient(135deg,#7c3aed,#db2777);">${i+1}</div>
-        <div class="q-text">${q.text}</div>
-        <div class="q-options">
-          ${q.options.map(o => `<button class="q-opt" onclick="readingMCQ(${i},this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}')">
-            ${o}
-          </button>`).join('')}
-        </div>
-        <div class="q-feedback" id="rfb-${i}"></div>
+    <div class="reading-layout">
+      <div class="reading-passage-col">
+        <div class="reading-passage-label">📖 Read this carefully:</div>
+        ${quiz.passage}
       </div>
-    `).join('')}
+      <div class="reading-questions-col">
+        <div class="reading-questions-label">📝 Answer the questions:</div>
+        ${quiz.questions.map((q,i) => `
+          <div class="q-card" id="rq-${i}" style="margin-bottom:14px;">
+            <div class="q-num-badge" style="background:linear-gradient(135deg,#7c3aed,#db2877);">${i+1}</div>
+            <div class="q-text">${q.text}</div>
+            <div class="q-options">
+              ${q.options.map(o => `<button class="q-opt" onclick="readingMCQ(${i},this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}')">
+                ${o}
+              </button>`).join('')}
+            </div>
+            <div class="q-feedback" id="rfb-${i}"></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
   `;
 }
 
@@ -6707,10 +6775,14 @@ async function lessonFetchSlide(slideIdx) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const raw  = await res.json();
     let text   = raw.content?.find(b => b.type === 'text')?.text?.trim() || '';
+    // Strip markdown fences
     text = text.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
-    // Find first { in case model adds preamble despite instructions
+    // Strip preamble before first {
     const jsonStart = text.indexOf('{');
     if (jsonStart > 0) text = text.slice(jsonStart);
+    // Strip trailing text after last } (Gemini sometimes appends explanation)
+    const jsonEnd = text.lastIndexOf('}');
+    if (jsonEnd >= 0 && jsonEnd < text.length - 1) text = text.slice(0, jsonEnd + 1);
     const json = JSON.parse(text);
     const data = {
       title:       json.title       || lessonTopic.name,
@@ -7066,8 +7138,8 @@ window.addEventListener('load', () => {
   <div class="quiz-prog-bar">
     <div class="quiz-prog-fill" id="reading-prog-fill" style="width:0%"></div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding:20px 20px 10px;" id="reading-body"></div>
-  <div style="padding:0 20px 28px;">
+  <div style="flex:1;overflow:hidden;padding:16px 20px 0;" id="reading-body"></div>
+  <div style="padding:10px 20px 20px;flex-shrink:0;">
     <button class="quiz-submit-btn" style="background:linear-gradient(135deg,#7c3aed,#db2777);" onclick="submitReading()">✅ Submit Reading Quiz</button>
   </div>
 </div>
@@ -7082,7 +7154,7 @@ window.addEventListener('load', () => {
     <div class="quiz-progress-text" id="writing-prog-text">Q 1/10</div>
   </div>
   <div class="quiz-prog-bar">
-    <div class="quiz-prog-fill" id="writing-prog-fill" style="width:25%"></div>
+    <div class="quiz-prog-fill" id="writing-prog-fill" style="width:0%"></div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:20px;" id="writing-body"></div>
   <div style="padding:0 20px 28px;">
