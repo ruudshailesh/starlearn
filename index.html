@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- StarLearn v2.7.1 | github.com/starlearn -->
+<!-- StarLearn v2.8 | github.com/starlearn -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ StarLearn – Vivan & Hridaan v2.7.1</title>
+<title>⭐ StarLearn – Vivan & Hridaan v2.8</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1382,6 +1382,45 @@ body {
   }
 }
 
+/* ════════════════
+   MATH SUM LAYOUT
+════════════════ */
+.math-sum-wrap {
+  background: #f8fafc;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  font-family: 'Baloo 2', cursive;
+  display: inline-block;
+  min-width: 160px;
+  text-align: right;
+}
+.math-sum-row {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.3;
+  display: block;
+}
+.math-sum-operator {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b82f6;
+}
+.math-sum-line {
+  border-top: 3px solid #374151;
+  margin: 6px 0 4px;
+  display: block;
+}
+.math-sum-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
 @media (max-width: 600px) {
   .subject-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .subject-card { padding: 14px 8px; }
@@ -2651,14 +2690,16 @@ const WRITING_QUIZ = {
 const PHONICS_QUIZ = {
   title: '🔊 Phonics',
   questions: [
-    { letter:'A', says:'says /a/ like in…', prompt:'Which starts with the /a/ sound?', options:['🍎 Apple','🏀 Ball','🐱 Cat','🐶 Dog'], answer:'🍎 Apple' },
-    { letter:'B', says:'says /b/ like in…', prompt:'Which starts with the /b/ sound?', options:['🍎 Apple','🍌 Banana','🐱 Cat','🐶 Dog'], answer:'🍌 Banana' },
-    { letter:'C', says:'says /c/ like in…', prompt:'Which starts with the /c/ sound?', options:['🍎 Apple','🐻 Bear','🐱 Cat','🐶 Dog'], answer:'🐱 Cat' },
-    { letter:'D', says:'says /d/ like in…', prompt:'Which starts with the /d/ sound?', options:['🍎 Apple','🏀 Ball','☕ Cup','🐶 Dog'], answer:'🐶 Dog' },
-    { letter:'S', says:'says /s/ like in…', prompt:'Which starts with the /s/ sound?', options:['🌙 Moon','☀️ Sun','🥚 Egg','🐟 Fish'], answer:'☀️ Sun' },
-    { letter:'M', says:'says /m/ like in…', prompt:'Which starts with the /m/ sound?', options:['☀️ Sun','🌧️ Rain','🌙 Moon','🐦 Bird'], answer:'🌙 Moon' },
-    { letter:'F', says:'says /f/ like in…', prompt:'Which starts with the /f/ sound?', options:['🐶 Dog','🐟 Fish','🐱 Cat','🐻 Bear'], answer:'🐟 Fish' },
-    { letter:'T', says:'says /t/ like in…', prompt:'Which starts with the /t/ sound?', options:['🌳 Tree','🏠 House','🌊 Lake','🐦 Bird'], answer:'🌳 Tree' },
+    { letter:'A', says:'says "ah" — like Apple', prompt:'Which one starts with A?', options:['🍎 Apple','🏀 Ball','🐶 Dog','🌙 Moon'], answer:'🍎 Apple' },
+    { letter:'B', says:'says "buh" — like Ball', prompt:'Which one starts with B?', options:['🍎 Apple','🏀 Ball','🐱 Cat','🐶 Dog'], answer:'🏀 Ball' },
+    { letter:'C', says:'says "kuh" — like Cat', prompt:'Which one starts with C?', options:['🏀 Ball','🐱 Cat','🐶 Dog','🐟 Fish'], answer:'🐱 Cat' },
+    { letter:'D', says:'says "duh" — like Dog', prompt:'Which one starts with D?', options:['🍎 Apple','🏀 Ball','🐱 Cat','🐶 Dog'], answer:'🐶 Dog' },
+    { letter:'F', says:'says "fff" — like Fish', prompt:'Which one starts with F?', options:['🐶 Dog','🐟 Fish','🌙 Moon','⭐ Star'], answer:'🐟 Fish' },
+    { letter:'M', says:'says "mmm" — like Moon', prompt:'Which one starts with M?', options:['⭐ Star','🌳 Tree','🌙 Moon','🏀 Ball'], answer:'🌙 Moon' },
+    { letter:'S', says:'says "sss" — like Sun', prompt:'Which one starts with S?', options:['🌙 Moon','☀️ Sun','🐱 Cat','🏀 Ball'], answer:'☀️ Sun' },
+    { letter:'T', says:'says "tuh" — like Tree', prompt:'Which one starts with T?', options:['🍎 Apple','🏀 Ball','🌳 Tree','🐶 Dog'], answer:'🌳 Tree' },
+    { letter:'L', says:'says "lll" — like Lion', prompt:'Which one starts with L?', options:['🐶 Dog','🦁 Lion','🏀 Ball','🍎 Apple'], answer:'🦁 Lion' },
+    { letter:'R', says:'says "rrr" — like Rain', prompt:'Which one starts with R?', options:['🌙 Moon','⭐ Star','🌧️ Rain','🐱 Cat'], answer:'🌧️ Rain' },
   ]
 };
 
@@ -2870,40 +2911,46 @@ const QUIZZES = {
   'hridaan-nums': {
     title: '🔢 Numbers',
     questions: [
-      { emoji: '🍎🍎🍎', text: 'How many apples?', options: ['1','2','3','4'], answer: '3' },
-      { emoji: '4️⃣', text: 'Which number comes AFTER 4?', options: ['3','5','6','2'], answer: '5' },
-      { emoji: '🌟🌟🌟🌟🌟', text: 'How many stars?', options: ['4','5','6','3'], answer: '5' },
-      { emoji: '2️⃣ or 6️⃣', text: 'Which number is MORE?', options: ['2','6'], answer: '6' },
-      { emoji: '🐶🐶', text: 'How many dogs?', options: ['1','2','3','4'], answer: '2' },
-      { emoji: '3️⃣', text: 'Which number comes BEFORE 3?', options: ['4','2','1','5'], answer: '2' },
-      { emoji: '🎈🎈🎈🎈', text: 'How many balloons?', options: ['3','4','5','6'], answer: '4' },
-      { emoji: '8️⃣ or 3️⃣', text: 'Which number is LESS?', options: ['8','3'], answer: '3' },
+      { emoji: '🍎🍎 + 🍎🍎🍎', text: '2 + 3 = ?', options: ['4','5','6','7'], answer: '5' },
+      { emoji: '⭐⭐⭐ + ⭐', text: '3 + 1 = ?', options: ['3','4','5','6'], answer: '4' },
+      { emoji: '🏀🏀🏀🏀 - 🏀', text: '4 - 1 = ?', options: ['2','3','4','5'], answer: '3' },
+      { emoji: '🐶🐶🐶 + 🐶🐶', text: '3 + 2 = ?', options: ['4','5','6','7'], answer: '5' },
+      { emoji: '🍕🍕🍕🍕🍕 - 🍕🍕', text: '5 - 2 = ?', options: ['2','3','4','5'], answer: '3' },
+      { emoji: '🎈 + 🎈🎈🎈', text: '1 + 3 = ?', options: ['3','4','5','6'], answer: '4' },
+      { emoji: '🌟🌟🌟🌟🌟🌟 - 🌟🌟', text: '6 - 2 = ?', options: ['3','4','5','6'], answer: '4' },
+      { emoji: '🚗🚗 + 🚗🚗🚗🚗', text: '2 + 4 = ?', options: ['5','6','7','8'], answer: '6' },
+      { emoji: '🍦🍦🍦🍦 + 🍦🍦🍦', text: '4 + 3 = ?', options: ['6','7','8','9'], answer: '7' },
+      { emoji: '🐱🐱🐱🐱🐱 - 🐱', text: '5 - 1 = ?', options: ['3','4','5','6'], answer: '4' },
     ]
   },
   'hridaan-alpha': {
     title: '🔤 Alphabet',
     questions: [
-      { emoji: '🍎', text: 'A is for…?', options: ['Ant','Apple','Arm','Axe'], answer: 'Apple' },
-      { emoji: '🏀', text: 'B is for…?', options: ['Bird','Bear','Ball','Boat'], answer: 'Ball' },
-      { emoji: '🐱', text: 'C is for…?', options: ['Cup','Car','Cow','Cat'], answer: 'Cat' },
-      { emoji: '🐶', text: 'D is for…?', options: ['Duck','Deer','Dog','Door'], answer: 'Dog' },
-      { emoji: '🐘', text: 'E is for…?', options: ['Egg','Eye','Ear','Elephant'], answer: 'Elephant' },
-      { emoji: '🍎', text: 'This picture starts with which letter?', options: ['B','A','C','D'], answer: 'A' },
-      { emoji: '🐱', text: 'This picture starts with which letter?', options: ['A','B','C','D'], answer: 'C' },
-      { emoji: '🐶', text: 'This picture starts with which letter?', options: ['A','B','C','D'], answer: 'D' },
+      { emoji: '🍎', text: 'Apple starts with…?', options: ['B','A','C','D'], answer: 'A' },
+      { emoji: '🏀', text: 'Ball starts with…?', options: ['A','B','C','D'], answer: 'B' },
+      { emoji: '🐱', text: 'Cat starts with…?', options: ['A','B','C','D'], answer: 'C' },
+      { emoji: '🐶', text: 'Dog starts with…?', options: ['A','B','C','D'], answer: 'D' },
+      { emoji: '🐘', text: 'Elephant starts with…?', options: ['A','B','C','E'], answer: 'E' },
+      { emoji: '🐟', text: 'Fish starts with…?', options: ['E','F','G','H'], answer: 'F' },
+      { emoji: '⭐', text: 'Star starts with…?', options: ['R','S','T','U'], answer: 'S' },
+      { emoji: '🌙', text: 'Moon starts with…?', options: ['L','M','N','O'], answer: 'M' },
+      { emoji: '🌳', text: 'Tree starts with…?', options: ['S','T','U','V'], answer: 'T' },
+      { emoji: '🦁', text: 'Lion starts with…?', options: ['J','K','L','M'], answer: 'L' },
     ]
   },
   'hridaan-shapes': {
     title: '🔵 Shapes & Colours',
     questions: [
-      { emoji: '⚽', text: 'A ball is this shape:', options: ['Square','Circle','Triangle','Rectangle'], answer: 'Circle' },
-      { emoji: '📦', text: 'A box is this shape:', options: ['Circle','Triangle','Square','Oval'], answer: 'Square' },
-      { emoji: '☀️', text: 'What colour is the sun?', options: ['Blue','Green','Red','Yellow'], answer: 'Yellow' },
-      { emoji: '🌿', text: 'What colour is grass?', options: ['Yellow','Blue','Green','Red'], answer: 'Green' },
-      { emoji: '🌊', text: 'What colour is the sky?', options: ['Green','Yellow','Blue','Pink'], answer: 'Blue' },
-      { emoji: '🔴', text: 'What colour is this circle?', options: ['Blue','Green','Yellow','Red'], answer: 'Red' },
-      { emoji: '🚪', text: 'A door is this shape:', options: ['Circle','Triangle','Rectangle','Square'], answer: 'Rectangle' },
-      { emoji: '🍕', text: 'A pizza slice is this shape:', options: ['Circle','Square','Rectangle','Triangle'], answer: 'Triangle' },
+      { emoji: '⚽', text: 'A ball is round. What shape?', options: ['Square','Circle','Triangle','Rectangle'], answer: 'Circle' },
+      { emoji: '📦', text: 'A box has 4 equal sides. What shape?', options: ['Circle','Triangle','Square','Oval'], answer: 'Square' },
+      { emoji: '🍕', text: 'A pizza slice has 3 sides. What shape?', options: ['Circle','Square','Rectangle','Triangle'], answer: 'Triangle' },
+      { emoji: '🚪', text: 'A door is tall and wide. What shape?', options: ['Circle','Triangle','Rectangle','Square'], answer: 'Rectangle' },
+      { emoji: '🔴', text: 'What colour is this? 🔴', options: ['Blue','Green','Yellow','Red'], answer: 'Red' },
+      { emoji: '💛', text: 'What colour is this? 💛', options: ['Red','Blue','Yellow','Green'], answer: 'Yellow' },
+      { emoji: '💚', text: 'What colour is this? 💚', options: ['Yellow','Blue','Green','Red'], answer: 'Green' },
+      { emoji: '💙', text: 'What colour is this? 💙', options: ['Green','Yellow','Red','Blue'], answer: 'Blue' },
+      { emoji: '🔺', text: 'How many sides does a triangle have?', options: ['2','3','4','5'], answer: '3' },
+      { emoji: '🟥', text: 'How many sides does a square have?', options: ['3','4','5','6'], answer: '4' },
     ]
   },
 };
@@ -3205,6 +3252,8 @@ STRICT RULES:
 - Mix: 6 MCQ + 4 number-input
 - MCQ options: all 4 must be plausible — use common wrong answers kids make (off by 1, forgot to carry, confused operation). NEVER use obviously wrong numbers like 99 for a small multiplication.
 - The answer field must be copied EXACTLY from the options array — identical string, no extra spaces
+- ALL 4 options must be DIFFERENT numbers — never repeat the same value twice in options
+- Spread options sensibly: e.g. for answer 42 use [36, 40, 42, 48] not [42, 42, 44, 46]
 - For input questions: answer is a number as a string e.g. "42"
 - Double-check every single calculation
 
@@ -3275,18 +3324,25 @@ Ensure the correct answer in spot-the-mistake is always one of the 4 options.`;
     const base = `You are generating quiz questions for Hridaan, a 3-year-old in Pre-K in Texas. English is his second language. His parent will read questions aloud. All questions must be tap-based (multiple choice only, no typing). Use simple emoji labels in options. Return ONLY valid JSON, no markdown.`;
 
     if (subject === 'nums') return `${base}
-Generate 8 number questions. Count objects (use emoji), which is more/less, what comes before/after (numbers 1-10).
-Each option should be a single number or emoji string.
-Return JSON array: [{"emoji":"🍎🍎🍎","text":"How many apples?","options":["1","2","3","4"],"answer":"3"}]`;
+Generate 10 number questions for Hridaan. He already knows counting and is ready for ADDITION and SUBTRACTION within 10.
+Mix: 5 addition questions + 3 subtraction questions + 2 counting/comparison questions.
+Use emoji to show the sum visually in the emoji field. Keep numbers small (1-10).
+Each option should be a single number. All 4 options must be DIFFERENT numbers.
+Return JSON array: [{"emoji":"🍎🍎 + 🍎🍎🍎","text":"2 + 3 = ?","options":["4","5","6","7"],"answer":"5"}]
+CRITICAL: answer must exactly match one of the 4 options. Double-check every calculation.`;
 
     if (subject === 'alpha') return `${base}
-Generate 8 alphabet questions. "X is for ___?" or "Which starts with /x/?" using familiar objects with emoji. Letters A-E only (early learner).
-Options should include emoji + word like "🍎 Apple".
-Return JSON array: [{"emoji":"🍎","text":"A is for…?","options":["🍎 Apple","🏀 Ball","🐱 Cat","🐶 Dog"],"answer":"🍎 Apple"}]`;
+Generate 10 alphabet questions for a 3-year-old. Each question shows an emoji and asks which letter it starts with.
+Use ONLY these well-known objects: Apple=A, Ball=B, Cat=C, Dog=D, Elephant=E, Fish=F, Star=S, Moon=M, Tree=T, Lion=L, Rain=R, Sun=S.
+Format: emoji shown, ask which letter it starts with. Options are 4 different letters.
+CRITICAL: Make sure the correct letter is actually in the options array. The answer must match one option exactly.
+Return JSON array: [{"emoji":"🍎","text":"Apple starts with…?","options":["B","A","C","D"],"answer":"A"}]`;
 
     if (subject === 'shapes') return `${base}
-Generate 8 shapes and colours questions. Shape of everyday objects, colour recognition, simple pattern ("which is the circle?"). Use bright emoji.
-Return JSON array: [{"emoji":"⚽","text":"A ball is this shape:","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
+Generate 10 shapes and colours questions for a 3-year-old. Mix of: shape identification using everyday objects (4 questions), colour recognition using coloured emoji (4 questions), counting sides (2 questions).
+Use very simple language. All options must be different. Answer must exactly match one option.
+CRITICAL: For colour questions use coloured emoji like 🔴🟡💚💙 so the child can see the colour directly.
+Return JSON array: [{"emoji":"⚽","text":"A ball is round. What shape?","options":["Square","Circle","Triangle","Rectangle"],"answer":"Circle"}]`;
 
     if (subject === 'phonics') return `${base}
 Generate 8 letter-sound questions. Show a letter, ask which picture starts with that sound. Letters A-T only. Options use emoji + word.
@@ -3509,15 +3565,67 @@ function loadVivanQuiz() {
 
 function buildVivanQ(q, i) {
   const num = i + 1;
+
+  // Deduplicate options — sometimes AI returns duplicates
+  let opts = q.options || [];
+  opts = [...new Set(opts.map(o => String(o).trim()))];
+  // If dedup left fewer than 2, pad with plausible neighbours
+  if (opts.length < 2) opts = [q.answer, String(Number(q.answer)+1), String(Number(q.answer)-1), String(Number(q.answer)+2)];
+  // Ensure correct answer is in options
+  if (!opts.includes(String(q.answer).trim())) opts[0] = String(q.answer).trim();
+  q = { ...q, options: opts };
+
+  // Detect if question is a vertical sum (contains + - × ÷ and two numbers)
+  const sumMatch = q.text.match(/^What is (\d[\d,]*)\s*([+\-×÷\/])\s*(\d[\d,]*)[\?.]?$/i);
+
   let inputHtml = '';
   if (q.type === 'input') {
-    inputHtml = `<div class="q-input-row">
-      <input class="q-input" type="number" placeholder="Answer" oninput="vivanAnswer(${i}, this.value, '${q.answer}')">
-    </div>`;
+    // Visual sum layout for input questions
+    if (sumMatch) {
+      const [, n1, op, n2] = sumMatch;
+      inputHtml = `<div style="text-align:center;margin-bottom:12px;">
+        <div class="math-sum-wrap">
+          <div class="math-sum-row">${n1}</div>
+          <div class="math-sum-row"><span class="math-sum-operator">${op}</span> ${n2}</div>
+          <div class="math-sum-line"></div>
+          <div class="math-sum-row" style="color:#3b82f6;">?</div>
+        </div>
+      </div>
+      <div class="q-input-row">
+        <input class="q-input" type="number" placeholder="Answer" oninput="vivanAnswer(${i}, this.value, '${q.answer}')">
+      </div>`;
+    } else {
+      inputHtml = `<div class="q-input-row">
+        <input class="q-input" type="number" placeholder="Answer" oninput="vivanAnswer(${i}, this.value, '${q.answer}')">
+      </div>`;
+    }
   } else {
-    const opts = q.options.map(o => `<button class="q-opt" onclick="vivanMCQ(${i}, this, '${o}', '${q.answer}')">${o}</button>`).join('');
-    inputHtml = `<div class="q-options">${opts}</div>`;
+    // MCQ — visual sum for applicable questions
+    const mcqSumMatch = q.text.match(/^What is (\d[\d,]*)\s*([+\-×÷\/])\s*(\d[\d,]*)[\?.]?$/i);
+    let questionDisplay = `<div class="q-text">${q.text}</div>`;
+    if (mcqSumMatch) {
+      const [, n1, op, n2] = mcqSumMatch;
+      questionDisplay = `<div style="text-align:center;margin-bottom:12px;">
+        <div class="math-sum-wrap">
+          <div class="math-sum-row">${n1}</div>
+          <div class="math-sum-row"><span class="math-sum-operator">${op}</span> ${n2}</div>
+          <div class="math-sum-line"></div>
+          <div class="math-sum-row" style="color:#3b82f6;">?</div>
+        </div>
+      </div>`;
+    }
+    const optHtml = q.options.map(o => `<button class="q-opt" onclick="vivanMCQ(${i}, this, '${o}', '${q.answer}')">${o}</button>`).join('');
+    inputHtml = `${mcqSumMatch ? '' : ''}<div class="q-options">${optHtml}</div>`;
+    const hintHtml2 = q.hint ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 12px;font-size:0.82rem;color:#92400e;font-weight:600;margin-bottom:10px;line-height:1.4;">💡 ${q.hint}</div>` : '';
+    return `<div class="q-card" id="vq-${i}">
+      <div class="q-num-badge">${num}</div>
+      ${questionDisplay}
+      ${hintHtml2}
+      ${inputHtml}
+      <div class="q-feedback" id="vfb-${i}"></div>
+    </div>`;
   }
+
   const hintHtml = q.hint ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 12px;font-size:0.82rem;color:#92400e;font-weight:600;margin-bottom:10px;line-height:1.4;">💡 ${q.hint}</div>` : '';
   return `<div class="q-card" id="vq-${i}">
     <div class="q-num-badge">${num}</div>
@@ -4214,6 +4322,18 @@ function renderPhonics() {
   document.getElementById('phonics-prog-fill').style.width = ((phCurrentIdx+1)/total*100) + '%';
   document.getElementById('ph-letter').textContent = q.letter;
   document.getElementById('ph-says').textContent = q.says;
+  // Speak the letter sound automatically when question loads
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utt = new SpeechSynthesisUtterance(q.letter + ' says ' + (q.says.match(/"([^"]+)"/)?.[1] || q.says));
+      utt.rate = 0.72; utt.lang = 'en-US';
+      const voices = window.speechSynthesis.getVoices();
+      const v = voices.find(v => v.lang === 'en-US' && !v.name.includes('Microsoft')) || null;
+      if (v) utt.voice = v;
+      window.speechSynthesis.speak(utt);
+    }, 400);
+  }
   document.getElementById('ph-feedback').textContent = '';
   document.getElementById('ph-next-btn').style.display = 'none';
 
@@ -4655,13 +4775,15 @@ if (window.speechSynthesis) {
 function hvpSpeak() {
   const q   = HVP_QUESTIONS[hvpCurrentIdx];
   const btn = document.getElementById('hvp-speak-btn');
-  if (btn) { btn.textContent = '🔊 Playing…'; setTimeout(() => { btn.textContent = '▶️ Hear the sound'; }, 3500); }
-  // Speak as: "The letter A." pause "A says ah." pause "Like Apple."
+  if (btn) { btn.textContent = '🔊 Playing…'; setTimeout(() => { btn.textContent = '▶️ Hear the sound'; }, 4000); }
+  // Speak clearly and slowly for a toddler
+  const exampleWord = q.example.replace(/[^a-zA-Z ]/g, '').trim().split(' ').pop();
   speakSequence([
-    { text: 'The letter ' + q.letter + '.', rate: 0.85 },
-    { text: q.letter + ' says ' + q.soundHint[0] + '.', rate: 0.80 },
-    { text: 'Like the word ' + q.example.replace(/[^a-zA-Z ]/g, '').trim() + '.', rate: 0.85 },
-  ], 900);
+    { text: 'The letter ' + q.letter + '.', rate: 0.80, pitch: 1.0 },
+    { text: q.letter + ' says ' + q.soundHint[0] + '.', rate: 0.72, pitch: 1.0 },
+    { text: q.soundHint[0] + ', ' + q.soundHint[0] + ', ' + q.soundHint[0] + '.', rate: 0.65, pitch: 1.0 },
+    { text: 'Like ' + exampleWord + '.', rate: 0.78, pitch: 1.0 },
+  ], 1000);
 }
 
 function hvpMicToggle() {
@@ -5360,14 +5482,17 @@ function spellSpeak() {
   const w   = spellWords[spellCurrentIdx];
   const btn = document.getElementById('spell-listen-btn');
   btn.textContent = '🔊 Playing…';
-  setTimeout(() => { btn.textContent = '🔊 Hear the word again'; }, 4500);
-  // Speak naturally: word, then sentence, then word again — with clear pauses
+  setTimeout(() => { btn.textContent = '🔊 Hear the word again'; }, 6000);
+
+  // Build sequence: word → sentence → word → letters spelled out
+  const letters = w.word.split('').join(', ');  // e.g. "b, e, c, a, u, s, e"
   speakSequence([
-    { text: w.word + '.', rate: 0.75, pitch: 1.0 },
-    { text: w.sentence || w.hint || w.word, rate: 0.88, pitch: 1.0 },
-    { text: w.word + '.', rate: 0.75, pitch: 1.0 },
-  ], 1200);
-  // Hint deliberately hidden — kids must spell from memory
+    { text: w.word + '.', rate: 0.70, pitch: 1.0 },           // say word slowly
+    { text: w.sentence || w.word, rate: 0.85, pitch: 1.0 },   // say in sentence
+    { text: w.word + '.', rate: 0.70, pitch: 1.0 },           // say word again
+    { text: 'Spelled: ' + letters + '.', rate: 0.65, pitch: 1.0 }, // spell it out
+  ], 1400);
+
   setTimeout(() => {
     document.getElementById('spell-hint').textContent = '';
   }, 100);
